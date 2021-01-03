@@ -13,7 +13,6 @@ import (
 	"github.com/myxy99/component/xinvoker"
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	"ndisk/internal/nfile/api/v1/registry"
-	"ndisk/internal/nfile/model"
 	myValidator "ndisk/internal/nfile/validator"
 	"net/http"
 )
@@ -26,7 +25,6 @@ type Server struct {
 func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 	s.initCfg()
 	s.invoker()
-	s.initDB(stopCh)
 	s.initHttpServer()
 	s.initRouter()
 	s.initValidator()
@@ -71,23 +69,8 @@ func (s *Server) invoker() {
 	})
 	xinvoker.Register(
 		xgorm.Register("mysql"),
-		//xredis.Register("redis"),
 	)
 	s.err = xinvoker.Init()
-}
-
-func (s *Server) initDB(stopCh <-chan struct{}) {
-	if s.err != nil {
-		return
-	}
-	model.MainDB = xgorm.Invoker("main")
-	go func() {
-		<-stopCh
-		d, _ := model.MainDB.DB()
-		_ = d.Close()
-	}()
-
-	s.initMigrate()
 }
 
 func (s *Server) initHttpServer() {
@@ -110,17 +93,6 @@ func (s *Server) initValidator() {
 		return
 	}
 	s.err = xvalidator.Init(xcfg.GetString("server.locale"), myValidator.RegisterValidation)
-}
-
-func (s *Server) initMigrate() {
-	if s.err != nil {
-		return
-	}
-	if model.MainDB != nil {
-		_ = model.MainDB.AutoMigrate(
-			//new(info.Info),
-		)
-	}
 }
 
 func (s *Server) govern() {

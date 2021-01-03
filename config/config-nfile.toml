@@ -1,17 +1,31 @@
 [server]
-    addr = "0.0.0.0:80"
+    addr = "0.0.0.0:1124"
     locale = "zh"
+
+[app]
+    name="ndisk_nfile"
+    debug= true
+    version="v0.1.0"
 
 [mysql.main]
     tablePrefix = "ndisk"
     host = "127.0.0.1"
     username = "root"
     password = "root"
-    dbName = "ndisk"
+    dbName = "ndisk_nfile"
     type = "mysql"
     debug = true
 
-[log]
-    name = "log.log"
+[xlog]
+    name = "ndisk_nfile.log"
     dir = "."
-    level = "info"
+    level = ""
+    async = false
+    debug = true
+    add_caller= true
+    caller_skip=2
+
+[app.govern]
+    host = "127.0.0.1"
+    port = 4569
+

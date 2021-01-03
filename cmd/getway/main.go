@@ -10,6 +10,10 @@ import (
 )
 
 func main() {
+	xflag.NewRootCommand(&xflag.Command{
+		Use:                "NGetWay",
+		DisableSuggestions: false,
+	})
 	xflag.Register(
 		xflag.CommandNode{
 			Name: "run",

@@ -4,12 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var Router *gin.Engine
+var router *gin.Engine
 
 func Engine() *gin.Engine {
-	if Router == nil {
+	if router == nil {
 		gin.SetMode(gin.ReleaseMode)
-		Router = gin.Default()
+		router = gin.Default()
 	}
-	return Router
+	return router
 }

@@ -8,17 +8,14 @@
     version="v0.1.0"
 
 [xlog]
-    name = "log.log"
+    name = "ndisk_getway.log"
     dir = "."
     level = ""
     async = false
-#    debug = true
+    debug = true
     add_caller= true
     caller_skip=2
 
 [app.govern]
     host = "127.0.0.1"
     port = 4568
-
-[email.main]
-    host="smtp.yeah.net"

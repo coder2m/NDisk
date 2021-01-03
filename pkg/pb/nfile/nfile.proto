@@ -1,0 +1,17 @@
+syntax = "proto3";
+package NFilePb;
+
+message FileInfo {
+  string fileId = 1;
+}
+
+message FileData  {
+  bytes Buffer = 1;
+}
+
+service NFileService {
+  //文件上传
+  rpc FileUpload(stream FileData)returns(FileInfo){}
+  //文件下载
+  rpc FileDownload(FileInfo)returns (stream FileData){}
+}

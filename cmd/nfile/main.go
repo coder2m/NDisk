@@ -10,6 +10,10 @@ import (
 )
 
 func main() {
+	xflag.NewRootCommand(&xflag.Command{
+		Use:                "NFile",
+		DisableSuggestions: false,
+	})
 	xflag.Register(
 		xflag.CommandNode{
 			Name: "run",
