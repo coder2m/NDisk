@@ -2,13 +2,11 @@ package nfile
 
 import (
 	"context"
-	"fmt"
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xconsole"
 	"github.com/myxy99/component/pkg/xdefer"
 	"github.com/myxy99/component/pkg/xflag"
-	"github.com/myxy99/component/pkg/xgp"
 	"github.com/myxy99/component/pkg/xvalidator"
 	"github.com/myxy99/component/xcfg"
 	"github.com/myxy99/component/xcfg/datasource/manager"
@@ -17,6 +15,7 @@ import (
 	serverinterceptors "github.com/myxy99/component/xgrpc/server"
 	"github.com/myxy99/component/xinvoker"
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
+	"github.com/myxy99/component/xmonitor"
 	"github.com/myxy99/component/xregistry"
 	"github.com/myxy99/component/xregistry/xetcd"
 	"github.com/myxy99/ndisk/internal/nfile/api/v1/registry"
@@ -42,18 +41,9 @@ func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 	s.initHttpServer()
 	s.initRouter()
 	s.rpc()
-	xgp.Go(func() {
-		fmt.Println("???/")
-	})
-	xgp.Go(func() {
-		s.invoker()
-	})
-	xgp.Go(func() {
-		s.initValidator()
-	})
-	xgp.Go(func() {
-		s.govern()
-	})
+	s.invoker()
+	s.initValidator()
+	s.govern()
 	return s.err
 }
 
@@ -134,6 +124,7 @@ func (s *Server) govern() {
 	if s.err != nil {
 		return
 	}
+	xmonitor.Run()
 	go xgovern.Run()
 }
 
