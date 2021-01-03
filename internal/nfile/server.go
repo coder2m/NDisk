@@ -2,11 +2,13 @@ package nfile
 
 import (
 	"context"
+	"fmt"
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xconsole"
 	"github.com/myxy99/component/pkg/xdefer"
 	"github.com/myxy99/component/pkg/xflag"
+	"github.com/myxy99/component/pkg/xgp"
 	"github.com/myxy99/component/pkg/xvalidator"
 	"github.com/myxy99/component/xcfg"
 	"github.com/myxy99/component/xcfg/datasource/manager"
@@ -37,12 +39,21 @@ type Server struct {
 func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 	s.initCfg()
 	s.debug()
-	s.invoker()
 	s.initHttpServer()
 	s.initRouter()
-	s.initValidator()
-	s.govern()
 	s.rpc()
+	xgp.Go(func() {
+		fmt.Println("???/")
+	})
+	xgp.Go(func() {
+		s.invoker()
+	})
+	xgp.Go(func() {
+		s.initValidator()
+	})
+	xgp.Go(func() {
+		s.govern()
+	})
 	return s.err
 }
 
@@ -177,7 +188,9 @@ func (s *Server) rpc() {
 
 	serve := grpc.NewServer(options...)
 	NFilePb.RegisterNFileServiceServer(serve, new(rpc.Server))
-	go serve.Serve(lis)
+	go func() {
+		s.err = serve.Serve(lis)
+	}()
 	xdefer.Register(func() error {
 		serve.Stop()
 		xconsole.Red("grpc server shutdown success ")
