@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-nfile
+  namespace: ndisk
+spec:
+  selector:
+    matchLabels:
+      name: nfile
+      version: v1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: nfile
+        version: v1
+    spec:
+      containers:
+      - name: ndisk-nfile
+        image: "{{index .Values.images 0}}:{{.Values.version}}"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80

@@ -7,7 +7,9 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/gorilla/websocket v1.4.2 // indirect
-	github.com/myxy99/component v0.2.3
+	github.com/myxy99/component latest
+	github.com/spf13/pflag v1.0.3 // indirect
+	gorm.io/gorm v1.20.8
 )
 
 replace (

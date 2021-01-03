@@ -1,0 +1,17 @@
+[server]
+    addr = "0.0.0.0:80"
+    locale = "zh"
+
+[mysql.main]
+    tablePrefix = "ndisk"
+    host = "127.0.0.1"
+    username = "root"
+    password = "root"
+    dbName = "ndisk"
+    type = "mysql"
+    debug = true
+
+[log]
+    name = "log.log"
+    dir = "."
+    level = "info"

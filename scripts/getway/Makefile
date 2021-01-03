@@ -7,7 +7,7 @@ build-getway-server:
 
 .PHONY: run-getway
 run-getway:
-	go run cmd/getway/main.go
+	go run cmd/getway/main.go run -c=config/confin-getway.toml
 
 .PHONY: build-getway
 build-getway:
