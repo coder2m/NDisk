@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-getway
+  namespace: ndisk
+spec:
+  selector:
+    matchLabels:
+      name: getway
+      version: v1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: getway
+        version: v1
+    spec:
+      containers:
+      - name: ndisk-getway
+        image: "{{index .Values.images 0}}:{{.Values.version}}"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80

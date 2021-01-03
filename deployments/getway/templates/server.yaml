@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-ndisk-server-getway
+  namespace: ndisk
+spec:
+  type: NodePort
+  selector:
+    name: getway
+    version: v1
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80 
+
