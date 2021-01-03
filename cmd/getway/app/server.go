@@ -1,9 +1,9 @@
 package app
 
 import (
-	xapp "github.com/myxy99/component"
-	"ndisk/cmd"
-	s "ndisk/internal/getway"
+	"github.com/myxy99/ndisk/cmd"
+	s "github.com/myxy99/ndisk/internal/getway"
+	"sync"
 )
 
 func Run(stopCh <-chan struct{}) error {
@@ -16,6 +16,7 @@ func Run(stopCh <-chan struct{}) error {
 }
 
 func NewServer() cmd.App {
-	xapp.PrintVersion()
-	return &s.Server{}
+	return &s.Server{
+		WaitGroup: new(sync.WaitGroup),
+	}
 }

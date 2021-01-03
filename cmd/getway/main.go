@@ -5,7 +5,7 @@ import (
 	"github.com/myxy99/component/pkg/xcolor"
 	"github.com/myxy99/component/pkg/xflag"
 	"github.com/myxy99/component/pkg/xsignals"
-	"ndisk/cmd/getway/app"
+	"github.com/myxy99/ndisk/cmd/getway/app"
 	"os"
 )
 

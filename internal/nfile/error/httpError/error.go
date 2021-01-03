@@ -3,7 +3,7 @@ package httpError
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/myxy99/component/xlog"
-	R "ndisk/pkg/response"
+	R "github.com/myxy99/ndisk/pkg/response"
 	"net/http"
 )
 

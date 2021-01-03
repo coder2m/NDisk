@@ -1,8 +1,10 @@
 syntax = "proto3";
+
 package NFilePb;
 
 message FileInfo {
-  string fileId = 1;
+  string FileId = 1;
+  string Hash = 2;
 }
 
 message FileData  {

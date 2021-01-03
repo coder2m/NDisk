@@ -16,6 +16,13 @@
     type = "mysql"
     debug = true
 
+[rpc]
+    etcd_addr="127.0.0.1:2379"
+    ip="0.0.0.0"
+    port=8484
+    register_ttl="10s"
+    register_interval="3s"
+
 [xlog]
     name = "ndisk_nfile.log"
     dir = "."

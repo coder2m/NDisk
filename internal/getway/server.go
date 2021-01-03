@@ -3,6 +3,7 @@ package getway
 import (
 	"context"
 	"github.com/BurntSushi/toml"
+	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xconsole"
 	"github.com/myxy99/component/pkg/xdefer"
 	"github.com/myxy99/component/pkg/xflag"
@@ -10,18 +11,21 @@ import (
 	"github.com/myxy99/component/xcfg"
 	"github.com/myxy99/component/xcfg/datasource/manager"
 	"github.com/myxy99/component/xgovern"
-	"ndisk/internal/getway/api/v1/registry"
-	myValidator "ndisk/internal/getway/validator"
+	"github.com/myxy99/ndisk/internal/getway/api/v1/registry"
+	myValidator "github.com/myxy99/ndisk/internal/getway/validator"
 	"net/http"
+	"sync"
 )
 
 type Server struct {
 	Server *http.Server
 	err    error
+	*sync.WaitGroup
 }
 
 func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 	s.initCfg()
+	s.debug()
 	s.initHttpServer()
 	s.initRouter()
 	s.initValidator()
@@ -31,7 +35,9 @@ func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 
 func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 	go func() {
+		defer s.Done()
 		<-stopCh
+		s.Add(1)
 		xdefer.Clean()
 	}()
 	xdefer.Register(func() error {
@@ -41,11 +47,16 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 		return s.Server.Shutdown(ctx)
 	})
 	xconsole.Greenf("Start listening on:", s.Server.Addr)
-	err = s.Server.ListenAndServe()
-	if err != http.ErrServerClosed {
+	if err = s.Server.ListenAndServe(); err != http.ErrServerClosed {
 		return err
 	}
+	s.Wait()
 	return nil
+}
+
+func (s *Server) debug() {
+	xconsole.ResetDebug(xapp.Debug())
+	xapp.PrintVersion()
 }
 
 func (s *Server) initCfg() {
