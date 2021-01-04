@@ -11,17 +11,12 @@ import (
 	"github.com/myxy99/component/xcfg"
 	"github.com/myxy99/component/xcfg/datasource/manager"
 	"github.com/myxy99/component/xgovern"
-	"github.com/myxy99/component/xgrpc"
-	serverinterceptors "github.com/myxy99/component/xgrpc/server"
 	"github.com/myxy99/component/xinvoker"
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	"github.com/myxy99/component/xmonitor"
-	"github.com/myxy99/component/xregistry"
-	"github.com/myxy99/component/xregistry/xetcd"
 	"github.com/myxy99/ndisk/internal/nfile/api/v1/registry"
 	rpcServer "github.com/myxy99/ndisk/internal/nfile/rpc"
 	myValidator "github.com/myxy99/ndisk/internal/nfile/validator"
-	"github.com/myxy99/ndisk/pkg/constant"
 	NFilePb "github.com/myxy99/ndisk/pkg/pb/nfile"
 	"github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
@@ -134,51 +129,22 @@ func (s *Server) rpc() {
 		return
 	}
 	var (
-		etcdR  xregistry.Registry
 		rpcCfg *rpc.Config
 		lis    net.Listener
 	)
 	rpcCfg = xcfg.UnmarshalWithExpect("rpc", rpc.DefaultConfig()).(*rpc.Config)
-	conf := xetcd.EtcdV3Cfg{
-		Endpoints: []string{rpcCfg.EtcdAddr},
-	}
-	etcdR, s.err = xetcd.NewRegistry(conf) //注册
+
+	s.err = rpc.DefaultRegistryEtcd(rpcCfg)
 	if s.err != nil {
 		return
 	}
-
-	etcdR.Register(
-		xregistry.ServiceName(xapp.Name()),
-		xregistry.ServiceNamespaces(constant.DefaultNamespaces),
-		xregistry.Address(rpcCfg.Addr()),
-		xregistry.RegisterTTL(rpcCfg.RegisterTTL),
-		xregistry.RegisterInterval(rpcCfg.RegisterInterval),
-	)
-
-	xdefer.Register(func() error {
-		etcdR.Close()
-		return nil
-	})
 
 	lis, s.err = net.Listen("tcp", rpcCfg.Addr())
 	if s.err != nil {
 		return
 	}
 
-	options := []grpc.ServerOption{
-		xgrpc.WithUnaryServerInterceptors(
-			serverinterceptors.CrashUnaryServerInterceptor(),
-			serverinterceptors.PrometheusUnaryServerInterceptor(),
-			serverinterceptors.XTimeoutUnaryServerInterceptor(rpcCfg.Timeout),
-			serverinterceptors.TraceUnaryServerInterceptor(),
-		),
-		xgrpc.WithStreamServerInterceptors(
-			serverinterceptors.CrashStreamServerInterceptor(),
-			serverinterceptors.PrometheusStreamServerInterceptor(),
-		),
-	}
-
-	serve := grpc.NewServer(options...)
+	serve := grpc.NewServer(rpc.DefaultOption(rpcCfg)...)
 	NFilePb.RegisterNFileServiceServer(serve, new(rpcServer.Server))
 	go func() {
 		s.err = serve.Serve(lis)

@@ -10,16 +10,11 @@ import (
 	"github.com/myxy99/component/xcfg"
 	"github.com/myxy99/component/xcfg/datasource/manager"
 	"github.com/myxy99/component/xgovern"
-	"github.com/myxy99/component/xgrpc"
-	serverinterceptors "github.com/myxy99/component/xgrpc/server"
 	"github.com/myxy99/component/xinvoker"
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	"github.com/myxy99/component/xmonitor"
-	"github.com/myxy99/component/xregistry"
-	"github.com/myxy99/component/xregistry/xetcd"
 	"github.com/myxy99/ndisk/internal/authority/model"
 	myValidator "github.com/myxy99/ndisk/internal/authority/validator"
-	"github.com/myxy99/ndisk/pkg/constant"
 	"github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
 	"net"
@@ -58,51 +53,20 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 	}
 
 	var (
-		etcdR  xregistry.Registry
 		rpcCfg *rpc.Config
 		lis    net.Listener
 	)
 	rpcCfg = xcfg.UnmarshalWithExpect("rpc", rpc.DefaultConfig()).(*rpc.Config)
-	conf := xetcd.EtcdV3Cfg{
-		Endpoints: []string{rpcCfg.EtcdAddr},
-	}
-	etcdR, s.err = xetcd.NewRegistry(conf) //注册
+	s.err = rpc.DefaultRegistryEtcd(rpcCfg)
 	if s.err != nil {
 		return
 	}
-
-	etcdR.Register(
-		xregistry.ServiceName(xapp.Name()),
-		xregistry.ServiceNamespaces(constant.DefaultNamespaces),
-		xregistry.Address(rpcCfg.Addr()),
-		xregistry.RegisterTTL(rpcCfg.RegisterTTL),
-		xregistry.RegisterInterval(rpcCfg.RegisterInterval),
-	)
-
-	xdefer.Register(func() error {
-		etcdR.Close()
-		return nil
-	})
-
 	lis, s.err = net.Listen("tcp", rpcCfg.Addr())
 	if s.err != nil {
 		return
 	}
 
-	options := []grpc.ServerOption{
-		xgrpc.WithUnaryServerInterceptors(
-			serverinterceptors.CrashUnaryServerInterceptor(),
-			serverinterceptors.PrometheusUnaryServerInterceptor(),
-			serverinterceptors.XTimeoutUnaryServerInterceptor(rpcCfg.Timeout),
-			serverinterceptors.TraceUnaryServerInterceptor(),
-		),
-		xgrpc.WithStreamServerInterceptors(
-			serverinterceptors.CrashStreamServerInterceptor(),
-			serverinterceptors.PrometheusStreamServerInterceptor(),
-		),
-	}
-
-	serve := grpc.NewServer(options...)
+	serve := grpc.NewServer(rpc.DefaultOption(rpcCfg)...)
 	//NFilePb.RegisterNFileServiceServer(serve, new(rpc.Server))
 	s.err = serve.Serve(lis)
 	if s.err != nil {

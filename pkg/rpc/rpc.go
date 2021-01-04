@@ -2,7 +2,15 @@ package rpc
 
 import (
 	"fmt"
+	xapp "github.com/myxy99/component"
+	"github.com/myxy99/component/pkg/xdefer"
 	"github.com/myxy99/component/pkg/xnet"
+	"github.com/myxy99/component/xgrpc"
+	serverinterceptors "github.com/myxy99/component/xgrpc/server"
+	"github.com/myxy99/component/xregistry"
+	"github.com/myxy99/component/xregistry/xetcd"
+	"github.com/myxy99/ndisk/pkg/constant"
+	"google.golang.org/grpc"
 	"time"
 )
 
@@ -32,4 +40,44 @@ func DefaultConfig() *Config {
 
 func (c Config) Addr() string {
 	return fmt.Sprintf("%v:%v", c.ServerIp, c.ServerPort)
+}
+
+func DefaultOption(c *Config) []grpc.ServerOption {
+	return []grpc.ServerOption{
+		xgrpc.WithUnaryServerInterceptors(
+			serverinterceptors.CrashUnaryServerInterceptor(),
+			serverinterceptors.PrometheusUnaryServerInterceptor(),
+			serverinterceptors.XTimeoutUnaryServerInterceptor(c.Timeout),
+			serverinterceptors.TraceUnaryServerInterceptor(),
+		),
+		xgrpc.WithStreamServerInterceptors(
+			serverinterceptors.CrashStreamServerInterceptor(),
+			serverinterceptors.PrometheusStreamServerInterceptor(),
+		),
+	}
+}
+
+func DefaultRegistryEtcd(c *Config) (err error) {
+	var etcdR xregistry.Registry
+	conf := xetcd.EtcdV3Cfg{
+		Endpoints: []string{c.EtcdAddr},
+	}
+	etcdR, err = xetcd.NewRegistry(conf) //注册
+	if err != nil {
+		return
+	}
+
+	etcdR.Register(
+		xregistry.ServiceName(xapp.Name()),
+		xregistry.ServiceNamespaces(constant.DefaultNamespaces),
+		xregistry.Address(c.Addr()),
+		xregistry.RegisterTTL(c.RegisterTTL),
+		xregistry.RegisterInterval(c.RegisterInterval),
+	)
+
+	xdefer.Register(func() error {
+		etcdR.Close()
+		return nil
+	})
+	return
 }
