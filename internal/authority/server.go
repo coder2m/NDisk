@@ -1,7 +1,6 @@
-package nfile
+package authority
 
 import (
-	"context"
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xconsole"
@@ -18,34 +17,33 @@ import (
 	"github.com/myxy99/component/xmonitor"
 	"github.com/myxy99/component/xregistry"
 	"github.com/myxy99/component/xregistry/xetcd"
-	"github.com/myxy99/ndisk/internal/nfile/api/v1/registry"
-	rpcServer "github.com/myxy99/ndisk/internal/nfile/rpc"
-	myValidator "github.com/myxy99/ndisk/internal/nfile/validator"
+	"github.com/myxy99/ndisk/internal/authority/model"
+	myValidator "github.com/myxy99/ndisk/internal/authority/validator"
 	"github.com/myxy99/ndisk/pkg/constant"
-	NFilePb "github.com/myxy99/ndisk/pkg/pb/nfile"
 	"github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
 	"net"
-	"net/http"
 	"sync"
 )
 
 type Server struct {
-	Server *http.Server
-	err    error
+	err error
 	*sync.WaitGroup
 }
 
 func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 	s.initCfg()
-	s.debug()
-	s.initHttpServer()
-	s.initRouter()
-	s.rpc()
 	s.invoker()
+	s.debug()
+	s.initDB(stopCh)
 	s.initValidator()
 	s.govern()
 	return s.err
+}
+
+func (s *Server) debug() {
+	xconsole.ResetDebug(xapp.Debug())
+	xapp.PrintVersion()
 }
 
 func (s *Server) Run(stopCh <-chan struct{}) (err error) {
@@ -55,84 +53,10 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 		xdefer.Clean()
 		s.Done()
 	}()
-	xdefer.Register(func() error {
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
-		xconsole.Red("http server shutdown")
-		return s.Server.Shutdown(ctx)
-	})
-	xconsole.Greenf("Start listening on:", s.Server.Addr)
-	if err = s.Server.ListenAndServe(); err != http.ErrServerClosed {
-		return err
-	}
-	s.Wait()
-	return nil
-}
-
-func (s *Server) debug() {
-	xconsole.ResetDebug(xapp.Debug())
-	xapp.PrintVersion()
-}
-
-func (s *Server) initCfg() {
 	if s.err != nil {
 		return
 	}
-	var data xcfg.DataSource
-	data, s.err = manager.NewDataSource(xflag.NString("run", "xcfg"))
-	if s.err != nil {
-		return
-	}
-	s.err = xcfg.LoadFromDataSource(data, toml.Unmarshal)
-}
 
-func (s *Server) invoker() {
-	if s.err != nil {
-		return
-	}
-	xdefer.Register(func() error {
-		return xinvoker.Close()
-	})
-	xinvoker.Register(
-		xgorm.Register("mysql"),
-	)
-	s.err = xinvoker.Init()
-}
-
-func (s *Server) initHttpServer() {
-	if s.err != nil {
-		return
-	}
-	s.Server = new(http.Server)
-	s.Server.Addr = xcfg.GetString("server.addr")
-}
-
-func (s *Server) initRouter() {
-	if s.err != nil {
-		return
-	}
-	s.Server.Handler = registry.Engine()
-}
-
-func (s *Server) initValidator() {
-	if s.err != nil {
-		return
-	}
-	s.err = xvalidator.Init(xcfg.GetString("server.locale"), myValidator.RegisterValidation)
-}
-
-func (s *Server) govern() {
-	if s.err != nil {
-		return
-	}
-	xmonitor.Run()
-	go xgovern.Run()
-}
-
-func (s *Server) rpc() {
-	if s.err != nil {
-		return
-	}
 	var (
 		etcdR  xregistry.Registry
 		rpcCfg *rpc.Config
@@ -179,14 +103,70 @@ func (s *Server) rpc() {
 	}
 
 	serve := grpc.NewServer(options...)
-	NFilePb.RegisterNFileServiceServer(serve, new(rpcServer.Server))
-	go func() {
-		s.err = serve.Serve(lis)
-	}()
+	//NFilePb.RegisterNFileServiceServer(serve, new(rpc.Server))
+	s.err = serve.Serve(lis)
+	if s.err != nil {
+		return s.err
+	}
 	xdefer.Register(func() error {
 		serve.Stop()
 		xconsole.Red("grpc server shutdown success ")
 		return nil
 	})
 	xconsole.Greenf("grpc server start up success:", rpcCfg.Addr())
+	s.Wait()
+	return nil
+}
+
+func (s *Server) initCfg() {
+	if s.err != nil {
+		return
+	}
+	var data xcfg.DataSource
+	data, s.err = manager.NewDataSource(xflag.NString("run", "xcfg"))
+	if s.err != nil {
+		return
+	}
+	s.err = xcfg.LoadFromDataSource(data, toml.Unmarshal)
+}
+
+func (s *Server) invoker() {
+	if s.err != nil {
+		return
+	}
+	xdefer.Register(func() error {
+		return xinvoker.Close()
+	})
+	xinvoker.Register(
+		//xgorm.Register("mysql"),
+		//xredis.Register("redis"),
+	)
+	s.err = xinvoker.Init()
+}
+
+func (s *Server) initDB(stopCh <-chan struct{}) {
+	if s.err != nil {
+		return
+	}
+	model.MainDB = xgorm.Invoker("main")
+	go func() {
+		<-stopCh
+		d, _ := model.MainDB.DB()
+		_ = d.Close()
+	}()
+}
+
+func (s *Server) initValidator() {
+	if s.err != nil {
+		return
+	}
+	s.err = xvalidator.Init(xcfg.GetString("server.locale"), myValidator.RegisterValidation)
+}
+
+func (s *Server) govern() {
+	if s.err != nil {
+		return
+	}
+	xmonitor.Run()
+	go xgovern.Run()
 }
