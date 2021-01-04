@@ -5,13 +5,13 @@ import (
 	"github.com/myxy99/component/pkg/xcolor"
 	"github.com/myxy99/component/pkg/xflag"
 	"github.com/myxy99/component/pkg/xsignals"
-	"github.com/myxy99/ndisk/cmd/authority/app"
+	"github.com/myxy99/ndisk/cmd/nuser/app"
 	"os"
 )
 
 func main() {
 	xflag.NewRootCommand(&xflag.Command{
-		Use:                "NAuth",
+		Use:                "NUser",
 		DisableSuggestions: false,
 	})
 	xflag.Register(
