@@ -1,4 +1,4 @@
-package nfile
+package nuser
 
 import (
 	"context"
@@ -14,10 +14,9 @@ import (
 	"github.com/myxy99/component/xinvoker"
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	"github.com/myxy99/component/xmonitor"
-	"github.com/myxy99/ndisk/internal/nfile/api/v1/registry"
-	rpcServer "github.com/myxy99/ndisk/internal/nfile/rpc"
-	myValidator "github.com/myxy99/ndisk/internal/nfile/validator"
-	NFilePb "github.com/myxy99/ndisk/pkg/pb/nfile"
+	"github.com/myxy99/ndisk/internal/nuser/api/v1/registry"
+	"github.com/myxy99/ndisk/internal/nuser/model"
+	myValidator "github.com/myxy99/ndisk/internal/nuser/validator"
 	"github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
 	"net"
@@ -34,10 +33,10 @@ type Server struct {
 func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 	s.initCfg()
 	s.debug()
+	s.invoker()
+	s.initDB(stopCh)
 	s.initHttpServer()
 	s.initRouter()
-	s.rpc()
-	s.invoker()
 	s.initValidator()
 	s.govern()
 	return s.err
@@ -90,8 +89,21 @@ func (s *Server) invoker() {
 	})
 	xinvoker.Register(
 		xgorm.Register("mysql"),
+		//xredis.Register("redis"),
 	)
 	s.err = xinvoker.Init()
+}
+
+func (s *Server) initDB(stopCh <-chan struct{}) {
+	if s.err != nil {
+		return
+	}
+	model.MainDB = xgorm.Invoker("main")
+	go func() {
+		<-stopCh
+		d, _ := model.MainDB.DB()
+		_ = d.Close()
+	}()
 }
 
 func (s *Server) initHttpServer() {
@@ -145,7 +157,6 @@ func (s *Server) rpc() {
 	}
 
 	serve := grpc.NewServer(rpc.DefaultOption(rpcCfg)...)
-	NFilePb.RegisterNFileServiceServer(serve, new(rpcServer.Server))
 	go func() {
 		s.err = serve.Serve(lis)
 	}()

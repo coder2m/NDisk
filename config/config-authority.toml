@@ -1,0 +1,31 @@
+[server]
+    locale = "zh"
+[app]
+    name="ndisk_authority"
+    debug= true
+    version="v0.1.0"
+[mysql.main]
+    tablePrefix = "ndisk"
+    host = "127.0.0.1"
+    username = "root"
+    password = "root"
+    dbName = "ndisk_auth"
+    type = "mysql"
+    debug = true
+[rpc]
+    etcd_addr="127.0.0.1:2380"
+    ip="0.0.0.0"
+    port=8485
+    register_ttl="10s"
+    register_interval="3s"
+[xlog]
+    name = "ndisk_authority.log"
+    dir = "."
+    level = ""
+    async = false
+    debug = true
+    add_caller= true
+    caller_skip=2
+[app.govern]
+    host = "127.0.0.1"
+    port = 4569
