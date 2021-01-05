@@ -30,7 +30,7 @@ func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequ
 	if !u.CheckPassword(request.Password) {
 		return nil, xrpc.NewError(xrpc.EmptyData)
 	}
-
+	return nil, err
 }
 
 func (s Server) SMSLogin(ctx context.Context, request *NUserPb.UserLoginRequest) (*NUserPb.LoginResponse, error) {
