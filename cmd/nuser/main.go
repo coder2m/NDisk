@@ -11,7 +11,7 @@ import (
 
 func main() {
 	xflag.NewRootCommand(&xflag.Command{
-		Use:                "nuser",
+		Use:                "NUser",
 		DisableSuggestions: false,
 	})
 	xflag.Register(

@@ -132,7 +132,7 @@ func (s *Server) rpc() {
 		rpcCfg *rpc.Config
 		lis    net.Listener
 	)
-	rpcCfg = xcfg.UnmarshalWithExpect("rpc", rpc.DefaultConfig()).(*rpc.Config)
+	rpcCfg = xcfg.UnmarshalWithExpect("rpcError", rpc.DefaultConfig()).(*rpc.Config)
 
 	s.err = rpc.DefaultRegistryEtcd(rpcCfg)
 	if s.err != nil {

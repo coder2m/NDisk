@@ -1,7 +1,6 @@
 package nuser
 
 import (
-	"context"
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xconsole"
@@ -12,21 +11,18 @@ import (
 	"github.com/myxy99/component/xcfg/datasource/manager"
 	"github.com/myxy99/component/xgovern"
 	"github.com/myxy99/component/xinvoker"
-	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	"github.com/myxy99/component/xmonitor"
-	"github.com/myxy99/ndisk/internal/nuser/api/v1/registry"
-	"github.com/myxy99/ndisk/internal/nuser/model"
+	"github.com/myxy99/ndisk/internal/nuser/rpc"
 	myValidator "github.com/myxy99/ndisk/internal/nuser/validator"
+	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
 	"github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
 	"net"
-	"net/http"
 	"sync"
 )
 
 type Server struct {
-	Server *http.Server
-	err    error
+	err error
 	*sync.WaitGroup
 }
 
@@ -34,9 +30,6 @@ func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 	s.initCfg()
 	s.debug()
 	s.invoker()
-	s.initDB(stopCh)
-	s.initHttpServer()
-	s.initRouter()
 	s.initValidator()
 	s.govern()
 	return s.err
@@ -49,18 +42,30 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 		xdefer.Clean()
 		s.Done()
 	}()
-	xdefer.Register(func() error {
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
-		xconsole.Red("http server shutdown")
-		return s.Server.Shutdown(ctx)
-	})
-	xconsole.Greenf("Start listening on:", s.Server.Addr)
-	if err = s.Server.ListenAndServe(); err != http.ErrServerClosed {
-		return err
+	var (
+		rpcCfg *xrpc.Config
+		lis    net.Listener
+	)
+	rpcCfg = xcfg.UnmarshalWithExpect("rpcError", xrpc.DefaultConfig()).(*xrpc.Config)
+	s.err = xrpc.DefaultRegistryEtcd(rpcCfg)
+	if s.err != nil {
+		return
 	}
+	lis, s.err = net.Listen("tcp", rpcCfg.Addr())
+	if s.err != nil {
+		return
+	}
+	serve := grpc.NewServer(xrpc.DefaultOption(rpcCfg)...)
+	xdefer.Register(func() error {
+		serve.Stop()
+		xconsole.Red("grpc server shutdown success ")
+		return nil
+	})
+	NUserPb.RegisterNUserServiceServer(serve, new(rpc.Server))
+	xconsole.Greenf("grpc server start up success:", rpcCfg.Addr())
+	s.err = serve.Serve(lis)
 	s.Wait()
-	return nil
+	return s.err
 }
 
 func (s *Server) debug() {
@@ -88,37 +93,10 @@ func (s *Server) invoker() {
 		return xinvoker.Close()
 	})
 	xinvoker.Register(
-		xgorm.Register("mysql"),
+		//xgorm.Register("mysql"),
 		//xredis.Register("redis"),
 	)
 	s.err = xinvoker.Init()
-}
-
-func (s *Server) initDB(stopCh <-chan struct{}) {
-	if s.err != nil {
-		return
-	}
-	model.MainDB = xgorm.Invoker("main")
-	go func() {
-		<-stopCh
-		d, _ := model.MainDB.DB()
-		_ = d.Close()
-	}()
-}
-
-func (s *Server) initHttpServer() {
-	if s.err != nil {
-		return
-	}
-	s.Server = new(http.Server)
-	s.Server.Addr = xcfg.GetString("server.addr")
-}
-
-func (s *Server) initRouter() {
-	if s.err != nil {
-		return
-	}
-	s.Server.Handler = registry.Engine()
 }
 
 func (s *Server) initValidator() {
@@ -141,12 +119,12 @@ func (s *Server) rpc() {
 		return
 	}
 	var (
-		rpcCfg *rpc.Config
+		rpcCfg *xrpc.Config
 		lis    net.Listener
 	)
-	rpcCfg = xcfg.UnmarshalWithExpect("rpc", rpc.DefaultConfig()).(*rpc.Config)
+	rpcCfg = xcfg.UnmarshalWithExpect("rpcError", xrpc.DefaultConfig()).(*xrpc.Config)
 
-	s.err = rpc.DefaultRegistryEtcd(rpcCfg)
+	s.err = xrpc.DefaultRegistryEtcd(rpcCfg)
 	if s.err != nil {
 		return
 	}
@@ -156,7 +134,7 @@ func (s *Server) rpc() {
 		return
 	}
 
-	serve := grpc.NewServer(rpc.DefaultOption(rpcCfg)...)
+	serve := grpc.NewServer(xrpc.DefaultOption(rpcCfg)...)
 	go func() {
 		s.err = serve.Serve(lis)
 	}()

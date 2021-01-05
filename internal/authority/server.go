@@ -11,9 +11,7 @@ import (
 	"github.com/myxy99/component/xcfg/datasource/manager"
 	"github.com/myxy99/component/xgovern"
 	"github.com/myxy99/component/xinvoker"
-	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	"github.com/myxy99/component/xmonitor"
-	"github.com/myxy99/ndisk/internal/authority/model"
 	myValidator "github.com/myxy99/ndisk/internal/authority/validator"
 	"github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
@@ -30,7 +28,6 @@ func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 	s.initCfg()
 	s.invoker()
 	s.debug()
-	s.initDB(stopCh)
 	s.initValidator()
 	s.govern()
 	return s.err
@@ -48,15 +45,11 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 		xdefer.Clean()
 		s.Done()
 	}()
-	if s.err != nil {
-		return
-	}
-
 	var (
 		rpcCfg *rpc.Config
 		lis    net.Listener
 	)
-	rpcCfg = xcfg.UnmarshalWithExpect("rpc", rpc.DefaultConfig()).(*rpc.Config)
+	rpcCfg = xcfg.UnmarshalWithExpect("rpcError", rpc.DefaultConfig()).(*rpc.Config)
 	s.err = rpc.DefaultRegistryEtcd(rpcCfg)
 	if s.err != nil {
 		return
@@ -65,21 +58,18 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 	if s.err != nil {
 		return
 	}
-
 	serve := grpc.NewServer(rpc.DefaultOption(rpcCfg)...)
-	//NFilePb.RegisterNFileServiceServer(serve, new(rpc.Server))
-	s.err = serve.Serve(lis)
-	if s.err != nil {
-		return s.err
-	}
+
 	xdefer.Register(func() error {
 		serve.Stop()
 		xconsole.Red("grpc server shutdown success ")
 		return nil
 	})
+	//NFilePb.RegisterNFileServiceServer(serve, new(rpcError.Server))
 	xconsole.Greenf("grpc server start up success:", rpcCfg.Addr())
+	s.err = serve.Serve(lis)
 	s.Wait()
-	return nil
+	return s.err
 }
 
 func (s *Server) initCfg() {
@@ -106,18 +96,6 @@ func (s *Server) invoker() {
 		//xredis.Register("redis"),
 	)
 	s.err = xinvoker.Init()
-}
-
-func (s *Server) initDB(stopCh <-chan struct{}) {
-	if s.err != nil {
-		return
-	}
-	model.MainDB = xgorm.Invoker("main")
-	go func() {
-		<-stopCh
-		d, _ := model.MainDB.DB()
-		_ = d.Close()
-	}()
 }
 
 func (s *Server) initValidator() {

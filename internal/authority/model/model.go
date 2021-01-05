@@ -1,7 +1,17 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	xgorm "github.com/myxy99/component/xinvoker/gorm"
+	"gorm.io/gorm"
+)
 
 var (
-	MainDB *gorm.DB
+	mainDB *gorm.DB
 )
+
+func MainDB() *gorm.DB {
+	if mainDB == nil {
+		mainDB = xgorm.Invoker("main")
+	}
+	return mainDB
+}

@@ -1,5 +1,4 @@
 [server]
-    addr = "0.0.0.0:1124"
     locale = "zh"
 
 [app]
@@ -14,10 +13,11 @@
     password = "root"
     dbName = "ndisk_nuser"
     type = "mysql"
+    port = "3306"
     debug = true
 
 [rpc]
-    etcd_addr="127.0.0.1:2380"
+    etcd_addr="127.0.0.1:2379"
     ip="0.0.0.0"
     port=8484
     register_ttl="10s"

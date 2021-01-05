@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package NUserPb;
+
+service NUserService {
+  //  账号登录
+  rpc AccountLogin(UserLoginRequest)returns(LoginResponse){}
+  //  账号登录-验证码
+  rpc SMSLogin(UserLoginRequest)returns(LoginResponse){}
+  //  注册
+  rpc UserRegister(UserRegisterRequest)returns(NilResponse){}
+  //  注册邮件验证发送邮件
+  //  找回密码发送邮件验证
+  rpc SendEmail(SendEmailRequest)returns(NilResponse){}
+  //  找回密码
+  rpc RetrievePassword(RetrievePasswordRequest)returns(NilResponse){}
+  //  根据id获取用户信息
+  rpc GetUserById(UserInfo)returns(UserInfo){}
+  //  批量获取用户信息 分页
+  rpc GetUserList(PageRequest)returns(UserListResponse){}
+  //  修改用户状态
+  rpc UpdateUserStatus(UserInfo)returns(NilResponse){}
+  //  修改用户信息
+  rpc UpdateUser(UserInfo)returns(NilResponse){}
+  //  批量删除用户
+  rpc DelUsers(UidList)returns(BatchOperationResponse){}
+  //  批量恢复用户
+  rpc RecoverDelUsers(UidList)returns(BatchOperationResponse){}
+  //  批量添加用户
+  rpc CreateUsers(UserList)returns(BatchOperationResponse){}
+  //  用户校验
+  rpc VerifyUsers(Token)returns(UserInfo){}
+}
+
+message UserLoginRequest  {
+  string account = 1;
+  string password = 2;
+}
+
+message UserInfo  {
+  int64 uid = 1;
+  string name = 2;
+  string alias = 3;
+  string email = 4;
+  uint32 status = 5;
+  string password = 6;
+  int64 created_at = 7;
+  int64 updated_at = 8;
+  int64 deleted_at = 9;
+}
+
+message Token  {
+  string account_token = 1;
+  string refresh_token = 2;
+}
+
+message LoginResponse  {
+  UserInfo info = 1;
+  Token token = 2;
+}
+
+message NilResponse{}
+
+message UserRegisterRequest{
+  UserInfo info = 1;
+  string code = 2;
+}
+
+message SendEmailRequest{
+  string email = 1;
+  ActionType type = 2; //0为注册邮件验证发送邮件；1为找回密码发送邮件验证
+}
+
+enum ActionType {
+  Register_Type = 0;
+  Retrieve_Type = 1;
+}
+
+message RetrievePasswordRequest{
+  string email = 1;
+  string password = 2;
+  string code = 3;
+}
+
+message PageRequest{
+  string keyword = 1;
+  uint32 page = 2;
+  uint32 limit = 3;
+  bool is_delete = 4;
+}
+
+message UserListResponse {
+  repeated UserInfo list = 1;
+  uint32 count = 2;
+}
+
+message UidList{
+  repeated uint32 uid = 1;
+}
+
+message UserList{
+  repeated UserInfo list = 1;
+}
+
+message BatchOperationResponse{
+  map<uint32, ResponseMsg > Data = 1;
+}
+
+message ResponseMsg{
+  string msg = 1;
+  bool error = 2;
+}
