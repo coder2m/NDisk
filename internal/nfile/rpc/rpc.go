@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/myxy99/component/pkg/xnet"
 	NFilePb "github.com/myxy99/ndisk/pkg/pb/nfile"
+	"io"
 	"time"
 )
 
@@ -38,7 +39,19 @@ func (c Config) Addr() string {
 type Server struct{}
 
 func (s Server) FileUpload(server NFilePb.NFileService_FileUploadServer) error {
-	panic("implement me")
+	for {
+		r, err := server.Recv()
+		fmt.Println(r.Buffer)
+		if err == io.EOF {
+			return server.SendAndClose(&NFilePb.FileInfo{
+				FileId: "",
+				Hash:   "",
+			})
+		}
+		if err != nil {
+			return err
+		}
+	}
 }
 
 func (s Server) FileDownload(info *NFilePb.FileInfo, server NFilePb.NFileService_FileDownloadServer) error {
