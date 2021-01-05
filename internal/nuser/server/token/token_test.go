@@ -20,7 +20,7 @@ func TestAccessTokenTicket_Create(t *testing.T) {
 	}{
 		{
 			name:    "test1",
-			args:    args{1},
+			args:    args{2},
 			wantErr: false,
 		},
 	}
@@ -33,8 +33,10 @@ func TestAccessTokenTicket_Create(t *testing.T) {
 			if err := a.Encode(tt.args.uid); (err != nil) != tt.wantErr {
 				t.Errorf("Create() error = %v, wantErr %v", err, tt.wantErr)
 			} else {
-				t.Logf("%+v", a)
+				t.Logf("%+v\n\n\n\n", a)
+				t.Log(a.Decode())
 			}
 		})
 	}
+
 }

@@ -9,6 +9,7 @@ require (
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/golang/protobuf v1.4.3
 	github.com/google/uuid v1.1.3
+	github.com/mitchellh/mapstructure v1.4.0
 	github.com/myxy99/component v0.3.4
 	google.golang.org/grpc v1.27.0
 	gorm.io/gorm v1.20.9

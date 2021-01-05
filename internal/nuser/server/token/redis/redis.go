@@ -50,8 +50,18 @@ func (a *AccessToken) CheckAccessToken(ctx context.Context, tokens string) bool 
 	return rToken == tokens
 }
 
-func (a *AccessToken) RefreshAccessToken(ctx context.Context, token string) (resp *token.AccessTokenTicket, err error) {
-	panic("implement me")
+func (a *AccessToken) RefreshAccessToken(ctx context.Context, tokens string) (resp *token.AccessTokenTicket, err error) {
+	t := new(token.AccessTokenTicket)
+	t.RefreshToken = tokens
+	uid, _ := t.Decode()
+	if uid <= 0 {
+		return nil, err
+	}
+	rToken := a.c.Get(ctx, refreshKey.Format(uid)).String()
+	if rToken != tokens {
+
+	}
+	return
 }
 
 func (a *AccessToken) ClearAccessToken(ctx context.Context, uid uint64) (err error) {
