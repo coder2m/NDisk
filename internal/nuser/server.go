@@ -3,6 +3,7 @@ package nuser
 import (
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
+	"github.com/myxy99/component/pkg/xcode"
 	"github.com/myxy99/component/pkg/xconsole"
 	"github.com/myxy99/component/pkg/xdefer"
 	"github.com/myxy99/component/pkg/xflag"
@@ -113,6 +114,7 @@ func (s *Server) govern() {
 		return
 	}
 	xmonitor.Run()
+	xcode.GovernRun()
 	go xgovern.Run()
 }
 

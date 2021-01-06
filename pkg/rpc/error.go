@@ -6,19 +6,27 @@
 package xrpc
 
 import (
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"github.com/myxy99/component/pkg/xcode"
 )
 
 const (
+	//system error
+	MysqlErr = iota + 100
+
 	//业务错误 高于 10000
-	EmptyData codes.Code = iota + 10000
+	EmptyData = iota + 10000
 )
 
-var errDepot = map[codes.Code]string{
-	EmptyData: "数据为找到",
-}
+var (
+	systemErrDepot = []xcode.CodeInfo{
+		{xcode.SystemType, MysqlErr, "mysql 错误"},
+	}
+	businessErrDepot = []xcode.CodeInfo{
+		{xcode.BusinessType, EmptyData, "数据未找到"},
+	}
+)
 
-func NewError(c codes.Code) error {
-	return status.Error(c, errDepot[c])
+func init() {
+	xcode.CodeAdds(systemErrDepot)
+	xcode.CodeAdds(businessErrDepot)
 }

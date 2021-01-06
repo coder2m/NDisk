@@ -3,6 +3,7 @@ package authority
 import (
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
+	"github.com/myxy99/component/pkg/xcode"
 	"github.com/myxy99/component/pkg/xconsole"
 	"github.com/myxy99/component/pkg/xdefer"
 	"github.com/myxy99/component/pkg/xflag"
@@ -46,11 +47,11 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 		s.Done()
 	}()
 	var (
-		rpcCfg *rpc.Config
+		rpcCfg *xrpc.Config
 		lis    net.Listener
 	)
-	rpcCfg = xcfg.UnmarshalWithExpect("rpcError", rpc.DefaultConfig()).(*rpc.Config)
-	s.err = rpc.DefaultRegistryEtcd(rpcCfg)
+	rpcCfg = xcfg.UnmarshalWithExpect("rpcError", xrpc.DefaultConfig()).(*xrpc.Config)
+	s.err = xrpc.DefaultRegistryEtcd(rpcCfg)
 	if s.err != nil {
 		return
 	}
@@ -58,7 +59,7 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 	if s.err != nil {
 		return
 	}
-	serve := grpc.NewServer(rpc.DefaultOption(rpcCfg)...)
+	serve := grpc.NewServer(xrpc.DefaultOption(rpcCfg)...)
 
 	xdefer.Register(func() error {
 		serve.Stop()
@@ -109,6 +110,7 @@ func (s *Server) govern() {
 	if s.err != nil {
 		return
 	}
+	xcode.GovernRun()
 	xmonitor.Run()
 	go xgovern.Run()
 }

@@ -10,6 +10,7 @@ import (
 	"errors"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xcast"
+	"github.com/myxy99/component/pkg/xcode"
 	"github.com/myxy99/component/xlog"
 	"github.com/myxy99/ndisk/internal/nuser/model"
 	"github.com/myxy99/ndisk/internal/nuser/model/user"
@@ -32,13 +33,13 @@ func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequ
 	})
 	if !errors.Is(err, nil) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, xrpc.NewError(xrpc.EmptyData)
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
 		}
 		xlog.Error("AccountLogin", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
 		return nil, err
 	}
 	if !u.CheckPassword(request.Password) {
-		return nil, xrpc.NewError(xrpc.EmptyData)
+		return nil, xcode.BusinessCode(xrpc.EmptyData)
 	}
 	token, err := accessToken.CreateAccessToken(ctx, xcast.ToUint64(u.ID))
 	if !errors.Is(err, nil) {

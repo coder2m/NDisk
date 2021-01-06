@@ -16,6 +16,9 @@
     port = "3306"
     debug = true
 
+[redis.main]
+    addr="127.0.0.1:6379"
+
 [rpc]
     etcd_addr="127.0.0.1:2379"
     ip="0.0.0.0"

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
+	"github.com/myxy99/component/pkg/xcode"
 	"github.com/myxy99/component/pkg/xconsole"
 	"github.com/myxy99/component/pkg/xdefer"
 	"github.com/myxy99/component/pkg/xflag"
@@ -121,6 +122,7 @@ func (s *Server) govern() {
 		return
 	}
 	xmonitor.Run()
+	xcode.GovernRun()
 	go xgovern.Run()
 }
 
@@ -129,12 +131,12 @@ func (s *Server) rpc() {
 		return
 	}
 	var (
-		rpcCfg *rpc.Config
+		rpcCfg *xrpc.Config
 		lis    net.Listener
 	)
-	rpcCfg = xcfg.UnmarshalWithExpect("rpcError", rpc.DefaultConfig()).(*rpc.Config)
+	rpcCfg = xcfg.UnmarshalWithExpect("rpcError", xrpc.DefaultConfig()).(*xrpc.Config)
 
-	s.err = rpc.DefaultRegistryEtcd(rpcCfg)
+	s.err = xrpc.DefaultRegistryEtcd(rpcCfg)
 	if s.err != nil {
 		return
 	}
@@ -144,7 +146,7 @@ func (s *Server) rpc() {
 		return
 	}
 
-	serve := grpc.NewServer(rpc.DefaultOption(rpcCfg)...)
+	serve := grpc.NewServer(xrpc.DefaultOption(rpcCfg)...)
 	NFilePb.RegisterNFileServiceServer(serve, new(rpcServer.Server))
 	go func() {
 		s.err = serve.Serve(lis)

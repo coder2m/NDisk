@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
+	"github.com/myxy99/component/pkg/xcode"
 	"github.com/myxy99/component/pkg/xconsole"
 	"github.com/myxy99/component/pkg/xdefer"
 	"github.com/myxy99/component/pkg/xflag"
@@ -11,6 +12,7 @@ import (
 	"github.com/myxy99/component/xcfg"
 	"github.com/myxy99/component/xcfg/datasource/manager"
 	"github.com/myxy99/component/xgovern"
+	"github.com/myxy99/component/xmonitor"
 	"github.com/myxy99/ndisk/internal/getway/api/v1/registry"
 	myValidator "github.com/myxy99/ndisk/internal/getway/validator"
 	"net/http"
@@ -97,5 +99,7 @@ func (s *Server) govern() {
 	if s.err != nil {
 		return
 	}
+	xcode.GovernRun()
+	xmonitor.Run()
 	go xgovern.Run()
 }
