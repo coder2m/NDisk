@@ -75,12 +75,13 @@ message UserRegisterRequest{
 
 message SendRequest{
   string account = 1;
-  ActionType type = 2; //0为注册邮件验证发送邮件；1为找回密码发送邮件验证
+  ActionType type = 2; //0为注册邮件验证发送邮件；1为找回密码发送邮件验证 2为登录
 }
 
 enum ActionType {
   Register_Type = 0;
   Retrieve_Type = 1;
+  Login_Type = 2;
 }
 
 message RetrievePasswordRequest{

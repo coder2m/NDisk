@@ -18,6 +18,9 @@ const (
 	AccountLoginErrCode
 	ValidationErrCode
 	FrequentOperationErrCode
+	SMSSendErrCode
+	SMSLoginErrCode
+	SendEmailErrCode
 )
 
 var (
@@ -29,6 +32,9 @@ var (
 		{xcode.BusinessType, AccountLoginErrCode, "AccountLogin"},
 		{xcode.BusinessType, ValidationErrCode, "validation error"},
 		{xcode.BusinessType, FrequentOperationErrCode, "frequent operation"},
+		{xcode.BusinessType, SMSSendErrCode, "SMS Send Err"},
+		{xcode.BusinessType, SMSLoginErrCode, "SMS Login Err"},
+		{xcode.BusinessType, SendEmailErrCode, "Send Email Err"},
 	}
 )
 
