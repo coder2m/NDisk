@@ -5,7 +5,14 @@
  **/
 package constant
 
+import "fmt"
+
+type RedisKey string
+
+func (k RedisKey) Format(age ...interface{}) string {
+	return fmt.Sprintf(string(k), age...)
+}
+
 const (
-	TurnOn   = 1
-	Prohibit = 2
+	SendSMS RedisKey = `NUser_SendSMS_%v_%v` //操作类型 用户电话号码
 )

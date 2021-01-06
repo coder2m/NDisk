@@ -16,6 +16,8 @@ const (
 	//业务错误 高于 10000
 	EmptyData = iota + 10000
 	AccountLoginErrCode
+	ValidationErrCode
+	FrequentOperationErrCode
 )
 
 var (
@@ -25,6 +27,8 @@ var (
 	businessErrDepot = []xcode.CodeInfo{
 		{xcode.BusinessType, EmptyData, "数据未找到"},
 		{xcode.BusinessType, AccountLoginErrCode, "AccountLogin"},
+		{xcode.BusinessType, ValidationErrCode, "validation error"},
+		{xcode.BusinessType, FrequentOperationErrCode, "frequent operation"},
 	}
 )
 

@@ -11,7 +11,11 @@ import (
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xcast"
 	"github.com/myxy99/component/pkg/xcode"
+	"github.com/myxy99/component/pkg/xvalidator"
+	xsms "github.com/myxy99/component/xinvoker/sms"
 	"github.com/myxy99/component/xlog"
+	"github.com/myxy99/ndisk/internal/nuser/constant"
+	_map "github.com/myxy99/ndisk/internal/nuser/map"
 	"github.com/myxy99/ndisk/internal/nuser/model"
 	"github.com/myxy99/ndisk/internal/nuser/model/user"
 	redisToken "github.com/myxy99/ndisk/internal/nuser/server/token/redis"
@@ -63,8 +67,27 @@ func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequ
 	}, err
 }
 
-func (s Server) SMSSend(ctx context.Context, request *NUserPb.SendRequest) (*NUserPb.NilResponse, error) {
-	panic("implement me")
+func (s Server) SMSSend(ctx context.Context, request *NUserPb.SendRequest) (nilR *NUserPb.NilResponse, err error) {
+	var phone _map.Phone
+	phone.Number = request.Account
+	err = xvalidator.Struct(phone)
+	if !errors.Is(err, nil) {
+		msg := xvalidator.GetMsg(err)
+		return nilR, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("SMSSend data validation error : %s", msg.Error())
+	}
+	//todo 验证验证码存在
+	if model.MainRedis().Exists(ctx, constant.SendSMS.Format(request.Type, request.Account)).Val() > 0 {
+		return nilR, xcode.BusinessCode(xrpc.FrequentOperationErrCode).SetMsgf("SMSSend frequent operation to phone:%v type:", phone.Number, request.Type)
+	}
+	smsRequest := xsms.SmsRequest{
+		PhoneNumbers:  phone.Number,
+		TemplateParam: "{\"code\":\"2312\"}",
+	}
+	res, err := xsms.Invoker("main").Send(&smsRequest)
+	if !errors.Is(err, nil) || !res.IsSuccess() {
+		xlog.Error("SMSSend", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.Any("smsRequest", smsRequest))
+	}
+	return new(NUserPb.NilResponse), err
 }
 
 func (s Server) SMSLogin(ctx context.Context, request *NUserPb.SMSLoginRequest) (*NUserPb.LoginResponse, error) {

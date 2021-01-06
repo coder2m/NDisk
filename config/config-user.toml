@@ -26,9 +26,9 @@
     password="your-password"
 
 [sms.main]
-    area="smtp.yeah.net"
-    accessKeyId=465
-    accessSecret="yangzzzzzz@yeah.net"
+    area="cn-hangzhou"
+    accessKeyId=""
+    accessSecret=""
 
 [rpc]
     etcd_addr="127.0.0.1:2379"
