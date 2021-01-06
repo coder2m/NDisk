@@ -17,7 +17,7 @@ type User struct {
 	Tel      string `gorm:"type:varchar(11);unique_index;"`
 	Email    string `gorm:"type:varchar(100);unique_index;not null"`
 	Password string `gorm:"not null"`
-	Status   int    `gorm:"DEFAULT:1;not null"`
+	Status   uint32 `gorm:"DEFAULT:1;not null"`
 
 	*gorm.Model
 }

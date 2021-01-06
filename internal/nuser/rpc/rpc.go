@@ -8,10 +8,19 @@ package rpc
 import (
 	"context"
 	"errors"
+	xapp "github.com/myxy99/component"
+	"github.com/myxy99/component/pkg/xcast"
+	"github.com/myxy99/component/xlog"
+	"github.com/myxy99/ndisk/internal/nuser/model"
 	"github.com/myxy99/ndisk/internal/nuser/model/user"
+	redisToken "github.com/myxy99/ndisk/internal/nuser/server/token/redis"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
 	xrpc "github.com/myxy99/ndisk/pkg/rpc"
 	"gorm.io/gorm"
+)
+
+var (
+	accessToken = redisToken.NewAccessToken(model.MainRedis())
 )
 
 type Server struct{}
@@ -21,16 +30,36 @@ func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequ
 	err := u.GetByWhere(map[string][]interface{}{
 		"name = ? or tel =? or email=?": {request.Account, request.Account, request.Account},
 	})
-	if errors.Is(err, nil) {
+	if !errors.Is(err, nil) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, xrpc.NewError(xrpc.EmptyData)
 		}
+		xlog.Error("AccountLogin", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
 		return nil, err
 	}
 	if !u.CheckPassword(request.Password) {
 		return nil, xrpc.NewError(xrpc.EmptyData)
 	}
-	return nil, err
+	token, err := accessToken.CreateAccessToken(ctx, xcast.ToUint64(u.ID))
+	if !errors.Is(err, nil) {
+		xlog.Error("AccountLogin", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
+		return nil, err
+	}
+	return &NUserPb.LoginResponse{
+		Info: &NUserPb.UserInfo{
+			Uid:       xcast.ToUint64(u.ID),
+			Name:      u.Name,
+			Alias:     u.Alias,
+			Email:     u.Email,
+			Status:    u.Status,
+			CreatedAt: xcast.ToUint64(u.CreatedAt.Unix()),
+			UpdatedAt: xcast.ToUint64(u.UpdatedAt.Unix()),
+		},
+		Token: &NUserPb.Token{
+			AccountToken: token.AccessToken,
+			RefreshToken: token.RefreshToken,
+		},
+	}, err
 }
 
 func (s Server) SMSLogin(ctx context.Context, request *NUserPb.UserLoginRequest) (*NUserPb.LoginResponse, error) {

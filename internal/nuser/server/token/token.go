@@ -2,18 +2,18 @@ package token
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/myxy99/component/pkg/xcast"
+	"github.com/myxy99/component/pkg/xjson"
 	"github.com/myxy99/component/xcfg"
-	"strconv"
+	"github.com/myxy99/ndisk/pkg/aes"
 	"time"
 )
 
 const (
 	DefaultAccessKey = "ecol123og1ysK#xo"
-	AccessTokenSalt  = iota + 1
-	RefreshTokenSalt
+	AccessTokenType  = iota + 1
+	RefreshTokenType
 )
 
 type (
@@ -26,6 +26,11 @@ type (
 		AccessTokenKey   string        `mapStructure:"accessTokenKey"`
 		AccessTokenTime  time.Duration `mapStructure:"accessTokenAt"`  //token持续时间
 		RefreshTokenTime time.Duration `mapStructure:"refreshTokenAt"` //刷新token再token过期后多久有效
+	}
+
+	Info struct {
+		Uid  uint64
+		Type uint64
 	}
 
 	AccessToken interface {
@@ -46,60 +51,48 @@ func DefaultAccessTokenConfig() *accessTokenConfig {
 
 var (
 	AccessTokenCfg = xcfg.UnmarshalWithExpect("access.token", DefaultAccessTokenConfig()).(*accessTokenConfig)
+	Aes            = aes.NewAes([]byte(AccessTokenCfg.AccessTokenKey))
+	DecryptErr     = errors.New("token error")
 )
 
 func (a *AccessTokenTicket) Encode(uid uint64) (err error) {
-	now := time.Now()
-	accessTokenClaims := &jwt.StandardClaims{
-		ExpiresAt: now.Add(AccessTokenCfg.AccessTokenTime).Unix(),
-		Id:        strconv.FormatUint(uid, 10),
-		IssuedAt:  now.Unix(),
-		Issuer:    `NDisk_User`,
-		NotBefore: now.Unix(),
-		Subject:   `JWT`,
+	accessTokenInfoB, err := xjson.Marshal(Info{
+		uid,
+		AccessTokenType,
+	})
+	if !errors.Is(err, nil) {
+		return err
 	}
-	accessTokenWithClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, accessTokenClaims)
-	a.AccessToken, err = accessTokenWithClaims.SignedString([]byte(AccessTokenCfg.AccessTokenKey))
+	accessToken, err := Aes.Encrypt(accessTokenInfoB)
+	if !errors.Is(err, nil) {
+		return err
+	}
+	a.AccessToken = base64.StdEncoding.EncodeToString(accessToken)
 
-	refreshTokenClaims := &jwt.StandardClaims{
-		ExpiresAt: now.Add(AccessTokenCfg.AccessTokenTime).Add(AccessTokenCfg.RefreshTokenTime).Unix(),
-		Id:        strconv.FormatUint(uid, 10),
-		IssuedAt:  now.Unix(),
-		Issuer:    `NDisk_User`,
-		NotBefore: now.Unix(),
-		Subject:   `JWT`,
+	refreshTokenInfoB, err := xjson.Marshal(Info{
+		uid,
+		RefreshTokenType,
+	})
+	if !errors.Is(err, nil) {
+		return err
 	}
-	refreshTokenWithClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, refreshTokenClaims)
-	a.RefreshToken, err = refreshTokenWithClaims.SignedString([]byte(AccessTokenCfg.AccessTokenKey))
+	refreshToken, err := Aes.Encrypt(refreshTokenInfoB)
+	if !errors.Is(err, nil) {
+		return err
+	}
+	a.RefreshToken = base64.StdEncoding.EncodeToString(refreshToken)
 	return err
 }
 
-func (a *AccessTokenTicket) Decode() (uid uint64, err error) {
-	if a.RefreshToken == "" && a.AccessToken == "" {
-		return 0, errors.New("nil")
-	}
-	var (
-		token  *jwt.Token
-		secret = func() jwt.Keyfunc {
-			return func(token *jwt.Token) (interface{}, error) {
-				return []byte(AccessTokenCfg.AccessTokenKey), nil
-			}
-		}
-	)
-	if a.AccessToken != "" {
-		token, err = jwt.Parse(a.AccessToken, secret())
-
-	}
-	if a.RefreshToken != "" {
-		token, err = jwt.Parse(a.RefreshToken, secret())
-	}
-	if err != nil {
+func (a *AccessTokenTicket) Decode(token string) (info Info, err error) {
+	tokenB, _ := base64.StdEncoding.DecodeString(token)
+	if !errors.Is(err, nil) {
 		return
 	}
-	claimMap, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		err = errors.New("cannot convert claim to StandardClaims")
+	infoB, err := Aes.Decrypt(tokenB)
+	if !errors.Is(err, nil) {
 		return
 	}
-	return xcast.ToUint64(claimMap["jti"]), err
+	err = xjson.Unmarshal(infoB, &info)
+	return
 }

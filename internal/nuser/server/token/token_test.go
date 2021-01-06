@@ -34,9 +34,10 @@ func TestAccessTokenTicket_Create(t *testing.T) {
 				t.Errorf("Create() error = %v, wantErr %v", err, tt.wantErr)
 			} else {
 				t.Logf("%+v\n\n\n\n", a)
-				t.Log(a.Decode())
+				newtoken := "kljkldjal;skjfaklsdjflksdj;" + a.RefreshToken
+				t.Log(a.Decode(newtoken))
+				t.Log(newtoken)
 			}
 		})
 	}
-
 }

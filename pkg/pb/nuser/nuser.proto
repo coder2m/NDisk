@@ -38,15 +38,15 @@ message UserLoginRequest  {
 }
 
 message UserInfo  {
-  int64 uid = 1;
+  uint64 uid = 1;
   string name = 2;
   string alias = 3;
   string email = 4;
   uint32 status = 5;
   string password = 6;
-  int64 created_at = 7;
-  int64 updated_at = 8;
-  int64 deleted_at = 9;
+  uint64 created_at = 7;
+  uint64 updated_at = 8;
+  uint64 deleted_at = 9;
 }
 
 message Token  {
@@ -103,7 +103,7 @@ message UserList{
 }
 
 message BatchOperationResponse{
-  map<uint32, ResponseMsg > Data = 1;
+  map<uint64, ResponseMsg > Data = 1;
 }
 
 message ResponseMsg{

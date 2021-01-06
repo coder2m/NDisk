@@ -1,4 +1,4 @@
-package redis
+package redisToken
 
 import (
 	"context"
@@ -16,6 +16,12 @@ const (
 
 func (s key) Format(arg uint64) string {
 	return fmt.Sprintf(string(s), arg)
+}
+
+func NewAccessToken(c *redis.Client) *AccessToken {
+	return &AccessToken{
+		c,
+	}
 }
 
 type AccessToken struct {
@@ -40,30 +46,26 @@ func (a *AccessToken) CreateAccessToken(ctx context.Context, uid uint64) (resp *
 }
 
 func (a *AccessToken) CheckAccessToken(ctx context.Context, tokens string) bool {
-	t := new(token.AccessTokenTicket)
-	t.AccessToken = tokens
-	uid, _ := t.Decode()
-	if uid <= 0 {
+	i, _ := new(token.AccessTokenTicket).Decode(tokens)
+	if i.Uid <= 0 || i.Type != token.AccessTokenType {
 		return false
 	}
-	rToken := a.c.Get(ctx, tokenKey.Format(uid)).String()
+	rToken := a.c.Get(ctx, tokenKey.Format(i.Uid)).String()
 	return rToken == tokens
 }
 
 func (a *AccessToken) RefreshAccessToken(ctx context.Context, tokens string) (resp *token.AccessTokenTicket, err error) {
-	t := new(token.AccessTokenTicket)
-	t.RefreshToken = tokens
-	uid, _ := t.Decode()
-	if uid <= 0 {
-		return nil, err
+	i, _ := new(token.AccessTokenTicket).Decode(tokens)
+	if i.Uid <= 0 || i.Type != token.RefreshTokenType {
+		return nil, token.DecryptErr
 	}
-	rToken := a.c.Get(ctx, refreshKey.Format(uid)).String()
+	rToken := a.c.Get(ctx, refreshKey.Format(i.Uid)).String()
 	if rToken != tokens {
-
+		return nil, token.DecryptErr
 	}
-	return
+	return a.CreateAccessToken(ctx, i.Uid)
 }
 
 func (a *AccessToken) ClearAccessToken(ctx context.Context, uid uint64) (err error) {
-	panic("implement me")
+	return a.c.Del(ctx, refreshKey.Format(uid), tokenKey.Format(uid)).Err()
 }
