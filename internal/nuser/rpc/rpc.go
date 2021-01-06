@@ -36,7 +36,7 @@ func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequ
 			return nil, xcode.BusinessCode(xrpc.EmptyData)
 		}
 		xlog.Error("AccountLogin", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
-		return nil, err
+		return nil, xcode.BusinessCode(xrpc.AccountLoginErrCode).SetMsgf("AccountLogin error : %s", err)
 	}
 	if !u.CheckPassword(request.Password) {
 		return nil, xcode.BusinessCode(xrpc.EmptyData)
@@ -44,7 +44,7 @@ func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequ
 	token, err := accessToken.CreateAccessToken(ctx, xcast.ToUint64(u.ID))
 	if !errors.Is(err, nil) {
 		xlog.Error("AccountLogin", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
-		return nil, err
+		return nil, xcode.BusinessCode(xrpc.AccountLoginErrCode).SetMsgf("AccountLogin error : %s", err)
 	}
 	return &NUserPb.LoginResponse{
 		Info: &NUserPb.UserInfo{
@@ -63,15 +63,19 @@ func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequ
 	}, err
 }
 
-func (s Server) SMSLogin(ctx context.Context, request *NUserPb.UserLoginRequest) (*NUserPb.LoginResponse, error) {
+func (s Server) SMSSend(ctx context.Context, request *NUserPb.SendRequest) (*NUserPb.NilResponse, error) {
+	panic("implement me")
+}
+
+func (s Server) SMSLogin(ctx context.Context, request *NUserPb.SMSLoginRequest) (*NUserPb.LoginResponse, error) {
+	panic("implement me")
+}
+
+func (s Server) SendEmail(ctx context.Context, request *NUserPb.SendRequest) (*NUserPb.NilResponse, error) {
 	panic("implement me")
 }
 
 func (s Server) UserRegister(ctx context.Context, request *NUserPb.UserRegisterRequest) (*NUserPb.NilResponse, error) {
-	panic("implement me")
-}
-
-func (s Server) SendEmail(ctx context.Context, request *NUserPb.SendEmailRequest) (*NUserPb.NilResponse, error) {
 	panic("implement me")
 }
 

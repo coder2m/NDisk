@@ -19,6 +19,17 @@
 [redis.main]
     addr="127.0.0.1:6379"
 
+[email.main]
+    host="smtp.yeah.net"
+    port=465
+    username="yangzzzzzz@yeah.net"
+    password="your-password"
+
+[sms.main]
+    area="smtp.yeah.net"
+    accessKeyId=465
+    accessSecret="yangzzzzzz@yeah.net"
+
 [rpc]
     etcd_addr="127.0.0.1:2379"
     ip="0.0.0.0"

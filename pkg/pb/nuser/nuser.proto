@@ -5,14 +5,16 @@ package NUserPb;
 service NUserService {
   //  账号登录
   rpc AccountLogin(UserLoginRequest)returns(LoginResponse){}
+  //  发送 短信
+  rpc SMSSend(SendRequest)returns(NilResponse){}
   //  账号登录-验证码
-  rpc SMSLogin(UserLoginRequest)returns(LoginResponse){}
+  rpc SMSLogin(SMSLoginRequest)returns(LoginResponse){}
   //  注册
   rpc UserRegister(UserRegisterRequest)returns(NilResponse){}
   //  注册邮件验证发送邮件
   //  找回密码发送邮件验证
-  rpc SendEmail(SendEmailRequest)returns(NilResponse){}
-  //  找回密码
+  rpc SendEmail(SendRequest)returns(NilResponse){}
+  //  找回密码 邮件或者电话 都可
   rpc RetrievePassword(RetrievePasswordRequest)returns(NilResponse){}
   //  根据id获取用户信息
   rpc GetUserById(UserInfo)returns(UserInfo){}
@@ -35,6 +37,11 @@ service NUserService {
 message UserLoginRequest  {
   string account = 1;
   string password = 2;
+}
+
+message SMSLoginRequest{
+  string tel = 1;
+  string code = 2;
 }
 
 message UserInfo  {
@@ -66,8 +73,8 @@ message UserRegisterRequest{
   string code = 2;
 }
 
-message SendEmailRequest{
-  string email = 1;
+message SendRequest{
+  string account = 1;
   ActionType type = 2; //0为注册邮件验证发送邮件；1为找回密码发送邮件验证
 }
 
@@ -77,7 +84,7 @@ enum ActionType {
 }
 
 message RetrievePasswordRequest{
-  string email = 1;
+  string account = 1;
   string password = 2;
   string code = 3;
 }

@@ -12,8 +12,10 @@ import (
 	"github.com/myxy99/component/xcfg/datasource/manager"
 	"github.com/myxy99/component/xgovern"
 	"github.com/myxy99/component/xinvoker"
+	xemail "github.com/myxy99/component/xinvoker/email"
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	xredis "github.com/myxy99/component/xinvoker/redis"
+	xsms "github.com/myxy99/component/xinvoker/sms"
 	"github.com/myxy99/component/xmonitor"
 	"github.com/myxy99/ndisk/internal/nuser/rpc"
 	myValidator "github.com/myxy99/ndisk/internal/nuser/validator"
@@ -98,6 +100,8 @@ func (s *Server) invoker() {
 	xinvoker.Register(
 		xgorm.Register("mysql"),
 		xredis.Register("redis"),
+		xemail.Register("email"),
+		xsms.Register("sms"),
 	)
 	s.err = xinvoker.Init()
 }
