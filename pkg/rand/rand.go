@@ -3,6 +3,7 @@ package xrand
 import (
 	"bytes"
 	"crypto/rand"
+	"fmt"
 	"math/big"
 )
 
@@ -13,7 +14,7 @@ func CreateRandomNumber(len int) string {
 
 	for i := 1; i <= len; i++ {
 		random, _ := rand.Int(rand.Reader, big.NewInt(int64(length)))
-		container += string(numbers[random.Int64()])
+		container += fmt.Sprintf("%d", numbers[random.Int64()])
 	}
 	return container
 }

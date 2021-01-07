@@ -8,7 +8,7 @@ import (
 )
 
 func HandleInternalError(ctx *gin.Context) {
-	xlog.Errorw("Internal Error", ctx.Err())
+	xlog.Error("Internal Error", xlog.FieldErr(ctx.Err()), xlog.FieldType("httpserver"))
 	R.Response(ctx, R.InternalError, "Internal Error", nil, http.StatusInternalServerError)
 	return
 }

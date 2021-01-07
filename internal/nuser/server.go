@@ -69,7 +69,9 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 	})
 	NUserPb.RegisterNUserServiceServer(serve, new(rpc.Server))
 	xconsole.Greenf("grpc server start up success:", rpcCfg.Addr())
-	reflection.Register(serve)
+	if xapp.Debug() {
+		reflection.Register(serve)
+	}
 	s.err = serve.Serve(lis)
 	s.Wait()
 	return s.err

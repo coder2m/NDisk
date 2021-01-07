@@ -87,7 +87,7 @@ func (s Server) SMSSend(ctx context.Context, request *NUserPb.SendRequest) (nilR
 		return nilR, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("SMSSend data validation error : %s", msg.Error())
 	}
 	if model.MainRedis().Exists(ctx, constant.SendVerificationCode.Format(request.Type, req.Number)).Val() > 0 {
-		return nilR, xcode.BusinessCode(xrpc.FrequentOperationErrCode).SetMsgf("SMSSend frequent operation to phone:%v type:", req.Number, request.Type)
+		return nilR, xcode.BusinessCode(xrpc.FrequentOperationErrCode).SetMsgf("SMSSend frequent operation to phone:%v type:%+v", req.Number, request.Type)
 	}
 	code := xrand.CreateRandomNumber(constant.VerificationCodeLength)
 	err = model.MainRedis().Set(ctx, constant.SendVerificationCode.Format(request.Type, req.Number), code, constant.VerificationEffectiveTime).Err()
@@ -166,7 +166,7 @@ func (s Server) SendEmail(ctx context.Context, request *NUserPb.SendRequest) (re
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("SendEmail data validation error : %s", msg.Error())
 	}
 	if model.MainRedis().Exists(ctx, constant.SendVerificationCode.Format(request.Type, req.Email)).Val() > 0 {
-		return rep, xcode.BusinessCode(xrpc.FrequentOperationErrCode).SetMsgf("SendEmail frequent operation to email:%v type:", req.Email, request.Type)
+		return rep, xcode.BusinessCode(xrpc.FrequentOperationErrCode).SetMsgf("SendEmail frequent operation to email:%v type:%+v", req.Email, request.Type)
 	}
 	code := xrand.CreateRandomString(constant.VerificationCodeLength)
 	err = model.MainRedis().Set(ctx, constant.SendVerificationCode.Format(request.Type, req.Email), code, constant.VerificationEffectiveTime).Err()
@@ -174,7 +174,7 @@ func (s Server) SendEmail(ctx context.Context, request *NUserPb.SendRequest) (re
 		xlog.Error("SendEmail", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("redis"))
 		return rep, xcode.BusinessCode(xrpc.SendEmailErrCode)
 	}
-	err = xclient.EmailMain().SendEmail([]string{req.Email}, "验证码", fmt.Sprintf("你的验证码是：%v", code))
+	err = xclient.EmailMain().SendEmail([]string{req.Email}, "验证码", fmt.Sprintf("你的验证码是：%s", code))
 	if !errors.Is(err, nil) {
 		xlog.Error("SendEmail", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
 		return rep, xcode.BusinessCode(xrpc.SendEmailErrCode)

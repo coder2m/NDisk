@@ -46,3 +46,7 @@ test
 
 # VSCode
 .vscode
+
+
+# config
+config/*.dev.toml
