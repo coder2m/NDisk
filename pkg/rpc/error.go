@@ -21,6 +21,10 @@ const (
 	SMSSendErrCode
 	SMSLoginErrCode
 	SendEmailErrCode
+	UserRegisterErrCode
+	RetrievePasswordErrCode
+	GetUserByIdErrCode
+	GetUserListErrCode
 )
 
 var (
@@ -35,6 +39,10 @@ var (
 		{xcode.BusinessType, SMSSendErrCode, "SMS Send Err"},
 		{xcode.BusinessType, SMSLoginErrCode, "SMS Login Err"},
 		{xcode.BusinessType, SendEmailErrCode, "Send Email Err"},
+		{xcode.BusinessType, UserRegisterErrCode, "User Register Err"},
+		{xcode.BusinessType, RetrievePasswordErrCode, "User Register Err"},
+		{xcode.BusinessType, GetUserByIdErrCode, "GetUserByIdErrCode Err"},
+		{xcode.BusinessType, GetUserListErrCode, "GetUserListErrCode Err"},
 	}
 )
 

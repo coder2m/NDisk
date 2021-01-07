@@ -48,12 +48,13 @@ message UserInfo  {
   uint64 uid = 1;
   string name = 2;
   string alias = 3;
-  string email = 4;
-  uint32 status = 5;
-  string password = 6;
-  uint64 created_at = 7;
-  uint64 updated_at = 8;
-  uint64 deleted_at = 9;
+  string Tel = 4;
+  string email = 5;
+  uint32 status = 6;
+  string password = 7;
+  uint64 created_at = 8;
+  uint64 updated_at = 9;
+  uint64 deleted_at = 10;
 }
 
 message Token  {

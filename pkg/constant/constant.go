@@ -12,7 +12,7 @@ func (k RedisKey) Format(age ...interface{}) string {
 }
 
 const (
-	SendSMS RedisKey = `NUser_SendSMS_%v_%v` //操作类型 用户电话号码
+	SendVerificationCode RedisKey = `NUser_SendSMS_%v_%v` //操作类型 用户电话号码
 )
 
 const (

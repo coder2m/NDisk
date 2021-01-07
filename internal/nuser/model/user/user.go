@@ -6,6 +6,7 @@
 package user
 
 import (
+	"context"
 	"github.com/myxy99/ndisk/internal/nuser/model"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -26,27 +27,27 @@ func (m *User) TableName() string {
 	return "user"
 }
 
-func (m *User) Add() error {
-	return model.MainDB().Table(m.TableName()).Create(m).Error
+func (m *User) Add(ctx context.Context) error {
+	return model.MainDB().Table(m.TableName()).WithContext(ctx).Create(m).Error
 }
-func (m *User) Del(wheres map[string]interface{}) error {
-	return model.MainDB().Table(m.TableName()).Where(wheres).Delete(m).Error
+func (m *User) Del(ctx context.Context, wheres map[string]interface{}) error {
+	return model.MainDB().Table(m.TableName()).WithContext(ctx).Where(wheres).Delete(m).Error
 }
-func (m *User) GetAll(data *[]User, wheres map[string][]interface{}) (err error) {
-	db := model.MainDB().Table(m.TableName())
+func (m *User) GetAll(ctx context.Context, data *[]User, wheres map[string][]interface{}) (err error) {
+	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
 	err = db.Find(&data).Error
 	return
 }
-func (m *User) Get(start int, size int, data *[]User, wheres map[string][]interface{}, isDelete bool) (total int64, err error) {
-	db := model.MainDB().Table(m.TableName())
+func (m *User) Get(ctx context.Context, start int, size int, data *[]User, wheres map[string][]interface{}, isDelete bool) (total int64, err error) {
+	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
 	if isDelete {
-		db = db.Unscoped().Where("interface.deleted_at is not null")
+		db = db.Unscoped().Where("deleted_at is not null")
 	} else {
 		db = db.Where(map[string]interface{}{"deleted_at": nil})
 	}
@@ -55,32 +56,44 @@ func (m *User) Get(start int, size int, data *[]User, wheres map[string][]interf
 	return
 }
 
-func (m *User) GetById() error {
-	return model.MainDB().Table(m.TableName()).First(m).Error
+func (m *User) GetById(ctx context.Context, IgnoreDel bool) error {
+	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	if !IgnoreDel {
+		db = db.Unscoped()
+	}
+	return db.First(m).Error
 }
 
-func (m *User) GetByWhere(wheres map[string][]interface{}) error {
-	db := model.MainDB().Table(m.TableName())
+func (m *User) GetByWhere(ctx context.Context, wheres map[string][]interface{}) error {
+	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
 	return db.First(m).Error
 }
 
-func (m *User) UpdateWhere(wheres map[string][]interface{}) error {
-	db := model.MainDB().Table(m.TableName())
+func (m *User) UpdatesWhere(ctx context.Context, wheres map[string][]interface{}) error {
+	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
 	return db.Updates(m).Error
 }
 
-func (m *User) UpdateStatus(status int) error {
-	return model.MainDB().Table(m.TableName()).Where("id=?", m.ID).Update("status", status).Error
+func (m *User) UpdateWhere(ctx context.Context, wheres map[string][]interface{}, column string, value interface{}) error {
+	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	for s, i := range wheres {
+		db = db.Where(s, i...)
+	}
+	return db.Update(column, value).Error
 }
 
-func (m *User) DelRes(wheres map[string][]interface{}) error {
-	db := model.MainDB().Table(m.TableName())
+func (m *User) UpdateStatus(ctx context.Context, status int) error {
+	return model.MainDB().Table(m.TableName()).WithContext(ctx).Where("id=?", m.ID).Update("status", status).Error
+}
+
+func (m *User) DelRes(ctx context.Context, wheres map[string][]interface{}) error {
+	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}

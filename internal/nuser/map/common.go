@@ -11,8 +11,8 @@ var DefaultPageRequest = PageList{
 }
 
 type PageList struct {
-	Page     int    `json:"page" form:"page" validate:"required,number" label:"页码"`
-	PageSize int    `json:"page_size" form:"page_size" validate:"required,number" label:"页码大小"`
+	Page     uint32 `json:"page" form:"page" validate:"required,number" label:"页码"`
+	PageSize uint32 `json:"page_size" form:"page_size" validate:"required,number" label:"页码大小"`
 	Keyword  string `json:"keyword" form:"keyword"`
 	IsDelete bool   `json:"is_delete" form:"is_delete"`
 }
