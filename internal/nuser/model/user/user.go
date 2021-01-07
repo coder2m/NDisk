@@ -30,8 +30,23 @@ func (m *User) TableName() string {
 func (m *User) Add(ctx context.Context) error {
 	return model.MainDB().Table(m.TableName()).WithContext(ctx).Create(m).Error
 }
-func (m *User) Del(ctx context.Context, wheres map[string]interface{}) error {
-	return model.MainDB().Table(m.TableName()).WithContext(ctx).Where(wheres).Delete(m).Error
+
+func (m *User) Adds(ctx context.Context, data []User) (count int64, err error) {
+	tx := model.MainDB().Table(m.TableName()).WithContext(ctx).CreateInBatches(data, 200)
+	err = tx.Error
+	count = tx.RowsAffected
+	return
+}
+
+func (m *User) Del(ctx context.Context, wheres map[string][]interface{}) (count int64, err error) {
+	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	for s, i := range wheres {
+		db = db.Where(s, i...)
+	}
+	tx := db.Delete(m)
+	err = tx.Error
+	count = tx.RowsAffected
+	return
 }
 func (m *User) GetAll(ctx context.Context, data *[]User, wheres map[string][]interface{}) (err error) {
 	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
@@ -88,16 +103,19 @@ func (m *User) UpdateWhere(ctx context.Context, wheres map[string][]interface{},
 	return db.Update(column, value).Error
 }
 
-func (m *User) UpdateStatus(ctx context.Context, status int) error {
+func (m *User) UpdateStatus(ctx context.Context, status uint32) error {
 	return model.MainDB().Table(m.TableName()).WithContext(ctx).Where("id=?", m.ID).Update("status", status).Error
 }
 
-func (m *User) DelRes(ctx context.Context, wheres map[string][]interface{}) error {
+func (m *User) DelRes(ctx context.Context, wheres map[string][]interface{}) (count int64, err error) {
 	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
-	return db.Update("deleted_at", nil).Error
+	tx := db.Update("deleted_at", nil)
+	err = tx.Error
+	count = tx.RowsAffected
+	return
 }
 
 func (m *User) CheckPassword(password string) bool {

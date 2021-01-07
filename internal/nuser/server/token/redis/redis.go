@@ -69,3 +69,7 @@ func (a *AccessToken) RefreshAccessToken(ctx context.Context, tokens string) (re
 func (a *AccessToken) ClearAccessToken(ctx context.Context, uid uint64) (err error) {
 	return a.c.Del(ctx, refreshKey.Format(uid), tokenKey.Format(uid)).Err()
 }
+
+func (a *AccessToken) DecoderAccessToken(ctx context.Context, tokens string) (info *token.Info, err error) {
+	return new(token.AccessTokenTicket).Decode(tokens)
+}

@@ -25,6 +25,13 @@ const (
 	RetrievePasswordErrCode
 	GetUserByIdErrCode
 	GetUserListErrCode
+	UpdateUserStatusErrCode
+	UpdateUserErrCode
+	DelUsersErrCode
+	RecoverDelUsersErrCode
+	CreateUsersErrCode
+	VerifyUsersTokenErrCode
+	RefreshTokenErrCode
 )
 
 var (
@@ -43,6 +50,13 @@ var (
 		{xcode.BusinessType, RetrievePasswordErrCode, "User Register Err"},
 		{xcode.BusinessType, GetUserByIdErrCode, "GetUserByIdErrCode Err"},
 		{xcode.BusinessType, GetUserListErrCode, "GetUserListErrCode Err"},
+		{xcode.BusinessType, UpdateUserStatusErrCode, "UpdateUserStatus Err"},
+		{xcode.BusinessType, UpdateUserErrCode, "UpdateUser Err"},
+		{xcode.BusinessType, DelUsersErrCode, "DelUsers Err"},
+		{xcode.BusinessType, RecoverDelUsersErrCode, "RecoverDelUsers Err"},
+		{xcode.BusinessType, CreateUsersErrCode, "CreateUsers Err"},
+		{xcode.BusinessType, VerifyUsersTokenErrCode, "VerifyUsers Token Err"},
+		{xcode.BusinessType, RefreshTokenErrCode, "RefreshToken Token Err"},
 	}
 )
 

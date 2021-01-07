@@ -19,12 +19,14 @@ import (
 	_map "github.com/myxy99/ndisk/internal/nuser/map"
 	"github.com/myxy99/ndisk/internal/nuser/model"
 	"github.com/myxy99/ndisk/internal/nuser/model/user"
+	"github.com/myxy99/ndisk/internal/nuser/server/token"
 	redisToken "github.com/myxy99/ndisk/internal/nuser/server/token/redis"
 	"github.com/myxy99/ndisk/pkg/constant"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
 	xrand "github.com/myxy99/ndisk/pkg/rand"
 	xrpc "github.com/myxy99/ndisk/pkg/rpc"
 	"gorm.io/gorm"
+	"strings"
 )
 
 var (
@@ -124,6 +126,7 @@ func (s Server) SMSLogin(ctx context.Context, request *NUserPb.SMSLoginRequest) 
 	if code != req.Code {
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("code Mismatch")
 	}
+	model.MainRedis().Del(ctx, constant.SendVerificationCode.Format(NUserPb.ActionType_Login_Type, req.Tel))
 	u := new(user.User)
 	err = u.GetByWhere(ctx, map[string][]interface{}{
 		"tel =?": {req.Tel},
@@ -133,12 +136,12 @@ func (s Server) SMSLogin(ctx context.Context, request *NUserPb.SMSLoginRequest) 
 			return nil, xcode.BusinessCode(xrpc.EmptyData)
 		}
 		xlog.Error("SMSLogin", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.SMSLoginErrCode).SetMsgf("SMSLogin error : %s", err)
+		return nil, xcode.BusinessCode(xrpc.SMSLoginErrCode).SetMsgf("SMSLogin error : %s", err.Error())
 	}
-	token, err := accessToken.CreateAccessToken(ctx, xcast.ToUint64(u.ID))
+	createAccessToken, err := accessToken.CreateAccessToken(ctx, xcast.ToUint64(u.ID))
 	if !errors.Is(err, nil) {
 		xlog.Error("SMSLogin", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
-		return nil, xcode.BusinessCode(xrpc.SMSLoginErrCode).SetMsgf("SMSLogin error : %s", err)
+		return nil, xcode.BusinessCode(xrpc.SMSLoginErrCode).SetMsgf("SMSLogin error : %s", err.Error())
 	}
 	return &NUserPb.LoginResponse{
 		Info: &NUserPb.UserInfo{
@@ -152,8 +155,8 @@ func (s Server) SMSLogin(ctx context.Context, request *NUserPb.SMSLoginRequest) 
 			UpdatedAt: xcast.ToUint64(u.UpdatedAt.Unix()),
 		},
 		Token: &NUserPb.Token{
-			AccountToken: token.AccessToken,
-			RefreshToken: token.RefreshToken,
+			AccountToken: createAccessToken.AccessToken,
+			RefreshToken: createAccessToken.RefreshToken,
 		},
 	}, xcode.OK
 }
@@ -201,6 +204,7 @@ func (s Server) UserRegister(ctx context.Context, request *NUserPb.UserRegisterR
 	if code != req.Code {
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("code Mismatch")
 	}
+	model.MainRedis().Del(ctx, constant.SendVerificationCode.Format(NUserPb.ActionType_Register_Type, req.Tel))
 	var u = &user.User{Name: req.Name, Alias: req.Alias, Tel: req.Tel, Email: req.Email, Password: req.Password}
 	err = u.SetPassword()
 	err = u.Add(ctx)
@@ -236,7 +240,7 @@ func (s Server) RetrievePassword(ctx context.Context, request *NUserPb.RetrieveP
 			return nil, xcode.BusinessCode(xrpc.EmptyData)
 		}
 		xlog.Error("RetrievePassword", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.RetrievePasswordErrCode).SetMsgf("RetrievePassword error : %s", err)
+		return nil, xcode.BusinessCode(xrpc.RetrievePasswordErrCode).SetMsgf("RetrievePassword error : %s", err.Error())
 	}
 	u.Password = req.Password
 	err = u.SetPassword()
@@ -245,7 +249,7 @@ func (s Server) RetrievePassword(ctx context.Context, request *NUserPb.RetrieveP
 	}, "password", u.Password)
 	if !errors.Is(err, nil) {
 		xlog.Error("RetrievePassword", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.RetrievePasswordErrCode).SetMsgf("RetrievePassword error : %s", err)
+		return nil, xcode.BusinessCode(xrpc.RetrievePasswordErrCode).SetMsgf("RetrievePassword error : %s", err.Error())
 	}
 	return rep, xcode.OK
 }
@@ -263,8 +267,11 @@ func (s Server) GetUserById(ctx context.Context, info *NUserPb.UserInfo) (rep *N
 	u.ID = req.Id
 	err = u.GetById(ctx, false)
 	if !errors.Is(err, nil) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return rep, xcode.BusinessCode(xrpc.EmptyData)
+		}
 		xlog.Error("GetUserById", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.GetUserByIdErrCode).SetMsgf("GetUserById error : %s", err)
+		return rep, xcode.BusinessCode(xrpc.GetUserByIdErrCode).SetMsgf("GetUserById error : %s", err.Error())
 	}
 	return &NUserPb.UserInfo{
 		Uid:       xcast.ToUint64(u.ID),
@@ -276,7 +283,7 @@ func (s Server) GetUserById(ctx context.Context, info *NUserPb.UserInfo) (rep *N
 		CreatedAt: xcast.ToUint64(u.CreatedAt.Unix()),
 		UpdatedAt: xcast.ToUint64(u.UpdatedAt.Unix()),
 		DeletedAt: xcast.ToUint64(u.DeletedAt.Time.Unix()),
-	}, err
+	}, xcode.OK
 }
 
 func (s Server) GetUserList(ctx context.Context, request *NUserPb.PageRequest) (rep *NUserPb.UserListResponse, err error) {
@@ -297,8 +304,11 @@ func (s Server) GetUserList(ctx context.Context, request *NUserPb.PageRequest) (
 	}
 	total, err := new(user.User).Get(ctx, xcast.ToInt(req.PageSize*(req.Page-1)), xcast.ToInt(req.PageSize), &data, where, req.IsDelete)
 	if !errors.Is(err, nil) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
+		}
 		xlog.Error("GetUserList", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.GetUserListErrCode).SetMsgf("GetUserList error : %s", err)
+		return nil, xcode.BusinessCode(xrpc.GetUserListErrCode).SetMsgf("GetUserList error : %s", err.Error())
 	}
 	var userList = make([]*NUserPb.UserInfo, len(data))
 	for i, datum := range data {
@@ -317,29 +327,160 @@ func (s Server) GetUserList(ctx context.Context, request *NUserPb.PageRequest) (
 	return &NUserPb.UserListResponse{
 		List:  userList,
 		Count: xcast.ToUint32(total),
-	}, err
+	}, xcode.OK
 }
 
-func (s Server) UpdateUserStatus(ctx context.Context, info *NUserPb.UserInfo) (*NUserPb.NilResponse, error) {
-	panic("implement me")
+func (s Server) UpdateUserStatus(ctx context.Context, info *NUserPb.UserInfo) (rep *NUserPb.NilResponse, err error) {
+	req := _map.UpdateUserStatus{
+		Uid:    info.Uid,
+		Status: info.Status,
+	}
+	err = xvalidator.Struct(req)
+	if !errors.Is(err, nil) {
+		msg := xvalidator.GetMsg(err)
+		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("UpdateUserStatus data validation error : %s", msg.Error())
+	}
+	u := new(user.User)
+	u.ID = xcast.ToUint(req.Uid)
+	err = u.UpdateStatus(ctx, req.Status)
+	if !errors.Is(err, nil) {
+		xlog.Error("UpdateUserStatus", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return nil, xcode.BusinessCode(xrpc.UpdateUserStatusErrCode).SetMsgf("UpdateUserStatus error : %s", err.Error())
+	}
+	return rep, xcode.OK
 }
 
-func (s Server) UpdateUser(ctx context.Context, info *NUserPb.UserInfo) (*NUserPb.NilResponse, error) {
-	panic("implement me")
+func (s Server) UpdateUser(ctx context.Context, info *NUserPb.UserInfo) (rep *NUserPb.NilResponse, err error) {
+	req := _map.UpdateUser{
+		Uid:      info.Uid,
+		Name:     info.Name,
+		Alias:    info.Alias,
+		Email:    info.Email,
+		Tel:      info.Tel,
+		Password: info.Password,
+	}
+	err = xvalidator.Struct(req)
+	if !errors.Is(err, nil) {
+		msg := xvalidator.GetMsg(err)
+		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("UpdateUser data validation error : %s", msg.Error())
+	}
+	u := &user.User{
+		Name:     req.Name,
+		Alias:    req.Alias,
+		Tel:      req.Tel,
+		Email:    req.Email,
+		Password: req.Password,
+	}
+	if u.Password != "" {
+		_ = u.SetPassword()
+	}
+	err = u.UpdatesWhere(ctx, map[string][]interface{}{"id=?": {req.Uid}})
+	if !errors.Is(err, nil) {
+		xlog.Error("UpdateUser", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return nil, xcode.BusinessCode(xrpc.UpdateUserErrCode).SetMsgf("UpdateUser error : %s", err.Error())
+	}
+	return rep, xcode.OK
 }
 
-func (s Server) DelUsers(ctx context.Context, list *NUserPb.UidList) (*NUserPb.BatchOperationResponse, error) {
-	panic("implement me")
+func (s Server) DelUsers(ctx context.Context, list *NUserPb.UidList) (rep *NUserPb.ChangeNumResponse, err error) {
+	if len(list.Uid) <= 0 {
+		return rep, err
+	}
+	var data = make([]string, len(list.Uid))
+	for i, u := range list.Uid {
+		data[i] = xcast.ToString(u)
+	}
+	where := map[string][]interface{}{
+		"id IN (?)": {strings.Join(data, ",")},
+	}
+	count, err := new(user.User).Del(ctx, where)
+	if !errors.Is(err, nil) {
+		xlog.Error("DelUsers", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return nil, xcode.BusinessCode(xrpc.DelUsersErrCode).SetMsgf("DelUsers error : %s", err.Error())
+	}
+	rep = new(NUserPb.ChangeNumResponse)
+	rep.Count = xcast.ToUint32(count)
+	return rep, xcode.OK
 }
 
-func (s Server) RecoverDelUsers(ctx context.Context, list *NUserPb.UidList) (*NUserPb.BatchOperationResponse, error) {
-	panic("implement me")
+func (s Server) RecoverDelUsers(ctx context.Context, list *NUserPb.UidList) (rep *NUserPb.ChangeNumResponse, err error) {
+	if len(list.Uid) <= 0 {
+		return rep, err
+	}
+	var data = make([]string, len(list.Uid))
+	for i, u := range list.Uid {
+		data[i] = xcast.ToString(u)
+	}
+	where := map[string][]interface{}{
+		"id IN (?)": {strings.Join(data, ",")},
+	}
+	count, err := new(user.User).DelRes(ctx, where)
+	if !errors.Is(err, nil) {
+		xlog.Error("RecoverDelUsers", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return nil, xcode.BusinessCode(xrpc.RecoverDelUsersErrCode).SetMsgf("RecoverDelUsers error : %s", err.Error())
+	}
+	rep = new(NUserPb.ChangeNumResponse)
+	rep.Count = xcast.ToUint32(count)
+	return rep, xcode.OK
 }
 
-func (s Server) CreateUsers(ctx context.Context, list *NUserPb.UserList) (*NUserPb.BatchOperationResponse, error) {
-	panic("implement me")
+func (s Server) CreateUsers(ctx context.Context, list *NUserPb.UserList) (rep *NUserPb.ChangeNumResponse, err error) {
+	if len(list.List) <= 0 {
+		return rep, err
+	}
+	var data = make([]user.User, len(list.List))
+	for i, info := range list.List {
+		data[i] = user.User{
+			Name:     info.Name,
+			Alias:    info.Alias,
+			Tel:      info.Tel,
+			Email:    info.Email,
+			Password: info.Password,
+		}
+		_ = data[i].SetPassword()
+	}
+	count, err := new(user.User).Adds(ctx, data)
+	if !errors.Is(err, nil) {
+		xlog.Error("CreateUsers", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return nil, xcode.BusinessCode(xrpc.RecoverDelUsersErrCode).SetMsgf("CreateUsers error : %s", err.Error())
+	}
+	rep = new(NUserPb.ChangeNumResponse)
+	rep.Count = xcast.ToUint32(count)
+	return rep, xcode.OK
 }
 
-func (s Server) VerifyUsers(ctx context.Context, list *NUserPb.Token) (*NUserPb.UserInfo, error) {
-	panic("implement me")
+func (s Server) VerifyUsers(ctx context.Context, list *NUserPb.Token) (rep *NUserPb.UserInfo, err error) {
+	req := _map.UserToken{
+		Token: list.AccountToken,
+	}
+	err = xvalidator.Struct(req)
+	if !errors.Is(err, nil) {
+		msg := xvalidator.GetMsg(err)
+		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("VerifyUsers data validation error : %s", msg.Error())
+	}
+	i, _ := accessToken.DecoderAccessToken(ctx, req.Token)
+	if i.Uid <= 0 || i.Type != token.AccessTokenType {
+		return rep, xcode.BusinessCode(xrpc.VerifyUsersTokenErrCode)
+	}
+	return s.GetUserById(ctx, &NUserPb.UserInfo{Uid: i.Uid})
+}
+
+func (s Server) RefreshToken(ctx context.Context, list *NUserPb.Token) (rep *NUserPb.Token, err error) {
+	req := _map.UserToken{
+		Token: list.RefreshToken,
+	}
+	err = xvalidator.Struct(req)
+	if !errors.Is(err, nil) {
+		msg := xvalidator.GetMsg(err)
+		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("RefreshToken data validation error : %s", msg.Error())
+	}
+	refreshAccessToken, err := accessToken.RefreshAccessToken(ctx, req.Token)
+	if !errors.Is(err, nil) {
+		xlog.Error("RefreshToken", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
+		return nil, xcode.BusinessCode(xrpc.RefreshTokenErrCode).SetMsgf("RefreshToken error : %s", err.Error())
+	}
+	return &NUserPb.Token{
+		AccountToken: refreshAccessToken.AccessToken,
+		RefreshToken: refreshAccessToken.RefreshToken,
+	}, xcode.OK
 }

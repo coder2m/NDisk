@@ -25,13 +25,19 @@ service NUserService {
   //  修改用户信息
   rpc UpdateUser(UserInfo)returns(NilResponse){}
   //  批量删除用户
-  rpc DelUsers(UidList)returns(BatchOperationResponse){}
+  rpc DelUsers(UidList)returns(ChangeNumResponse){}
   //  批量恢复用户
-  rpc RecoverDelUsers(UidList)returns(BatchOperationResponse){}
+  rpc RecoverDelUsers(UidList)returns(ChangeNumResponse){}
   //  批量添加用户
-  rpc CreateUsers(UserList)returns(BatchOperationResponse){}
+  rpc CreateUsers(UserList)returns(ChangeNumResponse){}
   //  用户校验
   rpc VerifyUsers(Token)returns(UserInfo){}
+  //  刷新token
+  rpc RefreshToken(Token)returns(Token){}
+}
+
+message ChangeNumResponse {
+  uint32 count = 1;
 }
 
 message UserLoginRequest  {
@@ -109,13 +115,4 @@ message UidList{
 
 message UserList{
   repeated UserInfo list = 1;
-}
-
-message BatchOperationResponse{
-  map<uint64, ResponseMsg > Data = 1;
-}
-
-message ResponseMsg{
-  string msg = 1;
-  bool error = 2;
 }

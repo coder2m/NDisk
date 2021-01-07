@@ -37,6 +37,7 @@ type (
 		CreateAccessToken(ctx context.Context, uid uint64) (resp *AccessTokenTicket, err error)
 		CheckAccessToken(ctx context.Context, token string) bool
 		RefreshAccessToken(ctx context.Context, token string) (resp *AccessTokenTicket, err error)
+		DecoderAccessToken(ctx context.Context, token string) (resp *Info, err error)
 		ClearAccessToken(ctx context.Context, uid uint64) (err error)
 	}
 )
@@ -84,7 +85,7 @@ func (a *AccessTokenTicket) Encode(uid uint64) (err error) {
 	return err
 }
 
-func (a *AccessTokenTicket) Decode(token string) (info Info, err error) {
+func (a *AccessTokenTicket) Decode(token string) (info *Info, err error) {
 	tokenB, _ := base64.StdEncoding.DecodeString(token)
 	if !errors.Is(err, nil) {
 		return
@@ -93,6 +94,6 @@ func (a *AccessTokenTicket) Decode(token string) (info Info, err error) {
 	if !errors.Is(err, nil) {
 		return
 	}
-	err = xjson.Unmarshal(infoB, &info)
+	err = xjson.Unmarshal(infoB, info)
 	return
 }
