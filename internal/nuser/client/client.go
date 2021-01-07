@@ -3,11 +3,15 @@ package xclient
 import (
 	xemail "github.com/myxy99/component/xinvoker/email"
 	xsms "github.com/myxy99/component/xinvoker/sms"
+	"github.com/myxy99/ndisk/internal/nuser/model"
+	"github.com/myxy99/ndisk/internal/nuser/server/token"
+	redisToken "github.com/myxy99/ndisk/internal/nuser/server/token/redis"
 )
 
 var (
-	emailMain *xemail.Email
-	smsMain   *xsms.Client
+	emailMain        *xemail.Email
+	smsMain          *xsms.Client
+	redisAccessToken token.AccessToken
 )
 
 func EmailMain() *xemail.Email {
@@ -22,4 +26,11 @@ func SMSMain() *xsms.Client {
 		smsMain = xsms.Invoker("main")
 	}
 	return smsMain
+}
+
+func RedisToken() token.AccessToken {
+	if redisAccessToken == nil {
+		redisToken.NewAccessToken(model.MainRedis())
+	}
+	return redisAccessToken
 }

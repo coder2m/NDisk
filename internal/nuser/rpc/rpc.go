@@ -20,17 +20,12 @@ import (
 	"github.com/myxy99/ndisk/internal/nuser/model"
 	"github.com/myxy99/ndisk/internal/nuser/model/user"
 	"github.com/myxy99/ndisk/internal/nuser/server/token"
-	redisToken "github.com/myxy99/ndisk/internal/nuser/server/token/redis"
 	"github.com/myxy99/ndisk/pkg/constant"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
 	xrand "github.com/myxy99/ndisk/pkg/rand"
 	xrpc "github.com/myxy99/ndisk/pkg/rpc"
 	"gorm.io/gorm"
 	"strings"
-)
-
-var (
-	accessToken = redisToken.NewAccessToken(model.MainRedis())
 )
 
 type Server struct{}
@@ -54,15 +49,15 @@ func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequ
 			return nil, xcode.BusinessCode(xrpc.EmptyData)
 		}
 		xlog.Error("AccountLogin", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.AccountLoginErrCode).SetMsgf("AccountLogin error : %s", err)
+		return nil, xcode.BusinessCode(xrpc.AccountLoginErrCode)
 	}
 	if !u.CheckPassword(request.Password) {
 		return nil, xcode.BusinessCode(xrpc.EmptyData)
 	}
-	token, err := accessToken.CreateAccessToken(ctx, xcast.ToUint64(u.ID))
+	createAccessToken, err := xclient.RedisToken().CreateAccessToken(ctx, xcast.ToUint64(u.ID))
 	if !errors.Is(err, nil) {
 		xlog.Error("AccountLogin", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
-		return nil, xcode.BusinessCode(xrpc.AccountLoginErrCode).SetMsgf("AccountLogin error : %s", err)
+		return nil, xcode.BusinessCode(xrpc.AccountLoginErrCode)
 	}
 	return &NUserPb.LoginResponse{
 		Info: &NUserPb.UserInfo{
@@ -76,8 +71,8 @@ func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequ
 			UpdatedAt: xcast.ToUint64(u.UpdatedAt.Unix()),
 		},
 		Token: &NUserPb.Token{
-			AccountToken: token.AccessToken,
-			RefreshToken: token.RefreshToken,
+			AccountToken: createAccessToken.AccessToken,
+			RefreshToken: createAccessToken.RefreshToken,
 		},
 	}, xcode.OK
 }
@@ -98,7 +93,7 @@ func (s Server) SMSSend(ctx context.Context, request *NUserPb.SendRequest) (nilR
 	err = model.MainRedis().Set(ctx, constant.SendVerificationCode.Format(request.Type, req.Number), code, constant.VerificationEffectiveTime).Err()
 	if !errors.Is(err, nil) {
 		xlog.Error("SMSSend", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("redis"))
-		return nilR, xcode.BusinessCode(xrpc.SMSSendErrCode).SetMsgf("SMSSend Send error : %s", err.Error())
+		return nilR, xcode.BusinessCode(xrpc.SMSSendErrCode)
 	}
 	smsRequest := xsms.SmsRequest{
 		PhoneNumbers:  req.Number,
@@ -107,7 +102,7 @@ func (s Server) SMSSend(ctx context.Context, request *NUserPb.SendRequest) (nilR
 	res, err := xclient.SMSMain().Send(&smsRequest)
 	if !errors.Is(err, nil) || !res.IsSuccess() {
 		xlog.Error("SMSSend", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.Any("smsRequest", smsRequest))
-		return nilR, xcode.BusinessCode(xrpc.SMSSendErrCode).SetMsgf("SMSSend Send error : %s", err.Error())
+		return nilR, xcode.BusinessCode(xrpc.SMSSendErrCode)
 	}
 	return nilR, xcode.OK
 }
@@ -136,12 +131,12 @@ func (s Server) SMSLogin(ctx context.Context, request *NUserPb.SMSLoginRequest) 
 			return nil, xcode.BusinessCode(xrpc.EmptyData)
 		}
 		xlog.Error("SMSLogin", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.SMSLoginErrCode).SetMsgf("SMSLogin error : %s", err.Error())
+		return nil, xcode.BusinessCode(xrpc.SMSLoginErrCode)
 	}
-	createAccessToken, err := accessToken.CreateAccessToken(ctx, xcast.ToUint64(u.ID))
+	createAccessToken, err := xclient.RedisToken().CreateAccessToken(ctx, xcast.ToUint64(u.ID))
 	if !errors.Is(err, nil) {
 		xlog.Error("SMSLogin", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
-		return nil, xcode.BusinessCode(xrpc.SMSLoginErrCode).SetMsgf("SMSLogin error : %s", err.Error())
+		return nil, xcode.BusinessCode(xrpc.SMSLoginErrCode)
 	}
 	return &NUserPb.LoginResponse{
 		Info: &NUserPb.UserInfo{
@@ -177,12 +172,12 @@ func (s Server) SendEmail(ctx context.Context, request *NUserPb.SendRequest) (re
 	err = model.MainRedis().Set(ctx, constant.SendVerificationCode.Format(request.Type, req.Email), code, constant.VerificationEffectiveTime).Err()
 	if !errors.Is(err, nil) {
 		xlog.Error("SendEmail", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("redis"))
-		return rep, xcode.BusinessCode(xrpc.SendEmailErrCode).SetMsgf("SendEmail Send error : %s", err.Error())
+		return rep, xcode.BusinessCode(xrpc.SendEmailErrCode)
 	}
 	err = xclient.EmailMain().SendEmail([]string{req.Email}, "验证码", fmt.Sprintf("你的验证码是：%v", code))
 	if !errors.Is(err, nil) {
 		xlog.Error("SendEmail", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
-		return rep, xcode.BusinessCode(xrpc.SendEmailErrCode).SetMsgf("SendEmail  error : %s", err.Error())
+		return rep, xcode.BusinessCode(xrpc.SendEmailErrCode)
 	}
 	return rep, xcode.OK
 }
@@ -210,7 +205,7 @@ func (s Server) UserRegister(ctx context.Context, request *NUserPb.UserRegisterR
 	err = u.Add(ctx)
 	if !errors.Is(err, nil) {
 		xlog.Error("User Register", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return rep, xcode.BusinessCode(xrpc.UserRegisterErrCode).SetMsgf("UserRegister error : %s", err.Error())
+		return rep, xcode.BusinessCode(xrpc.UserRegisterErrCode)
 	}
 	return rep, xcode.OK
 }
@@ -240,7 +235,7 @@ func (s Server) RetrievePassword(ctx context.Context, request *NUserPb.RetrieveP
 			return nil, xcode.BusinessCode(xrpc.EmptyData)
 		}
 		xlog.Error("RetrievePassword", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.RetrievePasswordErrCode).SetMsgf("RetrievePassword error : %s", err.Error())
+		return nil, xcode.BusinessCode(xrpc.RetrievePasswordErrCode)
 	}
 	u.Password = req.Password
 	err = u.SetPassword()
@@ -249,7 +244,7 @@ func (s Server) RetrievePassword(ctx context.Context, request *NUserPb.RetrieveP
 	}, "password", u.Password)
 	if !errors.Is(err, nil) {
 		xlog.Error("RetrievePassword", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.RetrievePasswordErrCode).SetMsgf("RetrievePassword error : %s", err.Error())
+		return nil, xcode.BusinessCode(xrpc.RetrievePasswordErrCode)
 	}
 	return rep, xcode.OK
 }
@@ -271,7 +266,7 @@ func (s Server) GetUserById(ctx context.Context, info *NUserPb.UserInfo) (rep *N
 			return rep, xcode.BusinessCode(xrpc.EmptyData)
 		}
 		xlog.Error("GetUserById", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return rep, xcode.BusinessCode(xrpc.GetUserByIdErrCode).SetMsgf("GetUserById error : %s", err.Error())
+		return rep, xcode.BusinessCode(xrpc.GetUserByIdErrCode)
 	}
 	return &NUserPb.UserInfo{
 		Uid:       xcast.ToUint64(u.ID),
@@ -308,7 +303,7 @@ func (s Server) GetUserList(ctx context.Context, request *NUserPb.PageRequest) (
 			return nil, xcode.BusinessCode(xrpc.EmptyData)
 		}
 		xlog.Error("GetUserList", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.GetUserListErrCode).SetMsgf("GetUserList error : %s", err.Error())
+		return nil, xcode.BusinessCode(xrpc.GetUserListErrCode)
 	}
 	var userList = make([]*NUserPb.UserInfo, len(data))
 	for i, datum := range data {
@@ -345,7 +340,7 @@ func (s Server) UpdateUserStatus(ctx context.Context, info *NUserPb.UserInfo) (r
 	err = u.UpdateStatus(ctx, req.Status)
 	if !errors.Is(err, nil) {
 		xlog.Error("UpdateUserStatus", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.UpdateUserStatusErrCode).SetMsgf("UpdateUserStatus error : %s", err.Error())
+		return nil, xcode.BusinessCode(xrpc.UpdateUserStatusErrCode)
 	}
 	return rep, xcode.OK
 }
@@ -377,7 +372,7 @@ func (s Server) UpdateUser(ctx context.Context, info *NUserPb.UserInfo) (rep *NU
 	err = u.UpdatesWhere(ctx, map[string][]interface{}{"id=?": {req.Uid}})
 	if !errors.Is(err, nil) {
 		xlog.Error("UpdateUser", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.UpdateUserErrCode).SetMsgf("UpdateUser error : %s", err.Error())
+		return nil, xcode.BusinessCode(xrpc.UpdateUserErrCode)
 	}
 	return rep, xcode.OK
 }
@@ -396,7 +391,7 @@ func (s Server) DelUsers(ctx context.Context, list *NUserPb.UidList) (rep *NUser
 	count, err := new(user.User).Del(ctx, where)
 	if !errors.Is(err, nil) {
 		xlog.Error("DelUsers", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.DelUsersErrCode).SetMsgf("DelUsers error : %s", err.Error())
+		return nil, xcode.BusinessCode(xrpc.DelUsersErrCode)
 	}
 	rep = new(NUserPb.ChangeNumResponse)
 	rep.Count = xcast.ToUint32(count)
@@ -417,7 +412,7 @@ func (s Server) RecoverDelUsers(ctx context.Context, list *NUserPb.UidList) (rep
 	count, err := new(user.User).DelRes(ctx, where)
 	if !errors.Is(err, nil) {
 		xlog.Error("RecoverDelUsers", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.RecoverDelUsersErrCode).SetMsgf("RecoverDelUsers error : %s", err.Error())
+		return nil, xcode.BusinessCode(xrpc.RecoverDelUsersErrCode)
 	}
 	rep = new(NUserPb.ChangeNumResponse)
 	rep.Count = xcast.ToUint32(count)
@@ -442,7 +437,7 @@ func (s Server) CreateUsers(ctx context.Context, list *NUserPb.UserList) (rep *N
 	count, err := new(user.User).Adds(ctx, data)
 	if !errors.Is(err, nil) {
 		xlog.Error("CreateUsers", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
-		return nil, xcode.BusinessCode(xrpc.RecoverDelUsersErrCode).SetMsgf("CreateUsers error : %s", err.Error())
+		return nil, xcode.BusinessCode(xrpc.RecoverDelUsersErrCode)
 	}
 	rep = new(NUserPb.ChangeNumResponse)
 	rep.Count = xcast.ToUint32(count)
@@ -458,7 +453,7 @@ func (s Server) VerifyUsers(ctx context.Context, list *NUserPb.Token) (rep *NUse
 		msg := xvalidator.GetMsg(err)
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("VerifyUsers data validation error : %s", msg.Error())
 	}
-	i, _ := accessToken.DecoderAccessToken(ctx, req.Token)
+	i, _ := xclient.RedisToken().DecoderAccessToken(ctx, req.Token)
 	if i.Uid <= 0 || i.Type != token.AccessTokenType {
 		return rep, xcode.BusinessCode(xrpc.VerifyUsersTokenErrCode)
 	}
@@ -474,10 +469,10 @@ func (s Server) RefreshToken(ctx context.Context, list *NUserPb.Token) (rep *NUs
 		msg := xvalidator.GetMsg(err)
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("RefreshToken data validation error : %s", msg.Error())
 	}
-	refreshAccessToken, err := accessToken.RefreshAccessToken(ctx, req.Token)
+	refreshAccessToken, err := xclient.RedisToken().RefreshAccessToken(ctx, req.Token)
 	if !errors.Is(err, nil) {
 		xlog.Error("RefreshToken", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
-		return nil, xcode.BusinessCode(xrpc.RefreshTokenErrCode).SetMsgf("RefreshToken error : %s", err.Error())
+		return nil, xcode.BusinessCode(xrpc.RefreshTokenErrCode)
 	}
 	return &NUserPb.Token{
 		AccountToken: refreshAccessToken.AccessToken,

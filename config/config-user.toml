@@ -22,7 +22,7 @@
     host="smtp.yeah.net"
     port=465
     username="yangzzzzzz@yeah.net"
-    password="your-password"
+    password="yzm15281605530"
 
 [sms.main]
     area="cn-hangzhou"
@@ -31,8 +31,8 @@
 
 [rpc]
     etcd_addr="127.0.0.1:2379"
-    ip="0.0.0.0"
-    port=8484
+    ip="127.0.0.1"
+    port=8090
     register_ttl="10s"
     register_interval="3s"
 

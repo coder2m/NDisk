@@ -9,8 +9,8 @@ import (
 )
 
 var RegisterValidation = map[string]*xvalidator.Register{
-	//"myCheck": {
-	//	myValidationFunc,
-	//	"{0}验证不通过",
-	//},
+	"phone": {
+		phoneValidationFunc,
+		"电话号码验证不通过",
+	},
 }

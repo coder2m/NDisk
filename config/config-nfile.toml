@@ -18,8 +18,8 @@
 
 [rpc]
     etcd_addr="127.0.0.1:2380"
-    ip="0.0.0.0"
-    port=8484
+    ip="127.0.0.1"
+    port=8489
     register_ttl="10s"
     register_interval="3s"
 

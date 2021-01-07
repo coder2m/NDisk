@@ -22,6 +22,7 @@ import (
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
 	"github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"net"
 	"sync"
 )
@@ -51,7 +52,7 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 		rpcCfg *xrpc.Config
 		lis    net.Listener
 	)
-	rpcCfg = xcfg.UnmarshalWithExpect("rpcError", xrpc.DefaultConfig()).(*xrpc.Config)
+	rpcCfg = xcfg.UnmarshalWithExpect("rpc", xrpc.DefaultConfig()).(*xrpc.Config)
 	s.err = xrpc.DefaultRegistryEtcd(rpcCfg)
 	if s.err != nil {
 		return
@@ -68,6 +69,7 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 	})
 	NUserPb.RegisterNUserServiceServer(serve, new(rpc.Server))
 	xconsole.Greenf("grpc server start up success:", rpcCfg.Addr())
+	reflection.Register(serve)
 	s.err = serve.Serve(lis)
 	s.Wait()
 	return s.err
@@ -104,6 +106,7 @@ func (s *Server) invoker() {
 		xsms.Register("sms"),
 	)
 	s.err = xinvoker.Init()
+	//_ = model.MainDB().Migrator().CreateTable(new(user.User))
 }
 
 func (s *Server) initValidator() {
@@ -120,36 +123,4 @@ func (s *Server) govern() {
 	xmonitor.Run()
 	xcode.GovernRun()
 	go xgovern.Run()
-}
-
-func (s *Server) rpc() {
-	if s.err != nil {
-		return
-	}
-	var (
-		rpcCfg *xrpc.Config
-		lis    net.Listener
-	)
-	rpcCfg = xcfg.UnmarshalWithExpect("rpcError", xrpc.DefaultConfig()).(*xrpc.Config)
-
-	s.err = xrpc.DefaultRegistryEtcd(rpcCfg)
-	if s.err != nil {
-		return
-	}
-
-	lis, s.err = net.Listen("tcp", rpcCfg.Addr())
-	if s.err != nil {
-		return
-	}
-
-	serve := grpc.NewServer(xrpc.DefaultOption(rpcCfg)...)
-	go func() {
-		s.err = serve.Serve(lis)
-	}()
-	xdefer.Register(func() error {
-		serve.Stop()
-		xconsole.Red("grpc server shutdown success ")
-		return nil
-	})
-	xconsole.Greenf("grpc server start up success:", rpcCfg.Addr())
 }

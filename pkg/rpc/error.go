@@ -39,7 +39,7 @@ var (
 		{xcode.SystemType, MysqlErr, "mysql 错误"},
 	}
 	businessErrDepot = []xcode.CodeInfo{
-		{xcode.BusinessType, EmptyData, "数据未找到"},
+		{xcode.BusinessType, EmptyData, "Empty Data"},
 		{xcode.BusinessType, AccountLoginErrCode, "AccountLogin"},
 		{xcode.BusinessType, ValidationErrCode, "validation error"},
 		{xcode.BusinessType, FrequentOperationErrCode, "frequent operation"},

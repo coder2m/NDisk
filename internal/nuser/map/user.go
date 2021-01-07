@@ -6,11 +6,11 @@
 package _map
 
 type Phone struct {
-	Number string `validate:"e164,required"`
+	Number string `validate:"required,phone"`
 }
 
 type Email struct {
-	Email string `validate:"email,required"`
+	Email string `validate:"required,email"`
 }
 
 type AccountLogin struct {
@@ -19,7 +19,7 @@ type AccountLogin struct {
 }
 
 type SMSLogin struct {
-	Tel  string `validate:"e164,required"`
+	Tel  string `validate:"required,phone"`
 	Code string `validate:"required"`
 }
 
@@ -27,7 +27,7 @@ type UserRegister struct {
 	Name     string `validate:"required,alphanum"`
 	Alias    string `validate:"required"`
 	Email    string `validate:"required,email"`
-	Tel      string `validate:"required,e164"`
+	Tel      string `validate:"required,phone"`
 	Password string `validate:"required,min=8"`
 	Code     string `validate:"required"`
 }
