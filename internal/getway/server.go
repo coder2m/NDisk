@@ -15,6 +15,7 @@ import (
 	"github.com/myxy99/component/xmonitor"
 	"github.com/myxy99/ndisk/internal/getway/api/v1/registry"
 	myValidator "github.com/myxy99/ndisk/internal/getway/validator"
+	xrpc "github.com/myxy99/ndisk/pkg/rpc"
 	"net/http"
 	"sync"
 )
@@ -32,6 +33,7 @@ func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 	s.initRouter()
 	s.initValidator()
 	s.govern()
+	s.rpc()
 	return s.err
 }
 
@@ -102,4 +104,13 @@ func (s *Server) govern() {
 	xcode.GovernRun()
 	xmonitor.Run()
 	go xgovern.Run()
+}
+
+func (s *Server) rpc() {
+	if s.err != nil {
+		return
+	}
+	var rpcCfg *xrpc.GRPCConfig
+	rpcCfg = xcfg.UnmarshalWithExpect("rpc", xrpc.DefaultGRPCConfig()).(*xrpc.GRPCConfig)
+	s.err = xrpc.DefaultRegistryEtcd(rpcCfg)
 }

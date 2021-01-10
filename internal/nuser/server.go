@@ -49,26 +49,26 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 		s.Done()
 	}()
 	var (
-		rpcCfg *xrpc.Config
-		lis    net.Listener
+		lis     net.Listener
+		grpcCfg *xrpc.GRPCConfig
 	)
-	rpcCfg = xcfg.UnmarshalWithExpect("rpc", xrpc.DefaultConfig()).(*xrpc.Config)
-	s.err = xrpc.DefaultRegistryEtcd(rpcCfg)
+	grpcCfg = xcfg.UnmarshalWithExpect("rpc.", xrpc.DefaultGRPCConfig()).(*xrpc.GRPCConfig)
+	s.err = xrpc.DefaultRegistryEtcd(grpcCfg)
 	if s.err != nil {
 		return
 	}
-	lis, s.err = net.Listen("tcp", rpcCfg.Addr())
+	lis, s.err = net.Listen("tcp", grpcCfg.Addr())
 	if s.err != nil {
 		return
 	}
-	serve := grpc.NewServer(xrpc.DefaultOption(rpcCfg)...)
+	serve := grpc.NewServer(xrpc.DefaultServerOption(grpcCfg)...)
 	xdefer.Register(func() error {
 		serve.Stop()
 		xconsole.Red("grpc server shutdown success ")
 		return nil
 	})
 	NUserPb.RegisterNUserServiceServer(serve, new(rpc.Server))
-	xconsole.Greenf("grpc server start up success:", rpcCfg.Addr())
+	xconsole.Greenf("grpc server start up success:", grpcCfg.Addr())
 	if xapp.Debug() {
 		reflection.Register(serve)
 	}

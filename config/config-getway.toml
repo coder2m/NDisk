@@ -19,3 +19,10 @@
 [app.govern]
     host = "127.0.0.1"
     port = 4568
+
+[rpc]
+    serverTimeout="10s"
+    serverSlowThreshold= "8s"
+    register_etcd_addr = "127.0.0.1:2379"
+    register_ttl = "10s"
+    register_interval = "3s"

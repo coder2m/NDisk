@@ -6,6 +6,7 @@ import (
 	"github.com/myxy99/component/pkg/xdefer"
 	"github.com/myxy99/component/pkg/xnet"
 	"github.com/myxy99/component/xgrpc"
+	clientinterceptors "github.com/myxy99/component/xgrpc/client"
 	serverinterceptors "github.com/myxy99/component/xgrpc/server"
 	"github.com/myxy99/component/xregistry"
 	"github.com/myxy99/component/xregistry/xetcd"
@@ -14,40 +15,45 @@ import (
 	"time"
 )
 
-type Config struct {
-	EtcdAddr         string        `mapStructure:"etcd_addr"`
-	ServerIp         string        `mapStructure:"ip"`
-	ServerPort       int           `mapStructure:"port"`
+type GRPCConfig struct {
+	ServerIp      string        `mapStructure:"serverIp"`
+	ServerPort    int           `mapStructure:"serverPort"`
+	ServerName    string        `mapStructure:"serverName"`
+	ServerTimeout time.Duration `mapStructure:"serverTimeout"`
+	SlowThreshold time.Duration `mapStructure:"serverSlowThreshold"`
+
+	EtcdAddr         string        `mapStructure:"register_etcd_addr"`
 	RegisterTTL      time.Duration `mapStructure:"register_ttl"`
 	RegisterInterval time.Duration `mapStructure:"register_interval"`
-	Timeout          time.Duration `mapStructure:"timeout"`
 }
 
-func DefaultConfig() *Config {
+func DefaultGRPCConfig() *GRPCConfig {
 	host, port, err := xnet.GetLocalMainIP()
 	if err != nil {
 		host = "localhost"
 	}
-	return &Config{
-		EtcdAddr:         "127.0.0.1:2379",
+	return &GRPCConfig{
 		ServerIp:         host,
 		ServerPort:       port,
+		ServerName:       xapp.Name(),
+		ServerTimeout:    10 * time.Second,
+		SlowThreshold:    8 * time.Second,
+		EtcdAddr:         "127.0.0.1:2379",
 		RegisterTTL:      30 * time.Second,
 		RegisterInterval: 15 * time.Second,
-		Timeout:          30 * time.Second,
 	}
 }
 
-func (c Config) Addr() string {
+func (c GRPCConfig) Addr() string {
 	return fmt.Sprintf("%v:%v", c.ServerIp, c.ServerPort)
 }
 
-func DefaultOption(c *Config) []grpc.ServerOption {
+func DefaultServerOption(c *GRPCConfig) []grpc.ServerOption {
 	return []grpc.ServerOption{
 		xgrpc.WithUnaryServerInterceptors(
 			serverinterceptors.CrashUnaryServerInterceptor(),
 			serverinterceptors.PrometheusUnaryServerInterceptor(),
-			serverinterceptors.XTimeoutUnaryServerInterceptor(c.Timeout),
+			serverinterceptors.XTimeoutUnaryServerInterceptor(c.ServerTimeout),
 			serverinterceptors.TraceUnaryServerInterceptor(),
 		),
 		xgrpc.WithStreamServerInterceptors(
@@ -57,7 +63,23 @@ func DefaultOption(c *Config) []grpc.ServerOption {
 	}
 }
 
-func DefaultRegistryEtcd(c *Config) (err error) {
+func DefaultClientOption(c *GRPCConfig) []grpc.DialOption {
+	return []grpc.DialOption{
+		xgrpc.WithUnaryClientInterceptors(
+			clientinterceptors.XTimeoutUnaryClientInterceptor(c.ServerTimeout, c.SlowThreshold),
+			clientinterceptors.XTraceUnaryClientInterceptor(),
+			clientinterceptors.XAidUnaryClientInterceptor(),
+			clientinterceptors.XLoggerUnaryClientInterceptor(c.ServerName),
+			clientinterceptors.PrometheusUnaryClientInterceptor(c.ServerName),
+
+		),
+		xgrpc.WithStreamClientInterceptors(
+			clientinterceptors.PrometheusStreamClientInterceptor(c.ServerName),
+		),
+	}
+}
+
+func DefaultRegistryEtcd(c *GRPCConfig) (err error) {
 	var etcdR xregistry.Registry
 	conf := xetcd.EtcdV3Cfg{
 		Endpoints: []string{c.EtcdAddr},

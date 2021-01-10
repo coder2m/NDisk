@@ -131,22 +131,25 @@ func (s *Server) rpc() {
 		return
 	}
 	var (
-		rpcCfg *xrpc.Config
-		lis    net.Listener
+		lis     net.Listener
+		grpcCfg *xrpc.GRPCConfig
 	)
-	rpcCfg = xcfg.UnmarshalWithExpect("rpcError", xrpc.DefaultConfig()).(*xrpc.Config)
-
-	s.err = xrpc.DefaultRegistryEtcd(rpcCfg)
+	grpcCfg = xcfg.UnmarshalWithExpect("rpc", xrpc.DefaultGRPCConfig()).(*xrpc.GRPCConfig)
+	s.err = xrpc.DefaultRegistryEtcd(grpcCfg)
 	if s.err != nil {
 		return
 	}
-
-	lis, s.err = net.Listen("tcp", rpcCfg.Addr())
+	lis, s.err = net.Listen("tcp", grpcCfg.Addr())
 	if s.err != nil {
 		return
 	}
+	serve := grpc.NewServer(xrpc.DefaultServerOption(grpcCfg)...)
 
-	serve := grpc.NewServer(xrpc.DefaultOption(rpcCfg)...)
+	xdefer.Register(func() error {
+		serve.Stop()
+		xconsole.Red("grpc server shutdown success ")
+		return nil
+	})
 	NFilePb.RegisterNFileServiceServer(serve, new(rpcServer.Server))
 	go func() {
 		s.err = serve.Serve(lis)
@@ -156,5 +159,5 @@ func (s *Server) rpc() {
 		xconsole.Red("grpc server shutdown success ")
 		return nil
 	})
-	xconsole.Greenf("grpc server start up success:", rpcCfg.Addr())
+	xconsole.Greenf("grpc server start up success:", grpcCfg.Addr())
 }

@@ -17,11 +17,13 @@
     debug = true
 
 [rpc]
-    etcd_addr="127.0.0.1:2380"
-    ip="127.0.0.1"
-    port=8489
-    register_ttl="10s"
-    register_interval="3s"
+    serverIp = "127.0.0.1"
+    serverPort = 8090
+    serverTimeout="10s"
+    serverSlowThreshold= "8s"
+    register_etcd_addr = "127.0.0.1:2379"
+    register_ttl = "10s"
+    register_interval = "3s"
 
 [xlog]
     name = "ndisk_nfile.log"
