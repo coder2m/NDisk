@@ -1,5 +1,5 @@
 [server]
-    addr = "0.0.0.0:1123"
+    addr = "0.0.0.0:1234"
     locale = "zh"
 
 [app]
@@ -18,7 +18,7 @@
 
 [app.govern]
     host = "0.0.0.0"
-    port = 4568
+    port = 4570
 
 [rpc]
     serverTimeout="10s"
@@ -28,3 +28,6 @@
     register_interval = "3s"
 
 [trace.jaeger]
+    [trace.jaeger.reporter]
+        localAgentHostPort = "127.0.0.1:6832"
+
