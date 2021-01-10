@@ -13,11 +13,15 @@ import (
 	"github.com/myxy99/component/xcfg/datasource/manager"
 	"github.com/myxy99/component/xgovern"
 	"github.com/myxy99/component/xmonitor"
+	"github.com/myxy99/component/xregistry/xetcd"
+	"github.com/myxy99/component/xtrace"
 	"github.com/myxy99/ndisk/internal/getway/api/v1/registry"
+	"github.com/myxy99/ndisk/internal/getway/client"
 	myValidator "github.com/myxy99/ndisk/internal/getway/validator"
-	xrpc "github.com/myxy99/ndisk/pkg/rpc"
+	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
 	"net/http"
 	"sync"
+	"time"
 )
 
 type Server struct {
@@ -103,6 +107,7 @@ func (s *Server) govern() {
 	}
 	xcode.GovernRun()
 	xmonitor.Run()
+	xtrace.Init("trace.jaeger")
 	go xgovern.Run()
 }
 
@@ -110,7 +115,17 @@ func (s *Server) rpc() {
 	if s.err != nil {
 		return
 	}
-	var rpcCfg *xrpc.GRPCConfig
-	rpcCfg = xcfg.UnmarshalWithExpect("rpc", xrpc.DefaultGRPCConfig()).(*xrpc.GRPCConfig)
-	s.err = xrpc.DefaultRegistryEtcd(rpcCfg)
+	grpcCfg := xclient.GetGRPCCfg()
+	conf := xetcd.EtcdV3Cfg{
+		Endpoints:        []string{grpcCfg.EtcdAddr},
+		AutoSyncInterval: grpcCfg.RegisterInterval,
+	}
+	s.err = xetcd.RegisterBuilder(conf)
+	xclient.InitClient()
+	go func() {
+		for true {
+			time.Sleep(2 * time.Second)
+			_, _ = xclient.NUserServer.VerifyUsers(context.Background(), &NUserPb.Token{})
+		}
+	}()
 }

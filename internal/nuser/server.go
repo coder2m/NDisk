@@ -17,6 +17,7 @@ import (
 	xredis "github.com/myxy99/component/xinvoker/redis"
 	xsms "github.com/myxy99/component/xinvoker/sms"
 	"github.com/myxy99/component/xmonitor"
+	"github.com/myxy99/component/xtrace"
 	"github.com/myxy99/ndisk/internal/nuser/rpc"
 	myValidator "github.com/myxy99/ndisk/internal/nuser/validator"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
@@ -124,5 +125,6 @@ func (s *Server) govern() {
 	}
 	xmonitor.Run()
 	xcode.GovernRun()
+	xtrace.Init("trace.jaeger")
 	go xgovern.Run()
 }
