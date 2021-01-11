@@ -27,3 +27,8 @@ func HandleForbidden(ctx *gin.Context) {
 	R.Response(ctx, R.Forbidden, "Forbidden", nil, http.StatusForbidden)
 	return
 }
+
+func HandleCaptchaError(ctx *gin.Context) {
+	R.Response(ctx, R.BadRequest, "captcha error", nil, http.StatusBadRequest)
+	return
+}

@@ -14,3 +14,7 @@ func Engine() *gin.Engine {
 	return Router
 }
 
+func V1() *gin.RouterGroup {
+	v1 := Engine().Group("/api/v1")
+	return v1
+}

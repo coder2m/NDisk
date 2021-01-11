@@ -19,6 +19,7 @@ import (
 	"github.com/myxy99/ndisk/internal/getway/client"
 	myValidator "github.com/myxy99/ndisk/internal/getway/validator"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
+	"github.com/myxy99/ndisk/pkg/recaptcha"
 	"net/http"
 	"sync"
 	"time"
@@ -38,6 +39,7 @@ func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 	s.initValidator()
 	s.govern()
 	s.rpc()
+	s.recaptcha()
 	return s.err
 }
 
@@ -128,4 +130,9 @@ func (s *Server) rpc() {
 			_, _ = xclient.NUserServer.VerifyUsers(context.Background(), &NUserPb.Token{})
 		}
 	}()
+}
+
+func (s *Server) recaptcha() {
+	recaptchaCfg := xcfg.UnmarshalWithExpect("google.recaptcha", recaptcha.DefaultConfig()).(*recaptcha.Config)
+	recaptcha.NewDefault(recaptchaCfg)
 }

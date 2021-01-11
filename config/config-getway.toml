@@ -31,3 +31,7 @@
     [trace.jaeger.reporter]
         localAgentHostPort = "127.0.0.1:6832"
 
+[google.recaptcha]
+    debug = true
+    timeout = "10s"
+    secret = ""
