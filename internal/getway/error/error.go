@@ -5,17 +5,28 @@
  **/
 package xerror
 
-import "github.com/myxy99/component/pkg/xcode"
+import (
+	"github.com/myxy99/component/pkg/xcode"
+)
 
 type Err struct {
-	Code    uint32
-	Message string
+	ErrorCode    uint32 `json:"err_code,omitempty"`
+	ErrorMessage string `json:"error_message,omitempty"`
+}
+
+func (e *Err) Error() string {
+	return e.ErrorMessage
+}
+
+func (e *Err) SetMessage(msg string) *Err {
+	e.ErrorMessage = msg
+	return e
 }
 
 func NewErr(code uint32, message string) *Err {
 	return &Err{
-		Code:    code,
-		Message: message,
+		ErrorCode:    code,
+		ErrorMessage: message,
 	}
 }
 

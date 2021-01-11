@@ -12,15 +12,20 @@ import (
 	xerror "github.com/myxy99/ndisk/internal/getway/error"
 	_map "github.com/myxy99/ndisk/internal/getway/map"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
+	xrpc "github.com/myxy99/ndisk/pkg/rpc"
 )
 
-func AccountLogin(ctx context.Context, login _map.AccountLogin) *xerror.Err {
+func AccountLogin(ctx context.Context, login _map.AccountLogin) (*NUserPb.LoginResponse, *xerror.Err) {
 	rep, err := xclient.NUserServer.AccountLogin(ctx, &NUserPb.UserLoginRequest{
 		Account:  login.Account,
 		Password: login.Password,
 	})
 	if !errors.Is(err, nil) {
-		return xerror.NewErrRPC(err)
+		e := xerror.NewErrRPC(err)
+		if e.ErrorCode == xrpc.EmptyData {
+			e = e.SetMessage("账号或者密码错误")
+		}
+		return nil, e
 	}
-
+	return rep, nil
 }

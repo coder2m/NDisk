@@ -11,19 +11,19 @@ import (
 )
 
 type Res struct {
-	Code int         `json:"code"`
-	Msg  string      `json:"msg"`
-	Data interface{} `json:"data"`
+	StatusCode int         `json:"status_code,omitempty"`
+	Msg        string      `json:"msg,omitempty"`
+	Data       interface{} `json:"data,omitempty"`
 }
 
 //R.Ok(c, "自定义msg",data)
-func Ok(c *gin.Context, msg string, data interface{}) {
-	Response(c, Success, msg, data, http.StatusOK)
+func Ok(c *gin.Context, data interface{}) {
+	Response(c, Success, MSG_OK, data, http.StatusOK)
 }
 
 //R.Error(c, "自定义msg",data)
-func Error(c *gin.Context, msg string, data interface{}) {
-	Response(c, File, msg, data, http.StatusOK)
+func Error(c *gin.Context, data interface{}) {
+	Response(c, File, MSG_ERR, data, http.StatusOK)
 }
 
 //R.Response(c,1,"msg",data,200)

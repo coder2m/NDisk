@@ -10,20 +10,26 @@ import (
 	"github.com/myxy99/component/pkg/xvalidator"
 	"github.com/myxy99/ndisk/internal/getway/error/httpError"
 	_map "github.com/myxy99/ndisk/internal/getway/map"
+	"github.com/myxy99/ndisk/internal/getway/server/user_server"
+	R "github.com/myxy99/ndisk/pkg/response"
 )
 
 //  账号登录
 func AccountLogin(ctx *gin.Context) {
-	var page _map.AccountLogin
-	if err := ctx.ShouldBind(&page); err != nil {
+	var login _map.AccountLogin
+	if err := ctx.ShouldBind(&login); err != nil {
 		httpError.HandleBadRequest(ctx, nil)
 		return
 	}
-	if err := xvalidator.Struct(page); err != nil {
+	if err := xvalidator.Struct(login); err != nil {
 		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-
+	if data, err := user_server.AccountLogin(ctx, login); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, data)
+	}
 	return
 }
 
