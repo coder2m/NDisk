@@ -13,10 +13,10 @@ import (
 )
 
 type User struct {
-	Name        string `gorm:"not null;unique_index;"`
+	Name        string `gorm:"not null;unique;"`
 	Alias       string `gorm:"not null"`
-	Tel         string `gorm:"type:varchar(11);unique_index;"`
-	Email       string `gorm:"type:varchar(100);unique_index;not null"`
+	Tel         string `gorm:"type:varchar(11);unique;"`
+	Email       string `gorm:"type:varchar(100);unique;not null"`
 	Password    string `gorm:"not null"`
 	Status      uint32 `gorm:"DEFAULT:1;not null"`
 	EmailStatus uint32 `gorm:"DEFAULT:2;not null"`
@@ -25,7 +25,7 @@ type User struct {
 }
 
 func (m *User) TableName() string {
-	return "auth"
+	return "user"
 }
 
 func (m *User) Add(ctx context.Context) error {

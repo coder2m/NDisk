@@ -9,6 +9,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/go-sql-driver/mysql"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xcast"
 	"github.com/myxy99/component/pkg/xcode"
@@ -74,7 +75,7 @@ func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequ
 			AccountToken: createAccessToken.AccessToken,
 			RefreshToken: createAccessToken.RefreshToken,
 		},
-	}, xcode.OK
+	}, nil
 }
 
 func (s Server) SMSSend(ctx context.Context, request *NUserPb.SendRequest) (nilR *NUserPb.NilResponse, err error) {
@@ -103,7 +104,7 @@ func (s Server) SMSSend(ctx context.Context, request *NUserPb.SendRequest) (nilR
 		xlog.Error("SMSSend", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.Any("smsRequest", smsRequest))
 		return nilR, xcode.BusinessCode(xrpc.SMSSendErrCode)
 	}
-	return nilR, xcode.OK
+	return nilR, nil
 }
 
 func (s Server) SMSLogin(ctx context.Context, request *NUserPb.SMSLoginRequest) (rep *NUserPb.LoginResponse, err error) {
@@ -152,7 +153,7 @@ func (s Server) SMSLogin(ctx context.Context, request *NUserPb.SMSLoginRequest) 
 			AccountToken: createAccessToken.AccessToken,
 			RefreshToken: createAccessToken.RefreshToken,
 		},
-	}, xcode.OK
+	}, nil
 }
 
 func (s Server) SendEmail(ctx context.Context, request *NUserPb.SendRequest) (rep *NUserPb.NilResponse, err error) {
@@ -177,7 +178,7 @@ func (s Server) SendEmail(ctx context.Context, request *NUserPb.SendRequest) (re
 		xlog.Error("SendEmail", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
 		return rep, xcode.BusinessCode(xrpc.SendEmailErrCode)
 	}
-	return rep, xcode.OK
+	return rep, nil
 }
 
 func (s Server) UserRegister(ctx context.Context, request *NUserPb.UserRegisterRequest) (rep *NUserPb.NilResponse, err error) {
@@ -212,7 +213,7 @@ func (s Server) UserRegister(ctx context.Context, request *NUserPb.UserRegisterR
 		xlog.Error("User Register", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return rep, xcode.BusinessCode(xrpc.UserRegisterErrCode)
 	}
-	return rep, xcode.OK
+	return rep, nil
 }
 
 func (s Server) RetrievePassword(ctx context.Context, request *NUserPb.RetrievePasswordRequest) (rep *NUserPb.NilResponse, err error) {
@@ -250,7 +251,7 @@ func (s Server) RetrievePassword(ctx context.Context, request *NUserPb.RetrieveP
 		xlog.Error("RetrievePassword", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.RetrievePasswordErrCode)
 	}
-	return rep, xcode.OK
+	return rep, nil
 }
 
 func (s Server) GetUserById(ctx context.Context, info *NUserPb.UserInfo) (rep *NUserPb.UserInfo, err error) {
@@ -282,7 +283,7 @@ func (s Server) GetUserById(ctx context.Context, info *NUserPb.UserInfo) (rep *N
 		CreatedAt:   xcast.ToUint64(u.CreatedAt.Unix()),
 		UpdatedAt:   xcast.ToUint64(u.UpdatedAt.Unix()),
 		DeletedAt:   xcast.ToUint64(u.DeletedAt.Time.Unix()),
-	}, xcode.OK
+	}, nil
 }
 
 func (s Server) GetUserList(ctx context.Context, request *NUserPb.PageRequest) (rep *NUserPb.UserListResponse, err error) {
@@ -326,7 +327,7 @@ func (s Server) GetUserList(ctx context.Context, request *NUserPb.PageRequest) (
 	return &NUserPb.UserListResponse{
 		List:  userList,
 		Count: xcast.ToUint32(total),
-	}, xcode.OK
+	}, nil
 }
 
 func (s Server) UpdateUserStatus(ctx context.Context, info *NUserPb.UserInfo) (rep *NUserPb.NilResponse, err error) {
@@ -345,7 +346,7 @@ func (s Server) UpdateUserStatus(ctx context.Context, info *NUserPb.UserInfo) (r
 		xlog.Error("UpdateUserStatus", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.UpdateUserStatusErrCode)
 	}
-	return rep, xcode.OK
+	return rep, nil
 }
 
 func (s Server) UpdateUserEmailStatus(ctx context.Context, info *NUserPb.UserInfo) (rep *NUserPb.NilResponse, err error) {
@@ -364,7 +365,7 @@ func (s Server) UpdateUserEmailStatus(ctx context.Context, info *NUserPb.UserInf
 		xlog.Error("UpdateUserEmailStatus", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.UpdateUserEmailStatusErrCode)
 	}
-	return rep, xcode.OK
+	return rep, nil
 }
 
 func (s Server) UpdateUser(ctx context.Context, info *NUserPb.UserInfo) (rep *NUserPb.NilResponse, err error) {
@@ -395,7 +396,7 @@ func (s Server) UpdateUser(ctx context.Context, info *NUserPb.UserInfo) (rep *NU
 		xlog.Error("UpdateUser", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.UpdateUserErrCode)
 	}
-	return rep, xcode.OK
+	return rep, nil
 }
 
 func (s Server) DelUsers(ctx context.Context, list *NUserPb.UidList) (rep *NUserPb.ChangeNumResponse, err error) {
@@ -416,7 +417,7 @@ func (s Server) DelUsers(ctx context.Context, list *NUserPb.UidList) (rep *NUser
 	}
 	rep = new(NUserPb.ChangeNumResponse)
 	rep.Count = xcast.ToUint32(count)
-	return rep, xcode.OK
+	return rep, nil
 }
 
 func (s Server) RecoverDelUsers(ctx context.Context, list *NUserPb.UidList) (rep *NUserPb.ChangeNumResponse, err error) {
@@ -437,12 +438,12 @@ func (s Server) RecoverDelUsers(ctx context.Context, list *NUserPb.UidList) (rep
 	}
 	rep = new(NUserPb.ChangeNumResponse)
 	rep.Count = xcast.ToUint32(count)
-	return rep, xcode.OK
+	return rep, nil
 }
 
 func (s Server) CreateUsers(ctx context.Context, list *NUserPb.UserList) (rep *NUserPb.ChangeNumResponse, err error) {
 	if len(list.List) <= 0 {
-		return rep, xcode.OK
+		return rep, nil
 	}
 	if len(list.List) > 200 {
 		return rep, xcode.BusinessCode(xrpc.MaximumNumberErrCode)
@@ -460,12 +461,17 @@ func (s Server) CreateUsers(ctx context.Context, list *NUserPb.UserList) (rep *N
 	}
 	count, err := new(user.User).Adds(ctx, data)
 	if !errors.Is(err, nil) {
+		if e, ok := err.(*mysql.MySQLError); ok {
+			if e.Number == 1062 { // Duplicate
+				return nil, xcode.BusinessCode(xrpc.CreateUsersErrCode).SetMsg("数据已经存在")
+			}
+		}
 		xlog.Error("CreateUsers", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.CreateUsersErrCode)
 	}
 	rep = new(NUserPb.ChangeNumResponse)
 	rep.Count = xcast.ToUint32(count)
-	return rep, xcode.OK
+	return rep, nil
 }
 
 func (s Server) VerifyUsers(ctx context.Context, r *NUserPb.Token) (rep *NUserPb.UserInfo, err error) {
@@ -499,7 +505,7 @@ func (s Server) RefreshToken(ctx context.Context, r *NUserPb.Token) (rep *NUserP
 	return &NUserPb.Token{
 		AccountToken: refreshAccessToken.AccessToken,
 		RefreshToken: refreshAccessToken.RefreshToken,
-	}, xcode.OK
+	}, nil
 }
 
 func (s Server) CheckCode(ctx context.Context, r *NUserPb.CheckCodeRequest) (rep *NUserPb.NilResponse, err error) {
@@ -517,5 +523,5 @@ func (s Server) CheckCode(ctx context.Context, r *NUserPb.CheckCodeRequest) (rep
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("code Mismatch")
 	}
 	model.MainRedis().Del(ctx, constant.SendVerificationCode.Format(req.Type, req.Account))
-	return nil, xcode.OK
+	return nil, nil
 }

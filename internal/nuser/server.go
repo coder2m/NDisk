@@ -53,7 +53,7 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 		lis     net.Listener
 		grpcCfg *xrpc.GRPCConfig
 	)
-	grpcCfg = xcfg.UnmarshalWithExpect("rpc.", xrpc.DefaultGRPCConfig()).(*xrpc.GRPCConfig)
+	grpcCfg = xcfg.UnmarshalWithExpect("rpc", xrpc.DefaultGRPCConfig()).(*xrpc.GRPCConfig)
 	s.err = xrpc.DefaultRegistryEtcd(grpcCfg)
 	if s.err != nil {
 		return
@@ -109,7 +109,7 @@ func (s *Server) invoker() {
 		xsms.Register("sms"),
 	)
 	s.err = xinvoker.Init()
-	//_ = model.MainDB().Migrator().CreateTable(new(auth.User))
+	//_ = model.MainDB().Migrator().CreateTable(new(user.User))
 }
 
 func (s *Server) initValidator() {
