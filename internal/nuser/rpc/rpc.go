@@ -54,6 +54,9 @@ func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequ
 	if !u.CheckPassword(request.Password) {
 		return nil, xcode.BusinessCode(xrpc.EmptyData)
 	}
+	if u.Status != 1 {
+		return nil, xcode.BusinessCode(xrpc.LoginUserBanErrCode)
+	}
 	createAccessToken, err := xclient.RedisToken().CreateAccessToken(ctx, xcast.ToUint64(u.ID))
 	if !errors.Is(err, nil) {
 		xlog.Error("AccountLogin", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
@@ -104,7 +107,7 @@ func (s Server) SMSSend(ctx context.Context, request *NUserPb.SendRequest) (nilR
 		xlog.Error("SMSSend", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.Any("smsRequest", smsRequest))
 		return nilR, xcode.BusinessCode(xrpc.SMSSendErrCode)
 	}
-	return nilR, nil
+	return new(NUserPb.NilResponse), nil
 }
 
 func (s Server) SMSLogin(ctx context.Context, request *NUserPb.SMSLoginRequest) (rep *NUserPb.LoginResponse, err error) {
@@ -131,6 +134,9 @@ func (s Server) SMSLogin(ctx context.Context, request *NUserPb.SMSLoginRequest) 
 		}
 		xlog.Error("SMSLogin", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.SMSLoginErrCode)
+	}
+	if u.Status != 1 {
+		return nil, xcode.BusinessCode(xrpc.LoginUserBanErrCode)
 	}
 	createAccessToken, err := xclient.RedisToken().CreateAccessToken(ctx, xcast.ToUint64(u.ID))
 	if !errors.Is(err, nil) {
@@ -178,7 +184,7 @@ func (s Server) SendEmail(ctx context.Context, request *NUserPb.SendRequest) (re
 		xlog.Error("SendEmail", xlog.FieldErr(err), xlog.FieldName(xapp.Name()))
 		return rep, xcode.BusinessCode(xrpc.SendEmailErrCode)
 	}
-	return rep, nil
+	return new(NUserPb.NilResponse), nil
 }
 
 func (s Server) UserRegister(ctx context.Context, request *NUserPb.UserRegisterRequest) (rep *NUserPb.NilResponse, err error) {
@@ -213,7 +219,7 @@ func (s Server) UserRegister(ctx context.Context, request *NUserPb.UserRegisterR
 		xlog.Error("User Register", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return rep, xcode.BusinessCode(xrpc.UserRegisterErrCode)
 	}
-	return rep, nil
+	return new(NUserPb.NilResponse), nil
 }
 
 func (s Server) RetrievePassword(ctx context.Context, request *NUserPb.RetrievePasswordRequest) (rep *NUserPb.NilResponse, err error) {
@@ -251,7 +257,7 @@ func (s Server) RetrievePassword(ctx context.Context, request *NUserPb.RetrieveP
 		xlog.Error("RetrievePassword", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.RetrievePasswordErrCode)
 	}
-	return rep, nil
+	return new(NUserPb.NilResponse), nil
 }
 
 func (s Server) GetUserById(ctx context.Context, info *NUserPb.UserInfo) (rep *NUserPb.UserInfo, err error) {
@@ -262,7 +268,9 @@ func (s Server) GetUserById(ctx context.Context, info *NUserPb.UserInfo) (rep *N
 	if !errors.Is(err, nil) {
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("GetUserById data validation error : %s", xvalidator.GetMsg(err).Error())
 	}
-	u := new(user.User)
+	u := &user.User{
+		Model: new(gorm.Model),
+	}
 	u.ID = req.Id
 	err = u.GetById(ctx, false)
 	if !errors.Is(err, nil) {
@@ -297,9 +305,14 @@ func (s Server) GetUserList(ctx context.Context, request *NUserPb.PageRequest) (
 	if !errors.Is(err, nil) {
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("GetUserList data validation error : %s", xvalidator.GetMsg(err).Error())
 	}
-	var data []user.User
-	where := map[string][]interface{}{
-		"name=? or alias=? or tel=? or email=?": {req.Keyword, req.Keyword, req.Keyword, req.Keyword},
+	var (
+		data  []user.User
+		where map[string][]interface{}
+	)
+	if req.Keyword != "" {
+		where = map[string][]interface{}{
+			"name=? or alias=? or tel=? or email=?": {req.Keyword, req.Keyword, req.Keyword, req.Keyword},
+		}
 	}
 	total, err := new(user.User).Get(ctx, xcast.ToInt(req.PageSize*(req.Page-1)), xcast.ToInt(req.PageSize), &data, where, req.IsDelete)
 	if !errors.Is(err, nil) {
@@ -339,33 +352,37 @@ func (s Server) UpdateUserStatus(ctx context.Context, info *NUserPb.UserInfo) (r
 	if !errors.Is(err, nil) {
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("UpdateUserStatus data validation error : %s", xvalidator.GetMsg(err).Error())
 	}
-	u := new(user.User)
+	u := &user.User{
+		Model: new(gorm.Model),
+	}
 	u.ID = xcast.ToUint(req.Uid)
 	err = u.UpdateStatus(ctx, req.Status)
 	if !errors.Is(err, nil) {
 		xlog.Error("UpdateUserStatus", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.UpdateUserStatusErrCode)
 	}
-	return rep, nil
+	return new(NUserPb.NilResponse), nil
 }
 
 func (s Server) UpdateUserEmailStatus(ctx context.Context, info *NUserPb.UserInfo) (rep *NUserPb.NilResponse, err error) {
 	req := _map.UpdateUserStatus{
 		Uid:    info.Uid,
-		Status: info.Status,
+		Status: info.EmailStatus,
 	}
 	err = xvalidator.Struct(req)
 	if !errors.Is(err, nil) {
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("UpdateUserEmailStatus data validation error : %s", xvalidator.GetMsg(err).Error())
 	}
-	u := new(user.User)
+	u := &user.User{
+		Model: new(gorm.Model),
+	}
 	u.ID = xcast.ToUint(req.Uid)
 	err = u.UpdateEmailStatus(ctx, req.Status)
 	if !errors.Is(err, nil) {
 		xlog.Error("UpdateUserEmailStatus", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.UpdateUserEmailStatusErrCode)
 	}
-	return rep, nil
+	return new(NUserPb.NilResponse), nil
 }
 
 func (s Server) UpdateUser(ctx context.Context, info *NUserPb.UserInfo) (rep *NUserPb.NilResponse, err error) {
@@ -396,7 +413,7 @@ func (s Server) UpdateUser(ctx context.Context, info *NUserPb.UserInfo) (rep *NU
 		xlog.Error("UpdateUser", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.UpdateUserErrCode)
 	}
-	return rep, nil
+	return new(NUserPb.NilResponse), nil
 }
 
 func (s Server) DelUsers(ctx context.Context, list *NUserPb.UidList) (rep *NUserPb.ChangeNumResponse, err error) {
@@ -523,5 +540,5 @@ func (s Server) CheckCode(ctx context.Context, r *NUserPb.CheckCodeRequest) (rep
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("code Mismatch")
 	}
 	model.MainRedis().Del(ctx, constant.SendVerificationCode.Format(req.Type, req.Account))
-	return nil, nil
+	return new(NUserPb.NilResponse), nil
 }

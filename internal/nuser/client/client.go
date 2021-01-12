@@ -30,7 +30,7 @@ func SMSMain() *xsms.Client {
 
 func RedisToken() token.AccessToken {
 	if redisAccessToken == nil {
-		redisToken.NewAccessToken(model.MainRedis())
+		redisAccessToken = redisToken.NewAccessToken(model.MainRedis())
 	}
 	return redisAccessToken
 }

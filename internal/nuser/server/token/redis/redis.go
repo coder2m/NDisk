@@ -59,7 +59,7 @@ func (a *AccessToken) RefreshAccessToken(ctx context.Context, tokens string) (re
 	if i.Uid <= 0 || i.Type != token.RefreshTokenType {
 		return nil, token.DecryptErr
 	}
-	rToken := a.c.Get(ctx, refreshKey.Format(i.Uid)).String()
+	rToken := a.c.Get(ctx, refreshKey.Format(i.Uid)).Val()
 	if rToken != tokens {
 		return nil, token.DecryptErr
 	}

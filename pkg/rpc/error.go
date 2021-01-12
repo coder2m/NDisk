@@ -16,6 +16,7 @@ const (
 	//业务错误 高于 10000
 	EmptyData = iota + 10000
 	AccountLoginErrCode
+	LoginUserBanErrCode
 	ValidationErrCode
 	FrequentOperationErrCode
 	SMSSendErrCode
@@ -44,6 +45,7 @@ var (
 	businessErrDepot = []xcode.CodeInfo{
 		{xcode.BusinessType, EmptyData, "Empty Data"},
 		{xcode.BusinessType, AccountLoginErrCode, "AccountLogin"},
+		{xcode.BusinessType, LoginUserBanErrCode, "User Ban"},
 		{xcode.BusinessType, ValidationErrCode, "validation error"},
 		{xcode.BusinessType, FrequentOperationErrCode, "frequent operation"},
 		{xcode.BusinessType, SMSSendErrCode, "SMS Send Err"},

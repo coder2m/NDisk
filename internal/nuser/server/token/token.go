@@ -11,10 +11,11 @@ import (
 )
 
 const (
-	DefaultAccessKey = "ecol123og1ysK#xo"
-	AccessTokenType  = iota + 1
+	AccessTokenType = iota + 1
 	RefreshTokenType
 )
+
+const DefaultAccessKey = "ecol123og1ysK#xo"
 
 type (
 	AccessTokenTicket struct {
@@ -31,6 +32,7 @@ type (
 	Info struct {
 		Uid  uint64
 		Type uint64
+		Time int64
 	}
 
 	AccessToken interface {
@@ -60,6 +62,7 @@ func (a *AccessTokenTicket) Encode(uid uint64) (err error) {
 	accessTokenInfoB, err := xjson.Marshal(Info{
 		uid,
 		AccessTokenType,
+		time.Now().Unix(),
 	})
 	if !errors.Is(err, nil) {
 		return err
@@ -73,6 +76,7 @@ func (a *AccessTokenTicket) Encode(uid uint64) (err error) {
 	refreshTokenInfoB, err := xjson.Marshal(Info{
 		uid,
 		RefreshTokenType,
+		time.Now().Unix(),
 	})
 	if !errors.Is(err, nil) {
 		return err
@@ -86,8 +90,9 @@ func (a *AccessTokenTicket) Encode(uid uint64) (err error) {
 }
 
 func (a *AccessTokenTicket) Decode(token string) (info *Info, err error) {
+	info = new(Info)
 	tokenB, _ := base64.StdEncoding.DecodeString(token)
-	if !errors.Is(err, nil) {
+	if !errors.Is(err, nil) || len(tokenB) < 32 {
 		return
 	}
 	infoB, err := Aes.Decrypt(tokenB)

@@ -50,8 +50,8 @@ type UpdateUser struct {
 	Name     string `validate:"required,alphanum"`
 	Alias    string `validate:"required"`
 	Email    string `validate:"required,email"`
-	Tel      string `validate:"required,e164"`
-	Password string `validate:"required,min=8"`
+	Tel      string `validate:"required,phone"`
+	Password string
 }
 
 type UserToken struct {

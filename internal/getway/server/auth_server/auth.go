@@ -24,6 +24,8 @@ func AccountLogin(ctx context.Context, login _map.AccountLogin) (map[string]inte
 		e := xerror.NewErrRPC(err)
 		if e.ErrorCode == xrpc.EmptyData {
 			e = e.SetMessage("账号或者密码错误")
+		} else if e.ErrorCode == xrpc.LoginUserBanErrCode {
+			e = e.SetMessage("用户被禁用")
 		}
 		return nil, e
 	}
@@ -70,6 +72,8 @@ func SMSLogin(ctx context.Context, to _map.SMSLogin) (map[string]interface{}, *x
 		e := xerror.NewErrRPC(err)
 		if e.ErrorCode == xrpc.ValidationErrCode {
 			e = e.SetMessage("电话号码或验证码错误")
+		} else if e.ErrorCode == xrpc.LoginUserBanErrCode {
+			e = e.SetMessage("用户被禁用")
 		}
 		return nil, e
 	}
