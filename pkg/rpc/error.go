@@ -26,12 +26,15 @@ const (
 	GetUserByIdErrCode
 	GetUserListErrCode
 	UpdateUserStatusErrCode
+	UpdateUserEmailStatusErrCode
 	UpdateUserErrCode
 	DelUsersErrCode
 	RecoverDelUsersErrCode
 	CreateUsersErrCode
 	VerifyUsersTokenErrCode
 	RefreshTokenErrCode
+	MaximumNumberErrCode
+	DataExistErrCode
 )
 
 var (
@@ -51,12 +54,15 @@ var (
 		{xcode.BusinessType, GetUserByIdErrCode, "GetUserByIdErrCode Err"},
 		{xcode.BusinessType, GetUserListErrCode, "GetUserListErrCode Err"},
 		{xcode.BusinessType, UpdateUserStatusErrCode, "UpdateUserStatus Err"},
+		{xcode.BusinessType, UpdateUserEmailStatusErrCode, "UpdateUserEmailStatus Err"},
 		{xcode.BusinessType, UpdateUserErrCode, "UpdateUser Err"},
 		{xcode.BusinessType, DelUsersErrCode, "DelUsers Err"},
 		{xcode.BusinessType, RecoverDelUsersErrCode, "RecoverDelUsers Err"},
 		{xcode.BusinessType, CreateUsersErrCode, "CreateUsers Err"},
 		{xcode.BusinessType, VerifyUsersTokenErrCode, "VerifyUsers Token Err"},
 		{xcode.BusinessType, RefreshTokenErrCode, "RefreshToken Token Err"},
+		{xcode.BusinessType, MaximumNumberErrCode, "Maximum number of operations exceeded error"},
+		{xcode.BusinessType, DataExistErrCode, "data exist"},
 	}
 )
 

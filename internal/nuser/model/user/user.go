@@ -13,18 +13,19 @@ import (
 )
 
 type User struct {
-	Name     string `gorm:"not null;unique_index;"`
-	Alias    string `gorm:"not null"`
-	Tel      string `gorm:"type:varchar(11);unique_index;"`
-	Email    string `gorm:"type:varchar(100);unique_index;not null"`
-	Password string `gorm:"not null"`
-	Status   uint32 `gorm:"DEFAULT:1;not null"`
+	Name        string `gorm:"not null;unique_index;"`
+	Alias       string `gorm:"not null"`
+	Tel         string `gorm:"type:varchar(11);unique_index;"`
+	Email       string `gorm:"type:varchar(100);unique_index;not null"`
+	Password    string `gorm:"not null"`
+	Status      uint32 `gorm:"DEFAULT:1;not null"`
+	EmailStatus uint32 `gorm:"DEFAULT:2;not null"`
 
 	*gorm.Model
 }
 
 func (m *User) TableName() string {
-	return "user"
+	return "auth"
 }
 
 func (m *User) Add(ctx context.Context) error {
@@ -87,6 +88,15 @@ func (m *User) GetByWhere(ctx context.Context, wheres map[string][]interface{}) 
 	return db.First(m).Error
 }
 
+func (m *User) ExistWhere(ctx context.Context, wheres map[string][]interface{}) bool {
+	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	for s, i := range wheres {
+		db = db.Where(s, i...)
+	}
+	first := db.First(m)
+	return first.RowsAffected != 0
+}
+
 func (m *User) UpdatesWhere(ctx context.Context, wheres map[string][]interface{}) error {
 	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
@@ -105,6 +115,10 @@ func (m *User) UpdateWhere(ctx context.Context, wheres map[string][]interface{},
 
 func (m *User) UpdateStatus(ctx context.Context, status uint32) error {
 	return model.MainDB().Table(m.TableName()).WithContext(ctx).Where("id=?", m.ID).Update("status", status).Error
+}
+
+func (m *User) UpdateEmailStatus(ctx context.Context, status uint32) error {
+	return model.MainDB().Table(m.TableName()).WithContext(ctx).Where("id=?", m.ID).Update("email_status", status).Error
 }
 
 func (m *User) DelRes(ctx context.Context, wheres map[string][]interface{}) (count int64, err error) {

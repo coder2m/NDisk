@@ -34,6 +34,10 @@ service NUserService {
   rpc VerifyUsers(Token)returns(UserInfo){}
   //  刷新token
   rpc RefreshToken(Token)returns(Token){}
+  //  更新邮箱状态
+  rpc UpdateUserEmailStatus(UserInfo)returns(NilResponse){}
+  //  验证Code
+  rpc CheckCode(CheckCodeRequest)returns(NilResponse){}
 }
 
 message ChangeNumResponse {
@@ -57,10 +61,11 @@ message UserInfo  {
   string Tel = 4;
   string email = 5;
   uint32 status = 6;
-  string password = 7;
-  uint64 created_at = 8;
-  uint64 updated_at = 9;
-  uint64 deleted_at = 10;
+  uint32 email_status = 7;
+  string password = 8;
+  uint64 created_at = 9;
+  uint64 updated_at = 10;
+  uint64 deleted_at = 11;
 }
 
 message Token  {
@@ -82,13 +87,22 @@ message UserRegisterRequest{
 
 message SendRequest{
   string account = 1;
-  ActionType type = 2; //0为注册邮件验证发送邮件；1为找回密码发送邮件验证 2为登录
+  //0为注册邮件验证发送邮件；1为找回密码发送邮件验证 2为登录 3为邮箱验证
+  ActionType type = 2;
+}
+
+message CheckCodeRequest{
+  string account = 1;
+  string code = 2;
+  //0为注册邮件验证发送邮件；1为找回密码发送邮件验证 2为登录 3为邮箱验证
+  ActionType type = 3;
 }
 
 enum ActionType {
   Register_Type = 0;
   Retrieve_Type = 1;
   Login_Type = 2;
+  EmailAttest_Type = 3;
 }
 
 message RetrievePasswordRequest{

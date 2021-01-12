@@ -109,7 +109,7 @@ func (s *Server) invoker() {
 		xsms.Register("sms"),
 	)
 	s.err = xinvoker.Init()
-	//_ = model.MainDB().Migrator().CreateTable(new(user.User))
+	//_ = model.MainDB().Migrator().CreateTable(new(auth.User))
 }
 
 func (s *Server) initValidator() {

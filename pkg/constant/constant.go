@@ -13,7 +13,7 @@ func (k Key) Format(age ...interface{}) string {
 
 // redis
 const (
-	SendVerificationCode Key = `NUser_SendSMS_%v_%v` //操作类型 用户电话号码
+	SendVerificationCode Key = `NUser_SendSMS_%v_%v` //操作类型 用户电话号码/邮箱
 )
 
 // 验证码
@@ -26,4 +26,9 @@ const (
 const (
 	DefaultNamespaces     = `NDisk`
 	GRPCTargetEtcd    Key = `etcd://%s/%s` //命名空间 //servername
+)
+
+//http
+const (
+	CSRF = `X-CSRF-T`
 )

@@ -6,6 +6,6 @@ package R
 
 const (
 	MSG_422 = "参数错误"
-	MSG_OK  = "Success"
+	MSG_OK  = "success"
 	MSG_ERR = "fail"
 )

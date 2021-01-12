@@ -23,7 +23,7 @@ func HandleNotFound(ctx *gin.Context) {
 	return
 }
 
-func HandleForbidden(ctx *gin.Context) {
-	R.Response(ctx, R.Forbidden, "Forbidden", nil, http.StatusForbidden)
+func HandleForbidden(ctx *gin.Context, data interface{}) {
+	R.Response(ctx, R.Forbidden, "Forbidden", data, http.StatusForbidden)
 	return
 }
