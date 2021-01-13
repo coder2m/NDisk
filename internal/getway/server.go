@@ -18,11 +18,9 @@ import (
 	"github.com/myxy99/ndisk/internal/getway/api/v1/registry"
 	"github.com/myxy99/ndisk/internal/getway/client"
 	myValidator "github.com/myxy99/ndisk/internal/getway/validator"
-	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
 	"github.com/myxy99/ndisk/pkg/recaptcha"
 	"net/http"
 	"sync"
-	"time"
 )
 
 type Server struct {
@@ -124,12 +122,6 @@ func (s *Server) rpc() {
 	}
 	s.err = xetcd.RegisterBuilder(conf)
 	xclient.InitClient()
-	go func() {
-		for true {
-			time.Sleep(2 * time.Second)
-			_, _ = xclient.NUserServer.VerifyUsers(context.Background(), &NUserPb.Token{})
-		}
-	}()
 }
 
 func (s *Server) recaptcha() {
