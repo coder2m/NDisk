@@ -4,6 +4,8 @@ go 1.15
 
 require (
 	github.com/BurntSushi/toml v0.3.1
+	github.com/casbin/casbin/v2 v2.11.2
+	github.com/casbin/xorm-adapter/v2 v2.1.0
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-redis/redis/v8 v8.4.4
@@ -16,6 +18,7 @@ require (
 	github.com/uber/jaeger-client-go v2.25.0+incompatible
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	google.golang.org/grpc v1.27.0
+	gorm.io/driver/mysql v1.0.3
 	gorm.io/gorm v1.20.9
 )
 
