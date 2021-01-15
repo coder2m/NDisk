@@ -13,6 +13,7 @@ import (
 	"github.com/myxy99/component/xgovern"
 	"github.com/myxy99/component/xinvoker"
 	"github.com/myxy99/component/xmonitor"
+	xclient "github.com/myxy99/ndisk/internal/authority/client"
 	myValidator "github.com/myxy99/ndisk/internal/authority/validator"
 	"github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
@@ -31,6 +32,7 @@ func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 	s.debug()
 	s.initValidator()
 	s.govern()
+	s.casbin()
 	return s.err
 }
 
@@ -112,4 +114,11 @@ func (s *Server) govern() {
 	xcode.GovernRun()
 	xmonitor.Run()
 	go xgovern.Run()
+}
+
+func (s *Server) casbin() {
+	if s.err != nil {
+		return
+	}
+	xclient.CasbinClient()
 }
