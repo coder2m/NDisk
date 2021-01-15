@@ -5,18 +5,21 @@ import (
 	"github.com/myxy99/component/pkg/xdefer"
 	"github.com/myxy99/component/xcfg"
 	"github.com/myxy99/ndisk/pkg/constant"
+	AuthorityPb "github.com/myxy99/ndisk/pkg/pb/authority"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
 	xrpc "github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
 )
 
 var (
-	NUserServer NUserPb.NUserServiceClient
-	grpcCfg     *xrpc.GRPCConfig
+	NUserServer     NUserPb.NUserServiceClient
+	AuthorityServer AuthorityPb.AuthorityServiceClient
+	grpcCfg         *xrpc.GRPCConfig
 )
 
 func InitClient() {
 	NUserServer = NUserPb.NewNUserServiceClient(connection("ndisk_nuser"))
+	AuthorityServer = AuthorityPb.NewAuthorityServiceClient(connection("ndisk_authority"))
 }
 
 func GetGRPCCfg() *xrpc.GRPCConfig {

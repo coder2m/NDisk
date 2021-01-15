@@ -4,15 +4,15 @@ go 1.15
 
 require (
 	github.com/BurntSushi/toml v0.3.1
-	github.com/casbin/casbin/v2 v2.11.2
-	github.com/casbin/xorm-adapter/v2 v2.1.0
+	github.com/casbin/casbin/v2 v2.12.0
+	github.com/casbin/gorm-adapter/v3 v3.0.4
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-redis/redis/v8 v8.4.4
 	github.com/go-resty/resty/v2 v2.3.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.4.3
-	github.com/myxy99/component v0.4.1
+	github.com/myxy99/component v0.4.2
 	github.com/pkg/errors v0.9.1
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	google.golang.org/grpc v1.27.0

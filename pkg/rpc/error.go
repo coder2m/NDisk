@@ -15,9 +15,11 @@ const (
 
 	//业务错误 高于 10000
 	EmptyData = iota + 10000
+	ValidationErrCode
+
+	//NUser
 	AccountLoginErrCode
 	LoginUserBanErrCode
-	ValidationErrCode
 	FrequentOperationErrCode
 	SMSSendErrCode
 	SMSLoginErrCode
@@ -36,6 +38,23 @@ const (
 	RefreshTokenErrCode
 	MaximumNumberErrCode
 	DataExistErrCode
+
+	//Authority
+	DeleteRoleErrCode
+	GetRolesForUserErrCode
+	AddRolesForUserErrCode
+	HasRoleForUserErrCode
+	DeleteRoleForUserErrCode
+	DeleteUserErrCode
+	DeleteRolesForUserErrCode
+	GetUsersForRoleErrCode
+	AddPermissionForUserErrCode
+	GetPermissionsForUserErrCode
+	DeletePermissionForUserErrCode
+	DeletePermissionsForUserErrCode
+	DeletePermissionErrCode
+	HasPermissionForUserErrCode
+	EnforceErrCode
 )
 
 var (
@@ -65,6 +84,22 @@ var (
 		{xcode.BusinessType, RefreshTokenErrCode, "RefreshToken Token Err"},
 		{xcode.BusinessType, MaximumNumberErrCode, "Maximum number of operations exceeded error"},
 		{xcode.BusinessType, DataExistErrCode, "data exist"},
+
+		{xcode.BusinessType, DeleteRoleErrCode, "delete role error"},
+		{xcode.BusinessType, GetRolesForUserErrCode, "get roles for user error"},
+		{xcode.BusinessType, AddRolesForUserErrCode, "AddRolesForUse error"},
+		{xcode.BusinessType, HasRoleForUserErrCode, "HasRoleForUserErrCode error"},
+		{xcode.BusinessType, DeleteRoleForUserErrCode, "DeleteRoleForUserErrCode error"},
+		{xcode.BusinessType, DeleteUserErrCode, "DeleteUser error"},
+		{xcode.BusinessType, DeleteRolesForUserErrCode, "DeleteRolesForUser error"},
+		{xcode.BusinessType, GetUsersForRoleErrCode, "GetUsersForRoleErr error"},
+		{xcode.BusinessType, AddPermissionForUserErrCode, "AddPermissionForUser error"},
+		{xcode.BusinessType, GetPermissionsForUserErrCode, "GetPermissionsForUser error"},
+		{xcode.BusinessType, DeletePermissionForUserErrCode, "DeletePermissionForUser error"},
+		{xcode.BusinessType, DeletePermissionsForUserErrCode, "DeletePermissionsForUser error"},
+		{xcode.BusinessType, DeletePermissionErrCode, "DeletePermission error"},
+		{xcode.BusinessType, HasPermissionForUserErrCode, "HasPermissionForUser error"},
+		{xcode.BusinessType, EnforceErrCode, "Enforce error"},
 	}
 )
 

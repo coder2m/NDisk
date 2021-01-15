@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package AuthorityPb;
+
+service AuthorityService {
+  //  获取角色列表 全部
+  rpc GetAllRoles (Empty) returns (Array) {}
+  //  删除角色
+  rpc DeleteRole (Target) returns (Empty) {}
+  //  获取用户的所有角色
+  rpc GetRolesForUser (Target) returns (Array) {}
+  //  给用户批量添加角色
+  rpc AddRolesForUser (Batch) returns (Empty) {}
+  //  确定用户是否具有角色
+  rpc HasRoleForUser (Single) returns (Determine) {}
+  //  删除用户的指定角色
+  rpc DeleteRoleForUser (Single) returns (Empty) {}
+  //  删除用户
+  rpc DeleteUser (Single) returns (Empty) {}
+  //  删除用户的全部角色
+  rpc DeleteRolesForUser (Single) returns (Empty) {}
+  //  获取角色下的所有用户
+  rpc GetUsersForRole (Single) returns (Array) {}
+  //  给角色添加权限
+  rpc AddPermissionForUser (Resources) returns (Empty) {}
+  //  获取角色下全部权限
+  rpc GetPermissionsForUser (Single) returns (Arrays) {}
+  //  删除角色下的指定权限
+  rpc DeletePermissionForUser (Batch) returns (Empty) {}
+  //  删除角色的全部权限
+  rpc DeletePermissionsForUser (Single) returns (Empty) {}
+  //  删除权限
+  rpc DeletePermission (Array) returns (Empty) {}
+  //  判断角色是否有权限
+  rpc HasPermissionForUser (Batch) returns (Determine) {}
+  //  判断用户对资源有没有权限
+  rpc Enforce (Resources) returns (Determine) {}
+}
+
+message Empty {}
+
+message Array {
+  repeated string data = 1;
+}
+
+message Arrays {
+  repeated Array list = 1;
+}
+
+message Target {
+  string to = 1;
+}
+
+message Batch {
+  string to = 1;
+  repeated string operate = 2;
+}
+
+message Single {
+  string to = 1;
+  string operate = 2;
+}
+
+message Determine {
+  bool ok = 1;
+}
+
+message Resources {
+  string role = 1;
+  string obj = 2;
+  string action = 3;
+}
