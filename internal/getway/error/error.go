@@ -32,5 +32,9 @@ func NewErr(code uint32, message string) *Err {
 
 func NewErrRPC(err error) *Err {
 	gst := xcode.ExtractCodes(err)
+	if gst.Code <= 10000 {
+		// todo
+		gst=gst.SetMsg("server internal error")
+	}
 	return NewErr(gst.GetCodeAsUint32(), gst.Message)
 }

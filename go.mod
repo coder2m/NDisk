@@ -11,9 +11,7 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.4.3
 	github.com/myxy99/component v0.4.1
-	github.com/opentracing/opentracing-go v1.2.0
 	github.com/pkg/errors v0.9.1
-	github.com/uber/jaeger-client-go v2.25.0+incompatible
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	google.golang.org/grpc v1.27.0
 	gorm.io/gorm v1.20.9

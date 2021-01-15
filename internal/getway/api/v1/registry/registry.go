@@ -2,7 +2,6 @@ package registry
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/myxy99/ndisk/internal/getway/api/v1/middleware"
 )
 
 var Router *gin.Engine
@@ -17,6 +16,6 @@ func Engine() *gin.Engine {
 
 func V1() *gin.RouterGroup {
 	v1 := Engine().Group("/api/v1")
-	v1.Use(middleware.CSRF())
+	//v1.Use(middleware.CSRF())
 	return v1
 }
