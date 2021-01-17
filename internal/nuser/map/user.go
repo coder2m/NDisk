@@ -26,12 +26,13 @@ type SMSLogin struct {
 }
 
 type UserRegister struct {
-	Name     string `validate:"required,alphanum"`
-	Alias    string `validate:"required"`
-	Email    string `validate:"required,email"`
-	Tel      string `validate:"required,phone"`
-	Password string `validate:"required,min=8"`
-	Code     string `validate:"required"`
+	Name       string `validate:"required,alphanum,min=6"`
+	Alias      string `validate:"required"`
+	Email      string `validate:"required,email"`
+	Tel        string `validate:"required,phone"`
+	Password   string `validate:"required,max=20,min=8"`
+	RePassword string `validate:"required,max=20,min=8,eqfield=Password" json:"re_password"`
+	Code       string `validate:"required"`
 }
 
 type RetrievePassword struct {

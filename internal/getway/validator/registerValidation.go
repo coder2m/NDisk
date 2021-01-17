@@ -13,4 +13,8 @@ var RegisterValidation = map[string]*xvalidator.Register{
 		phoneValidationFunc,
 		"电话号码验证不通过",
 	},
+	"oneOrTwo": {
+		oneOrTwo,
+		"status只能是1或者2",
+	},
 }

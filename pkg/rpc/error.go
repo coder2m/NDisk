@@ -33,6 +33,7 @@ const (
 	UpdateUserErrCode
 	DelUsersErrCode
 	RecoverDelUsersErrCode
+	GetUserListByUidErrCode
 	CreateUsersErrCode
 	VerifyUsersTokenErrCode
 	RefreshTokenErrCode
@@ -84,6 +85,8 @@ var (
 		{xcode.BusinessType, RefreshTokenErrCode, "RefreshToken Token Err"},
 		{xcode.BusinessType, MaximumNumberErrCode, "Maximum number of operations exceeded error"},
 		{xcode.BusinessType, DataExistErrCode, "data exist"},
+		{xcode.BusinessType, GetUserListByUidErrCode, "GetUserListByUid error"},
+
 
 		{xcode.BusinessType, DeleteRoleErrCode, "delete role error"},
 		{xcode.BusinessType, GetRolesForUserErrCode, "get roles for user error"},

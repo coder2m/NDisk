@@ -2,16 +2,24 @@ package registry
 
 import (
 	"github.com/gin-gonic/gin"
+	xapp "github.com/myxy99/component"
+	"github.com/myxy99/ndisk/internal/getway/api/v1/middleware"
 )
 
-var Router *gin.Engine
+var router *gin.Engine
 
 func Engine() *gin.Engine {
-	if Router == nil {
-		gin.SetMode(gin.ReleaseMode)
-		Router = gin.Default()
+	if router == nil {
+		if xapp.Debug() {
+			gin.DisableConsoleColor()
+			gin.SetMode(gin.DebugMode)
+		} else {
+			gin.SetMode(gin.ReleaseMode)
+		}
+		router = gin.Default()
+		router.Use(middleware.Cors())
 	}
-	return Router
+	return router
 }
 
 func V1() *gin.RouterGroup {

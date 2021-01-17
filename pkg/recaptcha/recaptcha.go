@@ -9,6 +9,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/myxy99/component/pkg/xjson"
 	"github.com/myxy99/component/xlog"
+	"io"
 	"strings"
 	"time"
 
@@ -16,7 +17,7 @@ import (
 )
 
 const (
-	apiEndpoint    = "https://www.google.com/recaptcha/api/siteverify"
+	apiEndpoint    = "https://www.recaptcha.net/recaptcha/api/siteverify"
 	defaultTimeout = 15 * time.Second
 )
 
@@ -58,8 +59,9 @@ type (
 		ChallengeTs challengeTs `json:"challenge_ts"`
 		Hostname    string      `json:"hostname"`
 		ErrorCodes  []string    `json:"error-codes"`
+		Score       float64     `json:"score"`
+		Action      string      `json:"action"`
 	}
-
 	// Config
 	Config struct {
 		Secret  string        `mapStructure:"secret"`
@@ -127,28 +129,28 @@ func NewDefault(c *Config, options ...Option) {
 }
 
 func Verify(captcha string) *Response {
-	if defaultClient == nil {
+	if defaultClient != nil {
 		return defaultClient.Verify(captcha)
 	}
 	return nilResponse
 }
 
 func VerifyE(captcha string) (*Response, error) {
-	if defaultClient == nil {
+	if defaultClient != nil {
 		return defaultClient.VerifyE(captcha)
 	}
 	return nilResponse, ErrDefaultClientNil
 }
 
 func VerifyWithIP(captcha, remoteIP string) *Response {
-	if defaultClient == nil {
+	if defaultClient != nil {
 		return defaultClient.VerifyWithIP(captcha, remoteIP)
 	}
 	return nilResponse
 }
 
 func VerifyWithIPE(captcha, remoteIP string) (*Response, error) {
-	if defaultClient == nil {
+	if defaultClient != nil {
 		return defaultClient.VerifyWithIPE(captcha, remoteIP)
 	}
 	return nilResponse, ErrDefaultClientNil
@@ -164,14 +166,13 @@ func New(c *Config, options ...Option) *Client {
 		httpClient: resty.
 			New().
 			SetTimeout(c.Timeout).
-			SetLogger(xlog.DefaultLogger).
+			SetLogger(xlog.GetDefaultLogger()).
 			SetDebug(c.Debug),
 	}
 
 	for _, option := range options {
 		option(&cli)
 	}
-
 	return &cli
 }
 
@@ -205,23 +206,21 @@ func (cli *Client) verify(captcha string, remoteIP string) (*Response, error) {
 	if captcha == "" {
 		return nilResponse, ErrCaptchaNil
 	}
-	var form = map[string]string{
-		"secret":   cli.secret,
-		"response": captcha,
-		"remoteip": remoteIP,
-	}
 	resp, err := cli.httpClient.
 		R().
-		SetHeader("Content-Type", "application/x-www-form-urlencoded").
-		SetBody(form).
+		SetFormData(map[string]string{
+			"secret":   cli.secret,
+			"response": captcha,
+			"remoteip": remoteIP,
+		}).
 		Post(apiEndpoint)
 	if err != nil {
-		return nil, errors.Wrap(err, "send request")
+		return nilResponse, errors.Wrap(err, "send request")
 	}
 
 	response := new(Response)
-	if err := xjson.NewDecoder(resp.RawResponse.Body).Decode(response); err != nil {
-		return response, errors.Wrap(err, "unmarshal api response")
+	if err := xjson.Unmarshal(resp.Body(), response); err != nil && err != io.EOF {
+		return nilResponse, errors.Wrap(err, "unmarshal api response")
 	}
 
 	for _, errCode := range response.ErrorCodes {

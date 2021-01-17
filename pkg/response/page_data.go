@@ -4,6 +4,8 @@
  */
 package R
 
+import "github.com/gin-gonic/gin"
+
 type PageData struct {
 	//当前页码
 	PageNo int
@@ -22,10 +24,12 @@ type PageData struct {
 }
 
 //总条数  当前页码  每页大小   数据list
-func Page(count int64, pageNo int, pageSize int, list interface{}) PageData {
+func Page(c *gin.Context, count int64, pageNo int, pageSize int, list interface{}) {
 	tp := int(count) / pageSize
 	if int(count)%pageSize > 0 {
 		tp = int(count)/pageSize + 1
 	}
-	return PageData{PageNo: pageNo, PageSize: pageSize, TotalPage: tp, TotalCount: count, FirstPage: pageNo == 1, LastPage: pageNo == tp, List: list}
+	data := PageData{PageNo: pageNo, PageSize: pageSize, TotalPage: tp, TotalCount: count, FirstPage: pageNo == 1, LastPage: pageNo == tp, List: list}
+	Ok(c, data)
+	return
 }

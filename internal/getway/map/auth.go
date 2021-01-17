@@ -30,18 +30,20 @@ type (
 	}
 
 	UserRegister struct {
-		Name     string `validate:"required,alphanum" json:"name"`
-		Alias    string `validate:"required" json:"alias"`
-		Email    string `validate:"required,email" json:"email"`
-		Tel      string `validate:"required,phone" json:"tel"`
-		Password string `validate:"required,min=8" json:"password"`
-		Code     string `validate:"required" json:"code"`
+		Name       string `validate:"required,alphanum,min=6" json:"name"`
+		Alias      string `validate:"required" json:"alias"`
+		Email      string `validate:"required,email" json:"email"`
+		Tel        string `validate:"required,phone" json:"tel"`
+		Password   string `validate:"required,max=20,min=8" json:"password"`
+		RePassword string `validate:"required,max=20,min=8,eqfield=Password" json:"re_password"`
+		Code       string `validate:"required" json:"code"`
 	}
 
 	RetrievePassword struct {
-		Account  string `validate:"required" json:"account"`
-		Password string `validate:"required,min=8" json:"password"`
-		Code     string `validate:"required" json:"code"`
+		Account    string `validate:"required" json:"account"`
+		Password   string `validate:"required,min=8" json:"password"`
+		RePassword string `validate:"required,max=20,min=8,eqfield=Password" json:"re_password"`
+		Code       string `validate:"required" json:"code"`
 	}
 
 	UserToken struct {

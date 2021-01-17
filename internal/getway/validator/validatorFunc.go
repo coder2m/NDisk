@@ -13,3 +13,10 @@ func phoneValidationFunc(fl validator.FieldLevel) bool {
 	reg := `^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$`
 	return regexp.MustCompile(reg).MatchString(fl.Field().String())
 }
+
+func oneOrTwo(fl validator.FieldLevel) bool {
+	if fl.Field().String() == "1" || fl.Field().String() == "2" {
+		return true
+	}
+	return false
+}

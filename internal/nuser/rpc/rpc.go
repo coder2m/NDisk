@@ -542,3 +542,41 @@ func (s Server) CheckCode(ctx context.Context, r *NUserPb.CheckCodeRequest) (rep
 	model.MainRedis().Del(ctx, constant.SendVerificationCode.Format(req.Type, req.Account))
 	return new(NUserPb.NilResponse), nil
 }
+
+func (s Server) GetUserListByUid(ctx context.Context, req *NUserPb.UidList) (rep *NUserPb.UserListResponse, err error) {
+	if len(req.Uid) <= 0 {
+		return rep, err
+	}
+	var data = make([]string, len(req.Uid))
+	for i, u := range req.Uid {
+		data[i] = xcast.ToString(u)
+	}
+	where := map[string][]interface{}{
+		"id IN (?)": {strings.Join(data, ",")},
+	}
+	var userList []user.User
+	err = new(user.User).GetAll(ctx, &userList, where)
+	if !errors.Is(err, nil) {
+		xlog.Error("GetUserListByUid", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return nil, xcode.BusinessCode(xrpc.GetUserListByUidErrCode)
+	}
+	var list = make([]*NUserPb.UserInfo, len(userList))
+	for i, datum := range userList {
+		list[i] = &NUserPb.UserInfo{
+			Uid:         xcast.ToUint64(datum.ID),
+			Name:        datum.Name,
+			Alias:       datum.Alias,
+			Tel:         datum.Tel,
+			Email:       datum.Email,
+			Status:      datum.Status,
+			EmailStatus: datum.EmailStatus,
+			CreatedAt:   xcast.ToUint64(datum.CreatedAt.Unix()),
+			UpdatedAt:   xcast.ToUint64(datum.UpdatedAt.Unix()),
+			DeletedAt:   xcast.ToUint64(datum.DeletedAt.Time.Unix()),
+		}
+	}
+	return &NUserPb.UserListResponse{
+		List:  list,
+		Count: xcast.ToUint32(len(userList)),
+	}, nil
+}

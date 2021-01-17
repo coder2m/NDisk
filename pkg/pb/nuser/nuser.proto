@@ -38,6 +38,8 @@ service NUserService {
   rpc UpdateUserEmailStatus(UserInfo)returns(NilResponse){}
   //  验证Code
   rpc CheckCode(CheckCodeRequest)returns(NilResponse){}
+  //  根据Uid批量获取用户列表
+  rpc GetUserListByUid(UidList)returns(UserListResponse){}
 }
 
 message ChangeNumResponse {

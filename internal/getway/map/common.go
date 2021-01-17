@@ -16,7 +16,3 @@ type PageList struct {
 	Keyword  string `json:"keyword" form:"keyword"`
 	IsDelete bool   `json:"is_delete" form:"is_delete"`
 }
-
-type IdMap struct {
-	Id uint `uri:"id" json:"id" validate:"required,number,min=1" label:"id"`
-}
