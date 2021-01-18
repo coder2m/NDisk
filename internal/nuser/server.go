@@ -18,6 +18,10 @@ import (
 	xsms "github.com/myxy99/component/xinvoker/sms"
 	"github.com/myxy99/component/xmonitor"
 	"github.com/myxy99/component/xtrace"
+	"github.com/myxy99/ndisk/internal/nuser/model"
+	"github.com/myxy99/ndisk/internal/nuser/model/agency"
+	"github.com/myxy99/ndisk/internal/nuser/model/agency2user"
+	"github.com/myxy99/ndisk/internal/nuser/model/user"
 	"github.com/myxy99/ndisk/internal/nuser/rpc"
 	myValidator "github.com/myxy99/ndisk/internal/nuser/validator"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
@@ -109,7 +113,13 @@ func (s *Server) invoker() {
 		xsms.Register("sms"),
 	)
 	s.err = xinvoker.Init()
-	//_ = model.MainDB().Migrator().CreateTable(new(user.User))
+	//_ = model.MainDB().Migrator().AutoMigrate(
+	//	new(user.User),
+	//	new(agency.Agency),
+	//	new(agency2user.AgencyUser),
+	//)
+	_ = model.MainDB().SetupJoinTable(&user.User{}, "Agency", &agency2user.AgencyUser{})
+	_ = model.MainDB().SetupJoinTable(&agency.Agency{}, "Users", &agency2user.AgencyUser{})
 }
 
 func (s *Server) initValidator() {

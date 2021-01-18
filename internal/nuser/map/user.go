@@ -64,3 +64,16 @@ type CheckCode struct {
 	Code    string             `validate:"required"`
 	Type    NUserPb.ActionType `validate:"required,number,min=1"` //0为注册邮件验证发送邮件；1为找回密码发送邮件验证 2为登录 3为邮箱验证
 }
+
+type UserInfo struct {
+	Uid         uint   `json:"uid,omitempty"`
+	Name        string `json:"name,omitempty"`
+	Alias       string `json:"alias,omitempty"`
+	Tel         string `json:"tel,omitempty"`
+	Email       string `json:"email,omitempty"`
+	Status      uint32 `json:"status,omitempty"`
+	EmailStatus uint32 `json:"email_status,omitempty"`
+	CreatedAt   int64  `json:"created_at,omitempty"`
+	UpdatedAt   int64  `json:"updated_at,omitempty"`
+	DeletedAt   int64  `json:"deleted_at,omitempty"`
+}
