@@ -45,10 +45,13 @@ func (m *Agency) Del(ctx context.Context, wheres map[string][]interface{}) (coun
 	return
 }
 
-func (m *Agency) GetAll(ctx context.Context, data *[]Agency, wheres map[string][]interface{}, related bool) (err error) {
+func (m *Agency) GetAll(ctx context.Context, data *[]Agency, wheres map[string][]interface{}, related bool, IgnoreDel bool) (err error) {
 	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
+	}
+	if !IgnoreDel {
+		db = db.Unscoped()
 	}
 	if related {
 		db = db.Preload("CreateUser")

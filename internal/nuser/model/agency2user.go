@@ -6,15 +6,25 @@ import (
 	"time"
 )
 
-type AgencyUser struct {
-	ID        uint `gorm:"primarykey"`
-	UserId    uint `gorm:"user_id;primaryKey"`
-	AgencyId  uint `gorm:"agency_id;primaryKey"`
-	Status    uint `gorm:"status;default:1"` //1为正常 2为拒绝 3 为等待接受邀请
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
-}
+type (
+	AgencyUser struct {
+		ID        uint `gorm:"primarykey"`
+		UserId    uint `gorm:"user_id;primaryKey"`
+		AgencyId  uint `gorm:"agency_id;primaryKey"`
+		Status    uint `gorm:"status;default:1"` //1为正常 2为拒绝 3 为等待接受邀请
+		CreatedAt time.Time
+		UpdatedAt time.Time
+		DeletedAt gorm.DeletedAt `gorm:"index"`
+	}
+
+	// 放回组织信息 结构
+	AgencyInfo struct {
+		ID       uint   `json:"id"`
+		Name     string `json:"name"`
+		ParentId uint   `json:"parent_id"`
+		Remark   string `json:"remark"`
+	}
+)
 
 func (m *AgencyUser) TableName() string {
 	return "agency_user"
@@ -119,4 +129,18 @@ func (m *AgencyUser) DelRes(ctx context.Context, wheres map[string][]interface{}
 	err = tx.Error
 	count = tx.RowsAffected
 	return
+}
+
+//根据用户id查询加入的机构
+func (m *AgencyUser) ListAgencyByJoinUId(ctx context.Context, uid uint, status uint) ([]AgencyInfo, error) {
+	var data []AgencyInfo
+	tx := MainDB().
+		Table(m.TableName()).
+		WithContext(ctx).
+		Select("agency.id", "agency.parent_id", "agency.name", "agency.remark").
+		Where("agency_user.user_id=?", uid).
+		Where("agency_user.status=?", status).
+		Joins("JOIN agency ON agency.id = agency_user.agency_id AND (agency.status = ? and agency.deleted_at is null)", 1).
+		Find(&data)
+	return data, tx.Error
 }

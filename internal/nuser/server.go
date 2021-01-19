@@ -1,6 +1,7 @@
 package nuser
 
 import (
+	"context"
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xcode"
@@ -18,8 +19,10 @@ import (
 	xsms "github.com/myxy99/component/xinvoker/sms"
 	"github.com/myxy99/component/xmonitor"
 	"github.com/myxy99/component/xtrace"
+	_map "github.com/myxy99/ndisk/internal/nuser/map"
 	"github.com/myxy99/ndisk/internal/nuser/model"
 	"github.com/myxy99/ndisk/internal/nuser/rpc"
+	agency_server "github.com/myxy99/ndisk/internal/nuser/server/agency"
 	myValidator "github.com/myxy99/ndisk/internal/nuser/validator"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
 	"github.com/myxy99/ndisk/pkg/rpc"
@@ -117,6 +120,7 @@ func (s *Server) invoker() {
 	)
 	_ = model.MainDB().SetupJoinTable(&model.User{}, "Agency", &model.AgencyUser{})
 	_ = model.MainDB().SetupJoinTable(&model.Agency{}, "Users", &model.AgencyUser{})
+	_, _ = agency_server.ListAgencyByJoinUId(context.Background(), _map.Id{Id: 1}, 1)
 }
 
 func (s *Server) initValidator() {

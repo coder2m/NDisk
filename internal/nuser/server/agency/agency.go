@@ -130,6 +130,38 @@ func UpdateAgency(ctx context.Context, req _map.UpdateAgency) (err error) {
 	return err
 }
 
+// 根据id获取机构信息
+func AgencyById(ctx context.Context, id uint, IgnoreDel bool) (data _map.AgencyInf, err error) {
+	a := &model.Agency{
+		ID: id,
+	}
+	err = a.GetById(ctx, IgnoreDel, true)
+	if !errors.Is(err, nil) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return data, EmptyDataErr
+		}
+		xlog.Error("AgencyById", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return data, errors.New("AgencyById error")
+	}
+	return _map.AgencyInf{
+		ID:       a.ID,
+		ParentId: a.ParentId,
+		Name:     a.Name,
+		Remark:   a.Remark,
+		Status:   a.Status,
+		CreateUser: _map.UserInfo{
+			Uid:   a.CreateUser.ID,
+			Name:  a.CreateUser.Name,
+			Alias: a.CreateUser.Alias,
+			Tel:   a.CreateUser.Tel,
+			Email: a.CreateUser.Email,
+		},
+		CreatedAt: a.CreatedAt.Unix(),
+		UpdatedAt: a.UpdatedAt.Unix(),
+		DeletedAt: a.DeletedAt.Time.Unix(),
+	}, err
+}
+
 func UpdateStatusAgency(ctx context.Context, id uint, status uint32) (err error) {
 	a := &model.Agency{
 		ID: id,
@@ -165,12 +197,11 @@ func RegainDelAgency(ctx context.Context, req _map.Ids) (count int64, err error)
 }
 
 // 获取指定用户创建的所有机构
-func ListAgencyByCreateUId(ctx context.Context, req _map.Id, status uint) ([]_map.AgencyInf, error) {
+func ListAgencyByCreateUId(ctx context.Context, req _map.Id) ([]_map.AgencyInf, error) {
 	var data []model.Agency
 	err := new(model.Agency).GetAll(ctx, &data, map[string][]interface{}{
-		"id = ?":     {req.Id},
-		"status = ?": {status},
-	}, false)
+		"create_uid = ?": {req.Id},
+	}, false, true)
 	if !errors.Is(err, nil) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, EmptyDataErr
@@ -195,8 +226,25 @@ func ListAgencyByCreateUId(ctx context.Context, req _map.Id, status uint) ([]_ma
 }
 
 //	获取用户加入的所有机构
-func ListAgencyByJoinUId(ctx context.Context, req _map.Id) ([]_map.AgencyInf, error) {
-	panic("TODO")
+func ListAgencyByJoinUId(ctx context.Context, req _map.Id, status uint) ([]_map.AgencyInf, error) {
+	data, err := new(model.AgencyUser).ListAgencyByJoinUId(ctx, req.Id, status)
+	if !errors.Is(err, nil) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, EmptyDataErr
+		}
+		xlog.Error("ListAgencyByJoinUId", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return nil, errors.New("ListAgencyByJoinUId error")
+	}
+	var list = make([]_map.AgencyInf, len(data))
+	for i, datum := range data {
+		list[i] = _map.AgencyInf{
+			ID:       datum.ID,
+			ParentId: datum.ParentId,
+			Name:     datum.Name,
+			Remark:   datum.Remark,
+		}
+	}
+	return list, err
 }
 
 // 获取机构下的所有用户
