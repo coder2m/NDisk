@@ -13,14 +13,13 @@ import (
 )
 
 type User struct {
-	Name        string `gorm:"not null;unique;"`
-	Alias       string `gorm:"not null"`
-	Tel         string `gorm:"type:varchar(11);unique;"`
-	Email       string `gorm:"type:varchar(100);unique;not null"`
-	Password    string `gorm:"not null"`
-	Status      uint32 `gorm:"DEFAULT:1;not null"`
-	EmailStatus uint32 `gorm:"DEFAULT:2;not null"`
-
+	Name        string          `gorm:"not null;unique;"`
+	Alias       string          `gorm:"not null"`
+	Tel         string          `gorm:"type:varchar(11);unique;"`
+	Email       string          `gorm:"type:varchar(100);unique;not null"`
+	Password    string          `gorm:"not null"`
+	Status      uint32          `gorm:"DEFAULT:1;not null"`
+	EmailStatus uint32          `gorm:"DEFAULT:2;not null"`
 	*gorm.Model
 }
 
@@ -67,8 +66,9 @@ func (m *User) Get(ctx context.Context, start int, size int, data *[]User, where
 	} else {
 		db = db.Where(map[string]interface{}{"deleted_at": nil})
 	}
-	err = db.Limit(size).Offset(start).Find(data).Error
-	err = db.Count(&total).Error
+	tx := db.Limit(size).Offset(start).Find(data)
+	total = tx.RowsAffected
+	err = tx.Error
 	return
 }
 

@@ -261,7 +261,7 @@ func (s Server) RetrievePassword(ctx context.Context, request *NUserPb.RetrieveP
 }
 
 func (s Server) GetUserById(ctx context.Context, info *NUserPb.UserInfo) (rep *NUserPb.UserInfo, err error) {
-	req := _map.IdMap{
+	req := _map.Id{
 		Id: xcast.ToUint(info.Uid),
 	}
 	err = xvalidator.Struct(req)
@@ -311,7 +311,12 @@ func (s Server) GetUserList(ctx context.Context, request *NUserPb.PageRequest) (
 	)
 	if req.Keyword != "" {
 		where = map[string][]interface{}{
-			"name=? or alias=? or tel=? or email=?": {req.Keyword, req.Keyword, req.Keyword, req.Keyword},
+			"name like ? or alias like ? or tel like ? or email like ?": {
+				"%" + req.Keyword + "%",
+				"%" + req.Keyword + "%",
+				"%" + req.Keyword + "%",
+				"%" + req.Keyword + "%",
+			},
 		}
 	}
 	total, err := new(user.User).Get(ctx, xcast.ToInt(req.PageSize*(req.Page-1)), xcast.ToInt(req.PageSize), &data, where, req.IsDelete)
@@ -357,7 +362,7 @@ func (s Server) UpdateUserStatus(ctx context.Context, info *NUserPb.UserInfo) (r
 	}
 	u.ID = xcast.ToUint(req.Uid)
 	err = u.UpdateStatus(ctx, req.Status)
-	if !errors.Is(err, nil) {
+	if !errors.Is(err, nil) && err != gorm.ErrRecordNotFound {
 		xlog.Error("UpdateUserStatus", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.UpdateUserStatusErrCode)
 	}
@@ -378,7 +383,7 @@ func (s Server) UpdateUserEmailStatus(ctx context.Context, info *NUserPb.UserInf
 	}
 	u.ID = xcast.ToUint(req.Uid)
 	err = u.UpdateEmailStatus(ctx, req.Status)
-	if !errors.Is(err, nil) {
+	if !errors.Is(err, nil) && err != gorm.ErrRecordNotFound {
 		xlog.Error("UpdateUserEmailStatus", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.UpdateUserEmailStatusErrCode)
 	}
@@ -409,7 +414,7 @@ func (s Server) UpdateUser(ctx context.Context, info *NUserPb.UserInfo) (rep *NU
 		_ = u.SetPassword()
 	}
 	err = u.UpdatesWhere(ctx, map[string][]interface{}{"id=?": {req.Uid}})
-	if !errors.Is(err, nil) {
+	if !errors.Is(err, nil) && err != gorm.ErrRecordNotFound {
 		xlog.Error("UpdateUser", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.UpdateUserErrCode)
 	}
@@ -428,7 +433,7 @@ func (s Server) DelUsers(ctx context.Context, list *NUserPb.UidList) (rep *NUser
 		"id IN (?)": {strings.Join(data, ",")},
 	}
 	count, err := new(user.User).Del(ctx, where)
-	if !errors.Is(err, nil) {
+	if !errors.Is(err, nil) && err != gorm.ErrRecordNotFound {
 		xlog.Error("DelUsers", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.DelUsersErrCode)
 	}
@@ -449,7 +454,7 @@ func (s Server) RecoverDelUsers(ctx context.Context, list *NUserPb.UidList) (rep
 		"id IN (?)": {strings.Join(data, ",")},
 	}
 	count, err := new(user.User).DelRes(ctx, where)
-	if !errors.Is(err, nil) {
+	if !errors.Is(err, nil) && err != gorm.ErrRecordNotFound {
 		xlog.Error("RecoverDelUsers", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.RecoverDelUsersErrCode)
 	}
@@ -477,7 +482,7 @@ func (s Server) CreateUsers(ctx context.Context, list *NUserPb.UserList) (rep *N
 		_ = data[i].SetPassword()
 	}
 	count, err := new(user.User).Adds(ctx, data)
-	if !errors.Is(err, nil) {
+	if !errors.Is(err, nil) && err != gorm.ErrRecordNotFound {
 		if e, ok := err.(*mysql.MySQLError); ok {
 			if e.Number == 1062 { // Duplicate
 				return nil, xcode.BusinessCode(xrpc.CreateUsersErrCode).SetMsg("数据已经存在")
@@ -556,7 +561,7 @@ func (s Server) GetUserListByUid(ctx context.Context, req *NUserPb.UidList) (rep
 	}
 	var userList []user.User
 	err = new(user.User).GetAll(ctx, &userList, where)
-	if !errors.Is(err, nil) {
+	if !errors.Is(err, nil) && err != gorm.ErrRecordNotFound {
 		xlog.Error("GetUserListByUid", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.GetUserListByUidErrCode)
 	}
