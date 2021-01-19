@@ -16,14 +16,20 @@ func Engine() *gin.Engine {
 		} else {
 			gin.SetMode(gin.ReleaseMode)
 		}
-		router = gin.Default()
-		router.Use(middleware.Cors())
+		router = gin.New()
+		router.Use(
+			middleware.RecoverMiddleware(1000),
+			middleware.XMonitor(),
+			middleware.XTrace(),
+			middleware.Cors(),
+		)
 	}
 	return router
 }
 
 func V1() *gin.RouterGroup {
-	v1 := Engine().Group("/api/v1")
+	r := Engine()
+	v1 := r.Group("/api/v1")
 	//v1.Use(middleware.CSRF())
 	return v1
 }
