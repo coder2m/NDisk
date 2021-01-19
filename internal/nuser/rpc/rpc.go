@@ -19,7 +19,6 @@ import (
 	xclient "github.com/myxy99/ndisk/internal/nuser/client"
 	_map "github.com/myxy99/ndisk/internal/nuser/map"
 	"github.com/myxy99/ndisk/internal/nuser/model"
-	"github.com/myxy99/ndisk/internal/nuser/model/user"
 	"github.com/myxy99/ndisk/internal/nuser/server/token"
 	"github.com/myxy99/ndisk/pkg/constant"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
@@ -40,7 +39,7 @@ func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequ
 	if !errors.Is(err, nil) {
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("accountLogin data validation error : %s", xvalidator.GetMsg(err).Error())
 	}
-	u := new(user.User)
+	u := new(model.User)
 	err = u.GetByWhere(ctx, map[string][]interface{}{
 		"name = ? or tel =? or email=?": {request.Account, request.Account, request.Account},
 	})
@@ -124,7 +123,7 @@ func (s Server) SMSLogin(ctx context.Context, request *NUserPb.SMSLoginRequest) 
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("code Mismatch")
 	}
 	model.MainRedis().Del(ctx, constant.SendVerificationCode.Format(NUserPb.ActionType_Login_Type, req.Tel))
-	u := new(user.User)
+	u := new(model.User)
 	err = u.GetByWhere(ctx, map[string][]interface{}{
 		"tel =?": {req.Tel},
 	})
@@ -206,13 +205,13 @@ func (s Server) UserRegister(ctx context.Context, request *NUserPb.UserRegisterR
 	}
 	model.MainRedis().Del(ctx, constant.SendVerificationCode.Format(NUserPb.ActionType_Register_Type, req.Tel))
 
-	if ok := new(user.User).ExistWhere(ctx, map[string][]interface{}{
+	if ok := new(model.User).ExistWhere(ctx, map[string][]interface{}{
 		"name = ? or tel =? or email=?": {req.Name, req.Tel, req.Email},
 	}); ok {
 		return rep, xcode.BusinessCode(xrpc.DataExistErrCode)
 	}
 
-	var u = &user.User{Name: req.Name, Alias: req.Alias, Tel: req.Tel, Email: req.Email, Password: req.Password}
+	var u = &model.User{Name: req.Name, Alias: req.Alias, Tel: req.Tel, Email: req.Email, Password: req.Password}
 	err = u.SetPassword()
 	err = u.Add(ctx)
 	if !errors.Is(err, nil) {
@@ -237,7 +236,7 @@ func (s Server) RetrievePassword(ctx context.Context, request *NUserPb.RetrieveP
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("code Mismatch")
 	}
 	model.MainRedis().Del(ctx, constant.SendVerificationCode.Format(NUserPb.ActionType_Retrieve_Type, req.Account))
-	u := new(user.User)
+	u := new(model.User)
 	err = u.GetByWhere(ctx, map[string][]interface{}{
 		"tel =? or email=?": {req.Account, req.Account},
 	})
@@ -268,9 +267,7 @@ func (s Server) GetUserById(ctx context.Context, info *NUserPb.UserInfo) (rep *N
 	if !errors.Is(err, nil) {
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("GetUserById data validation error : %s", xvalidator.GetMsg(err).Error())
 	}
-	u := &user.User{
-		Model: new(gorm.Model),
-	}
+	u := new(model.User)
 	u.ID = req.Id
 	err = u.GetById(ctx, false)
 	if !errors.Is(err, nil) {
@@ -306,7 +303,7 @@ func (s Server) GetUserList(ctx context.Context, request *NUserPb.PageRequest) (
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("GetUserList data validation error : %s", xvalidator.GetMsg(err).Error())
 	}
 	var (
-		data  []user.User
+		data  []model.User
 		where map[string][]interface{}
 	)
 	if req.Keyword != "" {
@@ -319,7 +316,7 @@ func (s Server) GetUserList(ctx context.Context, request *NUserPb.PageRequest) (
 			},
 		}
 	}
-	total, err := new(user.User).Get(ctx, xcast.ToInt(req.PageSize*(req.Page-1)), xcast.ToInt(req.PageSize), &data, where, req.IsDelete)
+	total, err := new(model.User).Get(ctx, xcast.ToInt(req.PageSize*(req.Page-1)), xcast.ToInt(req.PageSize), &data, where, req.IsDelete)
 	if !errors.Is(err, nil) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, xcode.BusinessCode(xrpc.EmptyData)
@@ -357,9 +354,7 @@ func (s Server) UpdateUserStatus(ctx context.Context, info *NUserPb.UserInfo) (r
 	if !errors.Is(err, nil) {
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("UpdateUserStatus data validation error : %s", xvalidator.GetMsg(err).Error())
 	}
-	u := &user.User{
-		Model: new(gorm.Model),
-	}
+	u := new(model.User)
 	u.ID = xcast.ToUint(req.Uid)
 	err = u.UpdateStatus(ctx, req.Status)
 	if !errors.Is(err, nil) && err != gorm.ErrRecordNotFound {
@@ -378,9 +373,7 @@ func (s Server) UpdateUserEmailStatus(ctx context.Context, info *NUserPb.UserInf
 	if !errors.Is(err, nil) {
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("UpdateUserEmailStatus data validation error : %s", xvalidator.GetMsg(err).Error())
 	}
-	u := &user.User{
-		Model: new(gorm.Model),
-	}
+	u := new(model.User)
 	u.ID = xcast.ToUint(req.Uid)
 	err = u.UpdateEmailStatus(ctx, req.Status)
 	if !errors.Is(err, nil) && err != gorm.ErrRecordNotFound {
@@ -403,7 +396,7 @@ func (s Server) UpdateUser(ctx context.Context, info *NUserPb.UserInfo) (rep *NU
 	if !errors.Is(err, nil) {
 		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("UpdateUser data validation error : %s", xvalidator.GetMsg(err).Error())
 	}
-	u := &user.User{
+	u := &model.User{
 		Name:     req.Name,
 		Alias:    req.Alias,
 		Tel:      req.Tel,
@@ -432,7 +425,7 @@ func (s Server) DelUsers(ctx context.Context, list *NUserPb.UidList) (rep *NUser
 	where := map[string][]interface{}{
 		"id IN (?)": {strings.Join(data, ",")},
 	}
-	count, err := new(user.User).Del(ctx, where)
+	count, err := new(model.User).Del(ctx, where)
 	if !errors.Is(err, nil) && err != gorm.ErrRecordNotFound {
 		xlog.Error("DelUsers", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.DelUsersErrCode)
@@ -453,7 +446,7 @@ func (s Server) RecoverDelUsers(ctx context.Context, list *NUserPb.UidList) (rep
 	where := map[string][]interface{}{
 		"id IN (?)": {strings.Join(data, ",")},
 	}
-	count, err := new(user.User).DelRes(ctx, where)
+	count, err := new(model.User).DelRes(ctx, where)
 	if !errors.Is(err, nil) && err != gorm.ErrRecordNotFound {
 		xlog.Error("RecoverDelUsers", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.RecoverDelUsersErrCode)
@@ -470,9 +463,9 @@ func (s Server) CreateUsers(ctx context.Context, list *NUserPb.UserList) (rep *N
 	if len(list.List) > 200 {
 		return rep, xcode.BusinessCode(xrpc.MaximumNumberErrCode)
 	}
-	var data = make([]user.User, len(list.List))
+	var data = make([]model.User, len(list.List))
 	for i, info := range list.List {
-		data[i] = user.User{
+		data[i] = model.User{
 			Name:     info.Name,
 			Alias:    info.Alias,
 			Tel:      info.Tel,
@@ -481,7 +474,7 @@ func (s Server) CreateUsers(ctx context.Context, list *NUserPb.UserList) (rep *N
 		}
 		_ = data[i].SetPassword()
 	}
-	count, err := new(user.User).Adds(ctx, data)
+	count, err := new(model.User).Adds(ctx, data)
 	if !errors.Is(err, nil) && err != gorm.ErrRecordNotFound {
 		if e, ok := err.(*mysql.MySQLError); ok {
 			if e.Number == 1062 { // Duplicate
@@ -559,8 +552,8 @@ func (s Server) GetUserListByUid(ctx context.Context, req *NUserPb.UidList) (rep
 	where := map[string][]interface{}{
 		"id IN (?)": {strings.Join(data, ",")},
 	}
-	var userList []user.User
-	err = new(user.User).GetAll(ctx, &userList, where)
+	var userList []model.User
+	err = new(model.User).GetAll(ctx, &userList, where)
 	if !errors.Is(err, nil) && err != gorm.ErrRecordNotFound {
 		xlog.Error("GetUserListByUid", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.GetUserListByUidErrCode)

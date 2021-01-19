@@ -3,24 +3,27 @@
  * @Description
  * @Date: 2021/1/5 15:26
  **/
-package user
+package model
 
 import (
 	"context"
-	"github.com/myxy99/ndisk/internal/nuser/model"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+	"time"
 )
 
 type User struct {
-	Name        string          `gorm:"not null;unique;"`
-	Alias       string          `gorm:"not null"`
-	Tel         string          `gorm:"type:varchar(11);unique;"`
-	Email       string          `gorm:"type:varchar(100);unique;not null"`
-	Password    string          `gorm:"not null"`
-	Status      uint32          `gorm:"DEFAULT:1;not null"`
-	EmailStatus uint32          `gorm:"DEFAULT:2;not null"`
-	*gorm.Model
+	ID          uint   `gorm:"primarykey"`
+	Name        string `gorm:"not null;unique;"`
+	Alias       string `gorm:"not null"`
+	Tel         string `gorm:"type:varchar(11);unique;"`
+	Email       string `gorm:"type:varchar(100);unique;not null"`
+	Password    string `gorm:"not null"`
+	Status      uint32 `gorm:"DEFAULT:1;not null"`
+	EmailStatus uint32 `gorm:"DEFAULT:2;not null"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   gorm.DeletedAt `gorm:"index"`
 }
 
 func (m *User) TableName() string {
@@ -28,18 +31,18 @@ func (m *User) TableName() string {
 }
 
 func (m *User) Add(ctx context.Context) error {
-	return model.MainDB().Table(m.TableName()).WithContext(ctx).Create(m).Error
+	return MainDB().Table(m.TableName()).WithContext(ctx).Create(m).Error
 }
 
 func (m *User) Adds(ctx context.Context, data []User) (count int64, err error) {
-	tx := model.MainDB().Table(m.TableName()).WithContext(ctx).CreateInBatches(data, 200)
+	tx := MainDB().Table(m.TableName()).WithContext(ctx).CreateInBatches(data, 200)
 	err = tx.Error
 	count = tx.RowsAffected
 	return
 }
 
 func (m *User) Del(ctx context.Context, wheres map[string][]interface{}) (count int64, err error) {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -49,7 +52,7 @@ func (m *User) Del(ctx context.Context, wheres map[string][]interface{}) (count 
 	return
 }
 func (m *User) GetAll(ctx context.Context, data *[]User, wheres map[string][]interface{}) (err error) {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -57,7 +60,7 @@ func (m *User) GetAll(ctx context.Context, data *[]User, wheres map[string][]int
 	return
 }
 func (m *User) Get(ctx context.Context, start int, size int, data *[]User, wheres map[string][]interface{}, isDelete bool) (total int64, err error) {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -73,7 +76,7 @@ func (m *User) Get(ctx context.Context, start int, size int, data *[]User, where
 }
 
 func (m *User) GetById(ctx context.Context, IgnoreDel bool) error {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	if !IgnoreDel {
 		db = db.Unscoped()
 	}
@@ -81,7 +84,7 @@ func (m *User) GetById(ctx context.Context, IgnoreDel bool) error {
 }
 
 func (m *User) GetByWhere(ctx context.Context, wheres map[string][]interface{}) error {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -89,7 +92,7 @@ func (m *User) GetByWhere(ctx context.Context, wheres map[string][]interface{}) 
 }
 
 func (m *User) ExistWhere(ctx context.Context, wheres map[string][]interface{}) bool {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -98,7 +101,7 @@ func (m *User) ExistWhere(ctx context.Context, wheres map[string][]interface{}) 
 }
 
 func (m *User) UpdatesWhere(ctx context.Context, wheres map[string][]interface{}) error {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -106,7 +109,7 @@ func (m *User) UpdatesWhere(ctx context.Context, wheres map[string][]interface{}
 }
 
 func (m *User) UpdateWhere(ctx context.Context, wheres map[string][]interface{}, column string, value interface{}) error {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -114,15 +117,15 @@ func (m *User) UpdateWhere(ctx context.Context, wheres map[string][]interface{},
 }
 
 func (m *User) UpdateStatus(ctx context.Context, status uint32) error {
-	return model.MainDB().Table(m.TableName()).WithContext(ctx).Where("id=?", m.ID).Update("status", status).Error
+	return MainDB().Table(m.TableName()).WithContext(ctx).Where("id=?", m.ID).Update("status", status).Error
 }
 
 func (m *User) UpdateEmailStatus(ctx context.Context, status uint32) error {
-	return model.MainDB().Table(m.TableName()).WithContext(ctx).Where("id=?", m.ID).Update("email_status", status).Error
+	return MainDB().Table(m.TableName()).WithContext(ctx).Where("id=?", m.ID).Update("email_status", status).Error
 }
 
 func (m *User) DelRes(ctx context.Context, wheres map[string][]interface{}) (count int64, err error) {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}

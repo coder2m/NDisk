@@ -19,9 +19,6 @@ import (
 	"github.com/myxy99/component/xmonitor"
 	"github.com/myxy99/component/xtrace"
 	"github.com/myxy99/ndisk/internal/nuser/model"
-	"github.com/myxy99/ndisk/internal/nuser/model/agency"
-	"github.com/myxy99/ndisk/internal/nuser/model/agency2user"
-	"github.com/myxy99/ndisk/internal/nuser/model/user"
 	"github.com/myxy99/ndisk/internal/nuser/rpc"
 	myValidator "github.com/myxy99/ndisk/internal/nuser/validator"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
@@ -113,13 +110,13 @@ func (s *Server) invoker() {
 		xsms.Register("sms"),
 	)
 	s.err = xinvoker.Init()
-	//_ = model.MainDB().Migrator().AutoMigrate(
-	//	new(user.User),
-	//	new(agency.Agency),
-	//	new(agency2user.AgencyUser),
-	//)
-	_ = model.MainDB().SetupJoinTable(&user.User{}, "Agency", &agency2user.AgencyUser{})
-	_ = model.MainDB().SetupJoinTable(&agency.Agency{}, "Users", &agency2user.AgencyUser{})
+	_ = model.MainDB().Migrator().AutoMigrate(
+		new(model.User),
+		new(model.Agency),
+		new(model.AgencyUser),
+	)
+	_ = model.MainDB().SetupJoinTable(&model.User{}, "Agency", &model.AgencyUser{})
+	_ = model.MainDB().SetupJoinTable(&model.Agency{}, "Users", &model.AgencyUser{})
 }
 
 func (s *Server) initValidator() {

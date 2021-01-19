@@ -1,22 +1,19 @@
-package agency
+package model
 
 import (
 	"context"
-	"github.com/myxy99/ndisk/internal/nuser/model"
-	"github.com/myxy99/ndisk/internal/nuser/model/user"
 	"gorm.io/gorm"
 	"time"
 )
 
 type Agency struct {
-	ID         uint        `gorm:"primarykey"`             // 主键
-	ParentId   uint        `gorm:"parent_id,DEFAULT:0"   ` // 上级机构
-	Name       string      `gorm:"name,unique"`            // 部门/11111
-	Remark     string      `gorm:"remark"`                 // 机构描述
-	Status     uint        `gorm:"status;DEFAULT:1"`       // 是否启用/1,启用,2,禁用
-	CreateUId  uint        `gorm:"create_uid"`             // 创建者
-	CreateUser user.User   `gorm:"foreignKey:CreateUId"`
-	Users      []user.User `gorm:"many2many:agency_user;"`
+	ID         uint   `gorm:"primarykey"`             // 主键
+	ParentId   uint   `gorm:"parent_id,DEFAULT:0"   ` // 上级机构
+	Name       string `gorm:"name,unique"`            // 部门/11111
+	Remark     string `gorm:"remark"`                 // 机构描述
+	Status     uint   `gorm:"status;DEFAULT:1"`       // 是否启用/1,启用,2,禁用
+	CreateUId  uint   `gorm:"create_uid"`             // 创建者
+	CreateUser User   `gorm:"foreignKey:CreateUId"`
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	DeletedAt  gorm.DeletedAt `gorm:"index"`
@@ -27,18 +24,18 @@ func (m *Agency) TableName() string {
 }
 
 func (m *Agency) Add(ctx context.Context) error {
-	return model.MainDB().Table(m.TableName()).WithContext(ctx).Create(m).Error
+	return MainDB().Table(m.TableName()).WithContext(ctx).Create(m).Error
 }
 
 func (m *Agency) Adds(ctx context.Context, data *[]Agency) (count int64, err error) {
-	tx := model.MainDB().Table(m.TableName()).WithContext(ctx).CreateInBatches(data, 200)
+	tx := MainDB().Table(m.TableName()).WithContext(ctx).CreateInBatches(data, 200)
 	err = tx.Error
 	count = tx.RowsAffected
 	return
 }
 
 func (m *Agency) Del(ctx context.Context, wheres map[string][]interface{}) (count int64, err error) {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -47,16 +44,21 @@ func (m *Agency) Del(ctx context.Context, wheres map[string][]interface{}) (coun
 	count = tx.RowsAffected
 	return
 }
-func (m *Agency) GetAll(ctx context.Context, data *[]Agency, wheres map[string][]interface{}) (err error) {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+
+func (m *Agency) GetAll(ctx context.Context, data *[]Agency, wheres map[string][]interface{}, related bool) (err error) {
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
+	}
+	if related {
+		db = db.Preload("CreateUser")
 	}
 	err = db.Find(&data).Error
 	return
 }
-func (m *Agency) Get(ctx context.Context, start int, size int, data *[]Agency, wheres map[string][]interface{}, isDelete bool) (total int64, err error) {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+
+func (m *Agency) Get(ctx context.Context, start int, size int, data *[]Agency, wheres map[string][]interface{}, isDelete bool, related bool) (total int64, err error) {
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -65,30 +67,39 @@ func (m *Agency) Get(ctx context.Context, start int, size int, data *[]Agency, w
 	} else {
 		db = db.Where(map[string]interface{}{"deleted_at": nil})
 	}
-	tx := db.Preload("CreateUser").Limit(size).Offset(start).Find(data)
+	if related {
+		db = db.Preload("CreateUser")
+	}
+	tx := db.Limit(size).Offset(start).Find(data)
 	total = tx.RowsAffected
 	err = tx.Error
 	return
 }
 
-func (m *Agency) GetById(ctx context.Context, IgnoreDel bool) error {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+func (m *Agency) GetById(ctx context.Context, IgnoreDel, related bool) error {
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	if !IgnoreDel {
 		db = db.Unscoped()
+	}
+	if related {
+		db = db.Preload("CreateUser")
 	}
 	return db.First(m).Error
 }
 
-func (m *Agency) GetByWhere(ctx context.Context, wheres map[string][]interface{}) error {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+func (m *Agency) GetByWhere(ctx context.Context, wheres map[string][]interface{}, related bool, args ...interface{}) error {
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
+	}
+	if related {
+		db = db.Preload("CreateUser", args...)
 	}
 	return db.First(m).Error
 }
 
 func (m *Agency) ExistWhere(ctx context.Context, wheres map[string][]interface{}) bool {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -97,7 +108,7 @@ func (m *Agency) ExistWhere(ctx context.Context, wheres map[string][]interface{}
 }
 
 func (m *Agency) UpdatesWhere(ctx context.Context, wheres map[string][]interface{}) error {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -105,7 +116,7 @@ func (m *Agency) UpdatesWhere(ctx context.Context, wheres map[string][]interface
 }
 
 func (m *Agency) UpdateWhere(ctx context.Context, wheres map[string][]interface{}, column string, value interface{}) error {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -113,11 +124,11 @@ func (m *Agency) UpdateWhere(ctx context.Context, wheres map[string][]interface{
 }
 
 func (m *Agency) UpdateStatus(ctx context.Context, status uint32) error {
-	return model.MainDB().Table(m.TableName()).WithContext(ctx).Where("id=?", m.ID).Update("status", status).Error
+	return MainDB().Table(m.TableName()).WithContext(ctx).Where("id=?", m.ID).Update("status", status).Error
 }
 
 func (m *Agency) DelRes(ctx context.Context, wheres map[string][]interface{}) (count int64, err error) {
-	db := model.MainDB().Table(m.TableName()).WithContext(ctx)
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}

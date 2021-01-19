@@ -8,8 +8,7 @@ import (
 	"github.com/myxy99/component/pkg/xcast"
 	"github.com/myxy99/component/xlog"
 	_map "github.com/myxy99/ndisk/internal/nuser/map"
-	"github.com/myxy99/ndisk/internal/nuser/model/agency"
-	"github.com/myxy99/ndisk/internal/nuser/model/user"
+	"github.com/myxy99/ndisk/internal/nuser/model"
 	"gorm.io/gorm"
 	"strings"
 )
@@ -21,23 +20,16 @@ var (
 
 //创建机构
 func CreateManyAgency(ctx context.Context, req _map.CreateManyAgencyReq) (count int64, err error) {
-	var list = make([]agency.Agency, len(req.Agency))
+	var list = make([]model.Agency, len(req.Agency))
 	for i, agencyReq := range req.Agency {
-		list[i] = agency.Agency{
-			ParentId: agencyReq.ParentId,
-			Name:     agencyReq.Name,
-			Remark:   agencyReq.Remark,
-			Users: []user.User{
-				{
-					Model: &gorm.Model{
-						ID: xcast.ToUint(req.Uid),
-					},
-				},
-			},
+		list[i] = model.Agency{
+			ParentId:  agencyReq.ParentId,
+			Name:      agencyReq.Name,
+			Remark:    agencyReq.Remark,
 			CreateUId: xcast.ToUint(req.Uid),
 		}
 	}
-	count, err = new(agency.Agency).Adds(ctx, &list)
+	count, err = new(model.Agency).Adds(ctx, &list)
 	if !errors.Is(err, nil) {
 		if e, ok := err.(*mysql.MySQLError); ok {
 			if e.Number == 1062 {
@@ -56,7 +48,7 @@ func DelManyAgency(ctx context.Context, req _map.Ids) (count int64, err error) {
 	for i, u := range req.List {
 		list[i] = xcast.ToString(u)
 	}
-	count, err = new(agency.Agency).Del(ctx, map[string][]interface{}{
+	count, err = new(model.Agency).Del(ctx, map[string][]interface{}{
 		"id in (?)": {strings.Join(list, ",")},
 	})
 	if !errors.Is(err, nil) {
@@ -72,7 +64,7 @@ func DelManyAgency(ctx context.Context, req _map.Ids) (count int64, err error) {
 //	机构列表
 func ListAgency(ctx context.Context, parentId uint, req _map.PageList) ([]_map.AgencyInf, int64, error) {
 	var (
-		data    []agency.Agency
+		data    []model.Agency
 		where   map[string][]interface{}
 		repList []_map.AgencyInf
 	)
@@ -86,7 +78,7 @@ func ListAgency(ctx context.Context, parentId uint, req _map.PageList) ([]_map.A
 			"%" + req.Keyword + "%",
 		}
 	}
-	total, err := new(agency.Agency).Get(ctx, xcast.ToInt(req.PageSize*(req.Page-1)), xcast.ToInt(req.PageSize), &data, where, req.IsDelete)
+	total, err := new(model.Agency).Get(ctx, xcast.ToInt(req.PageSize*(req.Page-1)), xcast.ToInt(req.PageSize), &data, where, req.IsDelete, true)
 	if !errors.Is(err, nil) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return repList, 0, EmptyDataErr
@@ -119,7 +111,7 @@ func ListAgency(ctx context.Context, parentId uint, req _map.PageList) ([]_map.A
 
 //	修改机构信息
 func UpdateAgency(ctx context.Context, req _map.UpdateAgency) (err error) {
-	a := &agency.Agency{
+	a := &model.Agency{
 		ID:       req.ID,
 		ParentId: req.ParentId,
 		Name:     req.Name,
@@ -139,7 +131,7 @@ func UpdateAgency(ctx context.Context, req _map.UpdateAgency) (err error) {
 }
 
 func UpdateStatusAgency(ctx context.Context, id uint, status uint32) (err error) {
-	a := &agency.Agency{
+	a := &model.Agency{
 		ID: id,
 	}
 	err = a.UpdateStatus(ctx, status)
@@ -159,7 +151,7 @@ func RegainDelAgency(ctx context.Context, req _map.Ids) (count int64, err error)
 	for i, u := range req.List {
 		list[i] = xcast.ToString(u)
 	}
-	count, err = new(agency.Agency).DelRes(ctx, map[string][]interface{}{
+	count, err = new(model.Agency).DelRes(ctx, map[string][]interface{}{
 		"id in (?)": {strings.Join(list, ",")},
 	})
 	if !errors.Is(err, nil) {
@@ -170,4 +162,44 @@ func RegainDelAgency(ctx context.Context, req _map.Ids) (count int64, err error)
 		return 0, errors.New("RegainDelAgency error")
 	}
 	return count, err
+}
+
+// 获取指定用户创建的所有机构
+func ListAgencyByCreateUId(ctx context.Context, req _map.Id, status uint) ([]_map.AgencyInf, error) {
+	var data []model.Agency
+	err := new(model.Agency).GetAll(ctx, &data, map[string][]interface{}{
+		"id = ?":     {req.Id},
+		"status = ?": {status},
+	}, false)
+	if !errors.Is(err, nil) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, EmptyDataErr
+		}
+		xlog.Error("ListAgencyByCreateUId", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return nil, errors.New("ListAgencyByCreateUId error")
+	}
+	var list = make([]_map.AgencyInf, len(data))
+	for i, datum := range data {
+		list[i] = _map.AgencyInf{
+			ID:        datum.ID,
+			ParentId:  datum.ParentId,
+			Name:      datum.Name,
+			Remark:    datum.Remark,
+			Status:    datum.Status,
+			CreatedAt: datum.CreatedAt.Unix(),
+			UpdatedAt: datum.UpdatedAt.Unix(),
+			DeletedAt: datum.DeletedAt.Time.Unix(),
+		}
+	}
+	return list, err
+}
+
+//	获取用户加入的所有机构
+func ListAgencyByJoinUId(ctx context.Context, req _map.Id) ([]_map.AgencyInf, error) {
+	panic("TODO")
+}
+
+// 获取机构下的所有用户
+func ListUserByJoinAgency(ctx context.Context, req _map.Id) ([]_map.UserInfo, error) {
+	panic("TODO")
 }
