@@ -17,12 +17,23 @@ type (
 		DeletedAt gorm.DeletedAt `gorm:"index"`
 	}
 
-	// 放回组织信息 结构
+	// 返回组织信息 结构
 	AgencyInfo struct {
+		AUId     uint   `json:"auid"` //关联表id
 		ID       uint   `json:"id"`
 		Name     string `json:"name"`
 		ParentId uint   `json:"parent_id"`
 		Remark   string `json:"remark"`
+	}
+
+	// 返回用户信息 结构
+	UserInfo struct {
+		AUId  uint   `json:"auid"` //关联表id
+		ID    uint   `json:"id"`
+		Name  string `json:"name"`
+		Alias string `json:"alias"`
+		Tel   string `json:"tel"`
+		Email string `json:"email"`
 	}
 )
 
@@ -137,10 +148,23 @@ func (m *AgencyUser) ListAgencyByJoinUId(ctx context.Context, uid uint, status u
 	tx := MainDB().
 		Table(m.TableName()).
 		WithContext(ctx).
-		Select("agency.id", "agency.parent_id", "agency.name", "agency.remark").
+		Select("agency.id", "agency.parent_id", "agency.name", "agency.remark", "agency_user.id as auid").
 		Where("agency_user.user_id=?", uid).
 		Where("agency_user.status=?", status).
 		Joins("JOIN agency ON agency.id = agency_user.agency_id AND (agency.status = ? and agency.deleted_at is null)", 1).
+		Find(&data)
+	return data, tx.Error
+}
+
+func (m *AgencyUser) ListUserByJoinAgency(ctx context.Context, aid uint, status uint) ([]UserInfo, error) {
+	var data []UserInfo
+	tx := MainDB().
+		Table(m.TableName()).
+		WithContext(ctx).
+		Select("user.id", "user.name", "user.alias", "user.tel", "user.email", "agency_user.id as auid").
+		Where("agency_user.agency_id=?", aid).
+		Where("agency_user.status=?", status).
+		Joins("JOIN user ON user.id = agency_user.agency_id AND (user.status = ? and user.deleted_at is null)", 1).
 		Find(&data)
 	return data, tx.Error
 }

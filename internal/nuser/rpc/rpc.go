@@ -19,6 +19,7 @@ import (
 	xclient "github.com/myxy99/ndisk/internal/nuser/client"
 	_map "github.com/myxy99/ndisk/internal/nuser/map"
 	"github.com/myxy99/ndisk/internal/nuser/model"
+	agency_server "github.com/myxy99/ndisk/internal/nuser/server/agency"
 	"github.com/myxy99/ndisk/internal/nuser/server/token"
 	"github.com/myxy99/ndisk/pkg/constant"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
@@ -29,6 +30,184 @@ import (
 )
 
 type Server struct{}
+
+func (s Server) CreateManyAgency(ctx context.Context, req *NUserPb.CreateManyAgencyReq) (*NUserPb.ChangeNumResponse, error) {
+	var agencyList = make([]_map.AgencyReq, len(req.Agency))
+	for i, agencyReq := range req.Agency {
+		agencyList[i] = _map.AgencyReq{
+			ParentId: xcast.ToUint(agencyReq.ParentId),
+			Name:     agencyReq.Name,
+			Remark:   agencyReq.Remark,
+		}
+	}
+	agencyReq := _map.CreateManyAgencyReq{
+		Uid:    req.Uid,
+		Agency: agencyList,
+	}
+	err := xvalidator.Struct(agencyReq)
+	if !errors.Is(err, nil) {
+		return nil, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("create agency data validation error : %s", xvalidator.GetMsg(err).Error())
+	}
+	count, err := agency_server.CreateManyAgency(ctx, agencyReq)
+	if !errors.Is(err, nil) {
+		if err == agency_server.ExistDataErr {
+			return nil, xcode.BusinessCode(xrpc.DataExistErrCode)
+		}
+		return nil, xcode.BusinessCode(xrpc.CreateManyAgencyErrCode)
+	}
+	return &NUserPb.ChangeNumResponse{
+		Count: xcast.ToUint32(count),
+	}, err
+}
+
+func (s Server) DelManyAgency(ctx context.Context, list *NUserPb.IdList) (*NUserPb.ChangeNumResponse, error) {
+	ids := _map.Ids{
+		List: list.Id,
+	}
+	err := xvalidator.Struct(ids)
+	if !errors.Is(err, nil) {
+		return nil, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("del agency data validation error : %s", xvalidator.GetMsg(err).Error())
+	}
+	count, err := agency_server.DelManyAgency(ctx, ids)
+	if !errors.Is(err, nil) {
+		if err == agency_server.EmptyDataErr {
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
+		}
+		return nil, xcode.BusinessCode(xrpc.CreateManyAgencyErrCode)
+	}
+	return &NUserPb.ChangeNumResponse{
+		Count: xcast.ToUint32(count),
+	}, err
+}
+
+func (s Server) ListAgency(ctx context.Context, request *NUserPb.ListAgencyPageRequest) (*NUserPb.ListAgencyPageResponse, error) {
+	var page = _map.DefaultPageRequest
+	page.Page = request.Page.Page
+	page.PageSize = request.Page.Limit
+	page.Keyword = request.Page.Keyword
+	page.IsDelete = request.Page.IsDelete
+	data, count, err := agency_server.ListAgency(ctx, request.ParentId, page)
+	if !errors.Is(err, nil) {
+		if err == agency_server.EmptyDataErr {
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
+		}
+		return nil, xcode.BusinessCode(xrpc.ListAgencyErrCode)
+	}
+
+	var list = make([]*NUserPb.AgencyInfo, len(data))
+	for i, datum := range data {
+		list[i] = &NUserPb.AgencyInfo{
+			Id:       xcast.ToUint32(datum.ID),
+			ParentId: xcast.ToUint32(datum.ParentId),
+			Name:     datum.Name,
+			Remark:   datum.Remark,
+			Status:   xcast.ToUint32(datum.Status),
+			CreateUser: &NUserPb.UserInfo{
+				Uid:   xcast.ToUint64(datum.CreateUser.Uid),
+				Name:  datum.CreateUser.Name,
+				Alias: datum.CreateUser.Alias,
+				Tel:   datum.CreateUser.Tel,
+				Email: datum.CreateUser.Email,
+			},
+			CreatedAt: xcast.ToUint64(datum.CreatedAt),
+			UpdatedAt: xcast.ToUint64(datum.UpdatedAt),
+			DeletedAt: xcast.ToUint64(datum.DeletedAt),
+		}
+	}
+	return &NUserPb.ListAgencyPageResponse{
+		List:  list,
+		Count: xcast.ToUint32(count),
+	}, err
+}
+
+func (s Server) UpdateAgency(ctx context.Context, info *NUserPb.AgencyInfo) (*NUserPb.NilResponse, error) {
+	agency := _map.UpdateAgency{
+		ID:       xcast.ToUint(info.Id),
+		ParentId: xcast.ToUint(info.ParentId),
+		Name:     info.Name,
+		Remark:   info.Remark,
+	}
+	err := xvalidator.Struct(agency)
+	if !errors.Is(err, nil) {
+		return nil, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("update agency data validation error : %s", xvalidator.GetMsg(err).Error())
+	}
+	err = agency_server.UpdateAgency(ctx, agency)
+	if !errors.Is(err, nil) {
+		if err == agency_server.EmptyDataErr {
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
+		}
+		return nil, xcode.BusinessCode(xrpc.UpdateAgencyErrCode)
+	}
+	return new(NUserPb.NilResponse), err
+}
+
+func (s Server) GetAgencyById(ctx context.Context, info *NUserPb.AgencyInfo) (*NUserPb.AgencyInfo, error) {
+	if info.Id <= 0 {
+		return nil, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("get agency by id data validation error : %s", "id is nil")
+	}
+	data, err := agency_server.AgencyById(ctx, xcast.ToUint(info.Id), false)
+	if !errors.Is(err, nil) {
+		if err == agency_server.EmptyDataErr {
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
+		}
+		return nil, xcode.BusinessCode(xrpc.GetAgencyByIdErrCode)
+	}
+	return &NUserPb.AgencyInfo{
+		Id:       xcast.ToUint32(data.ID),
+		ParentId: xcast.ToUint32(data.ParentId),
+		Name:     data.Name,
+		Remark:   data.Remark,
+		Status:   xcast.ToUint32(data.Status),
+		CreateUser: &NUserPb.UserInfo{
+			Uid:   xcast.ToUint64(data.CreateUser.Uid),
+			Name:  data.CreateUser.Name,
+			Alias: data.CreateUser.Alias,
+			Tel:   data.CreateUser.Tel,
+			Email: data.CreateUser.Email,
+		},
+		CreatedAt: xcast.ToUint64(data.CreatedAt),
+		UpdatedAt: xcast.ToUint64(data.UpdatedAt),
+		DeletedAt: xcast.ToUint64(data.DeletedAt),
+	}, err
+}
+
+func (s Server) UpdateAgencyStatus(ctx context.Context, info *NUserPb.AgencyInfo) (*NUserPb.NilResponse, error) {
+	if info.Id <= 0 || (info.Status != 1 && info.Status != 2) {
+		return nil, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("update agency status data validation error : %s", "id is nil")
+	}
+	err := agency_server.UpdateStatusAgency(ctx, xcast.ToUint(info.Id), info.Status)
+	if !errors.Is(err, nil) {
+		if err == agency_server.EmptyDataErr {
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
+		}
+		return nil, xcode.BusinessCode(xrpc.UpdateAgencyStatusErrCode)
+	}
+	return new(NUserPb.NilResponse), err
+}
+
+func (s Server) RecoverDelAgency(ctx context.Context, list *NUserPb.IdList) (*NUserPb.ChangeNumResponse, error) {
+	panic("implement me")
+}
+
+func (s Server) ListAgencyByCreateUId(ctx context.Context, id *NUserPb.Id) (*NUserPb.ListAgencyResponse, error) {
+	panic("implement me")
+}
+
+func (s Server) ListAgencyByJoinUId(ctx context.Context, id *NUserPb.Id) (*NUserPb.ListAgencyResponse, error) {
+	panic("implement me")
+}
+
+func (s Server) ListUserByJoinAgency(ctx context.Context, id *NUserPb.Id) (*NUserPb.ListAgencyResponse, error) {
+	panic("implement me")
+}
+
+func (s Server) UpdateStatusAgencyUser(ctx context.Context, id *NUserPb.Id) (*NUserPb.NilResponse, error) {
+	panic("implement me")
+}
+
+func (s Server) DelManyAgencyUser(ctx context.Context, list *NUserPb.IdList) (*NUserPb.ChangeNumResponse, error) {
+	panic("implement me")
+}
 
 func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequest) (rep *NUserPb.LoginResponse, err error) {
 	var req = _map.AccountLogin{

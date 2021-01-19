@@ -18,7 +18,7 @@ var (
 	ExistDataErr = errors.New("data exist")
 )
 
-//创建机构
+//	创建机构
 func CreateManyAgency(ctx context.Context, req _map.CreateManyAgencyReq) (count int64, err error) {
 	var list = make([]model.Agency, len(req.Agency))
 	for i, agencyReq := range req.Agency {
@@ -62,7 +62,7 @@ func DelManyAgency(ctx context.Context, req _map.Ids) (count int64, err error) {
 }
 
 //	机构列表
-func ListAgency(ctx context.Context, parentId uint, req _map.PageList) ([]_map.AgencyInf, int64, error) {
+func ListAgency(ctx context.Context, parentId uint32, req _map.PageList) ([]_map.AgencyInf, int64, error) {
 	var (
 		data    []model.Agency
 		where   map[string][]interface{}
@@ -162,6 +162,7 @@ func AgencyById(ctx context.Context, id uint, IgnoreDel bool) (data _map.AgencyI
 	}, err
 }
 
+// 根据id修改机构状态
 func UpdateStatusAgency(ctx context.Context, id uint, status uint32) (err error) {
 	a := &model.Agency{
 		ID: id,
@@ -238,6 +239,7 @@ func ListAgencyByJoinUId(ctx context.Context, req _map.Id, status uint) ([]_map.
 	var list = make([]_map.AgencyInf, len(data))
 	for i, datum := range data {
 		list[i] = _map.AgencyInf{
+			AUId:     datum.AUId,
 			ID:       datum.ID,
 			ParentId: datum.ParentId,
 			Name:     datum.Name,
@@ -248,6 +250,64 @@ func ListAgencyByJoinUId(ctx context.Context, req _map.Id, status uint) ([]_map.
 }
 
 // 获取机构下的所有用户
-func ListUserByJoinAgency(ctx context.Context, req _map.Id) ([]_map.UserInfo, error) {
-	panic("TODO")
+func ListUserByJoinAgency(ctx context.Context, req _map.Id, status uint) ([]_map.UserInfo, error) {
+	data, err := new(model.AgencyUser).ListUserByJoinAgency(ctx, req.Id, status)
+	if !errors.Is(err, nil) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, EmptyDataErr
+		}
+		xlog.Error("ListUserByJoinAgency", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return nil, errors.New("ListUserByJoinAgency error")
+	}
+	var list = make([]_map.UserInfo, len(data))
+	for i, datum := range data {
+		list[i] = _map.UserInfo{
+			AUId:  datum.AUId,
+			Uid:   datum.ID,
+			Name:  datum.Name,
+			Alias: datum.Alias,
+			Email: datum.Email,
+			Tel:   datum.Tel,
+		}
+	}
+	return list, err
+}
+
+// 修改关联表状态
+func UpdateStatusAgencyUser(ctx context.Context, id uint, status uint32) (err error) {
+	a := &model.AgencyUser{
+		ID: id,
+	}
+	err = a.UpdateStatus(ctx, status)
+	if !errors.Is(err, nil) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return EmptyDataErr
+		}
+		xlog.Error("UpdateStatusAgencyUser", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return errors.New("UpdateStatusAgencyUser error")
+	}
+	return err
+}
+
+//	根据关联id批量退出机构
+func DelManyAgencyUser(ctx context.Context, req _map.Ids) (count int64, err error) {
+	var list = make([]string, len(req.List))
+	for i, u := range req.List {
+		list[i] = xcast.ToString(u)
+	}
+	count, err = new(model.AgencyUser).Del(ctx, map[string][]interface{}{
+		"id in (?)": {strings.Join(list, ",")},
+	})
+	if !errors.Is(err, nil) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return 0, EmptyDataErr
+		}
+		xlog.Error("DelManyAgencyUser", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return 0, errors.New("DelManyAgencyUser error")
+	}
+	timeout, cancelFunc := context.WithTimeout(ctx, 60)
+	timeout.Done()
+	defer cancelFunc()
+	timeout.Done()
+	return
 }

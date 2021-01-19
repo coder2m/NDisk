@@ -18,9 +18,9 @@ type PageList struct {
 }
 
 type Id struct {
-	Id uint
+	Id uint `validate:"required,number"`
 }
 
 type Ids struct {
-	List []uint
+	List []uint32 `validate:"required"`
 }

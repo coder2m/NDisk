@@ -12,19 +12,21 @@ import (
 	"time"
 )
 
-type User struct {
-	ID          uint   `gorm:"primarykey"`
-	Name        string `gorm:"not null;unique;"`
-	Alias       string `gorm:"not null"`
-	Tel         string `gorm:"type:varchar(11);unique;"`
-	Email       string `gorm:"type:varchar(100);unique;not null"`
-	Password    string `gorm:"not null"`
-	Status      uint32 `gorm:"DEFAULT:1;not null"`
-	EmailStatus uint32 `gorm:"DEFAULT:2;not null"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	DeletedAt   gorm.DeletedAt `gorm:"index"`
-}
+type (
+	User struct {
+		ID          uint   `gorm:"primarykey"`
+		Name        string `gorm:"not null;unique;"`
+		Alias       string `gorm:"not null"`
+		Tel         string `gorm:"type:varchar(11);unique;"`
+		Email       string `gorm:"type:varchar(100);unique;not null"`
+		Password    string `gorm:"not null"`
+		Status      uint32 `gorm:"DEFAULT:1;not null"`
+		EmailStatus uint32 `gorm:"DEFAULT:2;not null"`
+		CreatedAt   time.Time
+		UpdatedAt   time.Time
+		DeletedAt   gorm.DeletedAt `gorm:"index"`
+	}
+)
 
 func (m *User) TableName() string {
 	return "user"

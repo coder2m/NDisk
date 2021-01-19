@@ -39,6 +39,18 @@ const (
 	RefreshTokenErrCode
 	MaximumNumberErrCode
 	DataExistErrCode
+	CreateManyAgencyErrCode
+	DelManyAgencyErrCode
+	ListAgencyErrCode
+	UpdateAgencyErrCode
+	GetAgencyByIdErrCode
+	UpdateAgencyStatusErrCode
+	RecoverDelAgencyErrCode
+	ListAgencyByCreateUIdErrCode
+	ListAgencyByJoinUIdErrCode
+	ListUserByJoinAgencyErrCode
+	UpdateStatusAgencyUserErrCode
+	DelManyAgencyUserErrCode
 
 	//Authority
 	DeleteRoleErrCode
@@ -86,7 +98,18 @@ var (
 		{xcode.BusinessType, MaximumNumberErrCode, "Maximum number of operations exceeded error"},
 		{xcode.BusinessType, DataExistErrCode, "data exist"},
 		{xcode.BusinessType, GetUserListByUidErrCode, "GetUserListByUid error"},
-
+		{xcode.BusinessType, CreateManyAgencyErrCode, "CreateManyAgency error"},
+		{xcode.BusinessType, DelManyAgencyErrCode, "DelManyAgency error"},
+		{xcode.BusinessType, ListAgencyErrCode, "ListAgencyErr error"},
+		{xcode.BusinessType, UpdateAgencyErrCode, "UpdateAgency error"},
+		{xcode.BusinessType, GetAgencyByIdErrCode, "GetAgencyByIdErr error"},
+		{xcode.BusinessType, UpdateAgencyStatusErrCode, "UpdateAgencyStatus error"},
+		{xcode.BusinessType, RecoverDelAgencyErrCode, "RecoverDelAgency error"},
+		{xcode.BusinessType, ListAgencyByCreateUIdErrCode, "ListAgencyByCreateUId error"},
+		{xcode.BusinessType, ListAgencyByJoinUIdErrCode, "ListAgencyByJoinUId error"},
+		{xcode.BusinessType, ListUserByJoinAgencyErrCode, "ListUserByJoinAgency error"},
+		{xcode.BusinessType, UpdateStatusAgencyUserErrCode, "UpdateStatusAgency error"},
+		{xcode.BusinessType, DelManyAgencyUserErrCode, "DelManyAgencyUser error"},
 
 		{xcode.BusinessType, DeleteRoleErrCode, "delete role error"},
 		{xcode.BusinessType, GetRolesForUserErrCode, "get roles for user error"},

@@ -66,6 +66,7 @@ type CheckCode struct {
 }
 
 type UserInfo struct {
+	AUId        uint   `json:"auid,omitempty"` //关联表id
 	Uid         uint   `json:"uid,omitempty"`
 	Name        string `json:"name,omitempty"`
 	Alias       string `json:"alias,omitempty"`
