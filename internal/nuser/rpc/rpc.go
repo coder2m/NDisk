@@ -186,11 +186,52 @@ func (s Server) UpdateAgencyStatus(ctx context.Context, info *NUserPb.AgencyInfo
 }
 
 func (s Server) RecoverDelAgency(ctx context.Context, list *NUserPb.IdList) (*NUserPb.ChangeNumResponse, error) {
-	panic("implement me")
+	ids := _map.Ids{
+		List: list.Id,
+	}
+	err := xvalidator.Struct(ids)
+	if !errors.Is(err, nil) {
+		return nil, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("recover del agency data validation error : %s", xvalidator.GetMsg(err).Error())
+	}
+	count, err := agency_server.RegainDelAgency(ctx, ids)
+	if !errors.Is(err, nil) {
+		if err == agency_server.EmptyDataErr {
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
+		}
+		return nil, xcode.BusinessCode(xrpc.RecoverDelAgencyErrCode)
+	}
+	return &NUserPb.ChangeNumResponse{
+		Count: xcast.ToUint32(count),
+	}, err
 }
 
 func (s Server) ListAgencyByCreateUId(ctx context.Context, id *NUserPb.Id) (*NUserPb.ListAgencyResponse, error) {
-	panic("implement me")
+	if id.Id <= 0 {
+		return nil, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("list agency by create uid data validation error : %s", "id is nil")
+	}
+	agencyList, err := agency_server.ListAgencyByCreateUId(ctx, _map.Id{Id: xcast.ToUint(id.Id)})
+	if !errors.Is(err, nil) {
+		if err == agency_server.EmptyDataErr {
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
+		}
+		return nil, xcode.BusinessCode(xrpc.ListAgencyByCreateUIdErrCode)
+	}
+	var list = make([]*NUserPb.AgencyInfo, len(agencyList))
+	for i, inf := range agencyList {
+		list[i] = &NUserPb.AgencyInfo{
+			Id:        xcast.ToUint32(inf.ID),
+			ParentId:  xcast.ToUint32(inf.ParentId),
+			Name:      inf.Name,
+			Remark:    inf.Remark,
+			Status:    xcast.ToUint32(inf.Status),
+			CreatedAt: xcast.ToUint64(inf.CreatedAt),
+			UpdatedAt: xcast.ToUint64(inf.UpdatedAt),
+			DeletedAt: xcast.ToUint64(inf.DeletedAt),
+		}
+	}
+	return &NUserPb.ListAgencyResponse{
+		List: list,
+	}, err
 }
 
 func (s Server) ListAgencyByJoinUId(ctx context.Context, id *NUserPb.Id) (*NUserPb.ListAgencyResponse, error) {
