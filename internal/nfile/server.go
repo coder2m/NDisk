@@ -14,6 +14,7 @@ import (
 	"github.com/myxy99/component/xgovern"
 	"github.com/myxy99/component/xinvoker"
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
+	xoss "github.com/myxy99/component/xinvoker/oss"
 	xredis "github.com/myxy99/component/xinvoker/redis"
 	"github.com/myxy99/component/xmonitor"
 	"github.com/myxy99/ndisk/internal/nfile/api/v1/registry"
@@ -93,6 +94,7 @@ func (s *Server) invoker() {
 	xinvoker.Register(
 		xgorm.Register("mysql"),
 		xredis.Register("redis"),
+		xoss.Register("oss"),
 	)
 	s.err = xinvoker.Init()
 }
