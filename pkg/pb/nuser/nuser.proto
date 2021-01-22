@@ -60,7 +60,7 @@ service NUserService {
   //	获取用户加入的所有机构
   rpc ListAgencyByJoinUId(Id)returns(ListAgencyResponse){}
   // 获取机构下的所有用户
-  rpc ListUserByJoinAgency(Id)returns(ListAgencyResponse){}
+  rpc ListUserByJoinAgency(Id)returns(UserList){}
   // 修改关联表状态
   rpc UpdateStatusAgencyUser(Id)returns(NilResponse){}
   //	根据关联id批量退出机构
@@ -95,7 +95,7 @@ message ListAgencyResponse {
 message AgencyInfo {
   uint32 auId = 1;
   uint32 id = 2;
-  uint32  parentId = 3;
+  uint32 parentId = 3;
   string name = 4;
   string remark = 5;
   uint32 status = 6;
@@ -120,17 +120,18 @@ message SMSLoginRequest{
 }
 
 message UserInfo  {
-  uint64 uid = 1;
-  string name = 2;
-  string alias = 3;
-  string Tel = 4;
-  string email = 5;
-  uint32 status = 6;
-  uint32 email_status = 7;
-  string password = 8;
-  uint64 created_at = 9;
-  uint64 updated_at = 10;
-  uint64 deleted_at = 11;
+  uint32 auId = 1;
+  uint64 uid = 2;
+  string name = 3;
+  string alias = 4;
+  string Tel = 5;
+  string email = 6;
+  uint32 status = 7;
+  uint32 email_status = 8;
+  string password = 9;
+  uint64 created_at = 10;
+  uint64 updated_at = 11;
+  uint64 deleted_at = 12;
 }
 
 message Token  {

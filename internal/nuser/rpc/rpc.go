@@ -235,19 +235,90 @@ func (s Server) ListAgencyByCreateUId(ctx context.Context, id *NUserPb.Id) (*NUs
 }
 
 func (s Server) ListAgencyByJoinUId(ctx context.Context, id *NUserPb.Id) (*NUserPb.ListAgencyResponse, error) {
-	panic("implement me")
+	if id.Id <= 0 || (id.Status != 1 && id.Status != 2 && id.Status != 3) {
+		return nil, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("list agency by join uid data validation error : %s", "id or status is nil")
+	}
+	agencyList, err := agency_server.ListAgencyByJoinUId(ctx, _map.Id{Id: xcast.ToUint(id.Id)}, xcast.ToUint(id.Status))
+	if !errors.Is(err, nil) {
+		if err == agency_server.EmptyDataErr {
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
+		}
+		return nil, xcode.BusinessCode(xrpc.ListAgencyByJoinUIdErrCode)
+	}
+	var list = make([]*NUserPb.AgencyInfo, len(agencyList))
+	for i, inf := range agencyList {
+		list[i] = &NUserPb.AgencyInfo{
+			AuId:     xcast.ToUint32(inf.AUId),
+			Id:       xcast.ToUint32(inf.ID),
+			ParentId: xcast.ToUint32(inf.ParentId),
+			Name:     inf.Name,
+			Remark:   inf.Remark,
+		}
+	}
+	return &NUserPb.ListAgencyResponse{
+		List: list,
+	}, err
 }
 
-func (s Server) ListUserByJoinAgency(ctx context.Context, id *NUserPb.Id) (*NUserPb.ListAgencyResponse, error) {
-	panic("implement me")
+func (s Server) ListUserByJoinAgency(ctx context.Context, id *NUserPb.Id) (*NUserPb.UserList, error) {
+	if id.Id <= 0 || (id.Status != 1 && id.Status != 2 && id.Status != 3) {
+		return nil, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("list user by join agency data validation error : %s", "id or status is nil")
+	}
+	uList, err := agency_server.ListUserByJoinAgency(ctx, _map.Id{Id: xcast.ToUint(id.Id)}, xcast.ToUint(id.Status))
+	if !errors.Is(err, nil) {
+		if err == agency_server.EmptyDataErr {
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
+		}
+		return nil, xcode.BusinessCode(xrpc.ListUserByJoinAgencyErrCode)
+	}
+	var list = make([]*NUserPb.UserInfo, len(uList))
+	for i, inf := range uList {
+		list[i] = &NUserPb.UserInfo{
+			AuId:  xcast.ToUint32(inf.AUId),
+			Uid:   xcast.ToUint64(inf.Uid),
+			Name:  inf.Name,
+			Alias: inf.Alias,
+			Email: inf.Email,
+			Tel:   inf.Tel,
+		}
+	}
+	return &NUserPb.UserList{
+		List: list,
+	}, err
 }
 
 func (s Server) UpdateStatusAgencyUser(ctx context.Context, id *NUserPb.Id) (*NUserPb.NilResponse, error) {
-	panic("implement me")
+	if id.Id <= 0 || (id.Status != 1 && id.Status != 2 && id.Status != 3) {
+		return nil, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("update status agency user data validation error : %s", "id or status is nil")
+	}
+	err := agency_server.UpdateStatusAgencyUser(ctx, xcast.ToUint(id.Id), xcast.ToUint32(id.Status))
+	if !errors.Is(err, nil) {
+		if err == agency_server.EmptyDataErr {
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
+		}
+		return nil, xcode.BusinessCode(xrpc.ListUserByJoinAgencyErrCode)
+	}
+	return new(NUserPb.NilResponse), err
 }
 
 func (s Server) DelManyAgencyUser(ctx context.Context, list *NUserPb.IdList) (*NUserPb.ChangeNumResponse, error) {
-	panic("implement me")
+	ids := _map.Ids{
+		List: list.Id,
+	}
+	err := xvalidator.Struct(ids)
+	if !errors.Is(err, nil) {
+		return nil, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("del many agency user validation error : %s", xvalidator.GetMsg(err).Error())
+	}
+	count, err := agency_server.DelManyAgencyUser(ctx, ids)
+	if !errors.Is(err, nil) {
+		if err == agency_server.EmptyDataErr {
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
+		}
+		return nil, xcode.BusinessCode(xrpc.DelManyAgencyUserErrCode)
+	}
+	return &NUserPb.ChangeNumResponse{
+		Count: xcast.ToUint32(count),
+	}, err
 }
 
 func (s Server) AccountLogin(ctx context.Context, request *NUserPb.UserLoginRequest) (rep *NUserPb.LoginResponse, err error) {
