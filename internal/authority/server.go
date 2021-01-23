@@ -12,6 +12,7 @@ import (
 	"github.com/myxy99/component/xcfg/datasource/manager"
 	"github.com/myxy99/component/xgovern"
 	"github.com/myxy99/component/xinvoker"
+	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	"github.com/myxy99/component/xmonitor"
 	xclient "github.com/myxy99/ndisk/internal/authority/client"
 	myValidator "github.com/myxy99/ndisk/internal/authority/validator"
@@ -94,10 +95,15 @@ func (s *Server) invoker() {
 		return xinvoker.Close()
 	})
 	xinvoker.Register(
-		//xgorm.Register("mysql"),
+		xgorm.Register("mysql"),
 		//xredis.Register("redis"),
 	)
 	s.err = xinvoker.Init()
+	//_ = model.MainDB().Migrator().AutoMigrate(
+	//	new(model.Resources),
+	//	new(model.Menu),
+	//	new(model.Roles),
+	//)
 }
 
 func (s *Server) initValidator() {

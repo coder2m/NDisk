@@ -3,7 +3,6 @@ package model
 import (
 	"errors"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
-	"github.com/myxy99/component/xcfg"
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	"github.com/myxy99/component/xlog"
 	_ "gorm.io/driver/mysql"
@@ -25,7 +24,7 @@ func MainDB() *gorm.DB {
 func CasbinDB() *gormadapter.Adapter {
 	if casbinDB == nil {
 		var err error
-		casbinDB, err = gormadapter.NewAdapter(xcfg.GetString("casbin.driver"), xcfg.GetString("casbin.host"))
+		casbinDB, err = gormadapter.NewAdapterByDBUseTableName(MainDB(), "sys", "casbin")
 		if !errors.Is(err, nil) {
 			xlog.Error("CasbinDB Connection failed",
 				xlog.FieldErr(err),
