@@ -29,4 +29,44 @@ type (
 	Array struct {
 		Data []string `validate:"required"`
 	}
+
+	RolesReq struct {
+		Name        string `validate:"required"`
+		Description string `validate:"required"`
+	}
+
+	//------------------------------
+	MenuResInfo struct {
+		ID          uint   `json:"id,omitempty"`
+		ParentId    uint   `json:"parent_id,omitempty"`
+		Path        string `json:"path,omitempty"`
+		Name        string `json:"name,omitempty"`
+		Description string `json:"description,omitempty"`
+		IconClass   string `json:"icon_class,omitempty"`
+		CreatedAt   uint64 `json:"created_at,omitempty"`
+		UpdatedAt   uint64 `json:"updated_at,omitempty"`
+		DeletedAt   uint64 `json:"deleted_at,omitempty"`
+	}
+
+	ResourcesResInfo struct {
+		ID          uint   `json:"id,omitempty"`
+		Name        string `json:"name,omitempty"`
+		Path        string `json:"path,omitempty"`
+		Action      string `json:"action,omitempty"`
+		Description string `json:"description,omitempty"`
+		CreatedAt   uint64 `json:"created_at,omitempty"`
+		UpdatedAt   uint64 `json:"updated_at,omitempty"`
+		DeletedAt   uint64 `json:"deleted_at,omitempty"`
+	}
+
+	RolesResInfo struct {
+		ID          uint               `json:"id,omitempty"`
+		Name        string             `json:"name,omitempty"`
+		Description string             `json:"description,omitempty"`
+		Menus       []MenuResInfo      `json:"menus,omitempty"`
+		Resources   []ResourcesResInfo `json:"resources,omitempty"`
+		CreatedAt   uint64             `json:"created_at,omitempty"`
+		UpdatedAt   uint64             `json:"updated_at,omitempty"`
+		DeletedAt   uint64             `json:"deleted_at,omitempty"`
+	}
 )

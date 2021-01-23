@@ -15,6 +15,7 @@ import (
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	"github.com/myxy99/component/xmonitor"
 	xclient "github.com/myxy99/ndisk/internal/authority/client"
+	"github.com/myxy99/ndisk/internal/authority/model"
 	myValidator "github.com/myxy99/ndisk/internal/authority/validator"
 	"github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
@@ -99,11 +100,11 @@ func (s *Server) invoker() {
 		//xredis.Register("redis"),
 	)
 	s.err = xinvoker.Init()
-	//_ = model.MainDB().Migrator().AutoMigrate(
-	//	new(model.Resources),
-	//	new(model.Menu),
-	//	new(model.Roles),
-	//)
+	_ = model.MainDB().Migrator().AutoMigrate(
+		new(model.Resources),
+		new(model.Menu),
+		new(model.Roles),
+	)
 }
 
 func (s *Server) initValidator() {
@@ -127,4 +128,12 @@ func (s *Server) casbin() {
 		return
 	}
 	xclient.CasbinClient()
+	// TODO 测试
+	//xclient.CasbinClient().AddPermissionForUser("测试角色", "/test", "GET")
+	//_ = auth_server.AddRoles(context.Background(), _map.RolesReq{
+	//	Name:        "admin2",
+	//	Description: "我是admin2",
+	//})
+	//st, _ := xjson.Marshal(data)
+	//xconsole.Red(string(st))
 }
