@@ -35,6 +35,21 @@ type (
 		Description string `validate:"required"`
 	}
 
+	ResourcesReq struct {
+		Name        string `validate:"required"`
+		Path        string `validate:"required"`
+		Action      string `validate:"required"`
+		Description string `validate:"required"`
+	}
+
+	MenuReq struct {
+		ParentId    uint   `validate:"required"`
+		Path        string `validate:"required"`
+		Name        string `validate:"required"`
+		Description string `validate:"required"`
+		IconClass   string `validate:"required"`
+	}
+
 	UpdateRolesMenuAndResourcesReq struct {
 		ID        uint   `validate:"required"`
 		Menus     []uint `validate:"required"`

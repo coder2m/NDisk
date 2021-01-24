@@ -59,11 +59,15 @@ func (m *Roles) Del(ctx context.Context, ids []uint32) (count int64, err error) 
 		count = res.RowsAffected
 	}
 
-	for _, roles := range list {
-		if err := tx.Table(new(CasbinRule).TableName()).Where("v0 in (?)", roles.Name).Delete(&CasbinRule{}).Error; err != nil {
-			tx.Rollback()
-			return 0, err
-		}
+	listName := make([]string, len(list))
+
+	for i, roles := range list {
+		listName[i] = roles.Name
+	}
+
+	if err := tx.Table(new(CasbinRule).TableName()).Where("v0 in (?)", listName).Delete(&CasbinRule{}).Error; err != nil {
+		tx.Rollback()
+		return 0, err
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -147,6 +151,10 @@ func (m *Roles) UpdatesWhereById(ctx context.Context, id uint) (err error) {
 		}
 	}()
 
+	if err := tx.Error; err != nil {
+		return err
+	}
+
 	var r Roles
 
 	if err := tx.Table(m.TableName()).First(&r, id).Error; err != nil {
@@ -186,6 +194,41 @@ func (m *Roles) UpdateRolesMenuAndResources(ctx context.Context) error {
 			tx.Rollback()
 		}
 	}()
+
+	var (
+		r         Roles
+		cabinList []CasbinRule
+	)
+
+	if err := tx.Table(m.TableName()).First(&r, m.ID).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Table("resources").Find(&m.Resources).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Table("sys_casbin").Where("v0 = ?", r.Name).Unscoped().Delete(&CasbinRule{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	cabinList = make([]CasbinRule, len(m.Resources))
+	for i, resource := range m.Resources {
+		cabinList[i] = CasbinRule{
+			PType: "p",
+			V0:    r.Name,
+			V1:    resource.Path,
+			V2:    resource.Action,
+		}
+	}
+
+	if err := tx.Table("sys_casbin").CreateInBatches(cabinList, 1000).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
 
 	if err := tx.Model(m).Association("Menus").Replace(m.Menus); err != nil {
 		tx.Rollback()

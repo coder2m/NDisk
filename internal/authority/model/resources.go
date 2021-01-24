@@ -37,14 +37,42 @@ func (m *Resources) Adds(ctx context.Context, data *[]Resources) (count int64, e
 	return
 }
 
-func (m *Resources) Del(ctx context.Context, wheres map[string][]interface{}) (count int64, err error) {
-	db := MainDB().Table(m.TableName()).WithContext(ctx)
-	for s, i := range wheres {
-		db = db.Where(s, i...)
+func (m *Resources) Del(ctx context.Context, ids []uint32) (count int64, err error) {
+	tx := MainDB().Begin().WithContext(ctx)
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	if err := tx.Error; err != nil {
+		return 0, err
 	}
-	tx := db.Delete(m)
+
+	var list []Resources
+	if err := tx.Table(m.TableName()).Where("id in (?)", ids).Find(&list).Error; err != nil {
+		tx.Rollback()
+		return 0, err
+	}
+
+	if res := tx.Table(m.TableName()).Where("id in (?)", ids).Delete(m); res.Error != nil {
+		tx.Rollback()
+		return 0, err
+	} else {
+		count = res.RowsAffected
+	}
+
+	for _, re := range list {
+		if err := tx.Table(new(CasbinRule).TableName()).Where("v1 = ? and v2 = ?", re.Path, re.Action).Unscoped().Delete(&CasbinRule{}).Error; err != nil {
+			tx.Rollback()
+			return 0, err
+		}
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		return 0, err
+	}
 	err = tx.Error
-	count = tx.RowsAffected
+
 	return
 }
 
@@ -127,4 +155,45 @@ func (m *Resources) UpdateWhere(ctx context.Context, wheres map[string][]interfa
 		db = db.Where(s, i...)
 	}
 	return db.Update(column, value).Error
+}
+
+func (m Resources) UpdatesWhereById(ctx context.Context, id uint) error {
+	tx := MainDB().Begin().WithContext(ctx)
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	var r Resources
+
+	if err := tx.Table(m.TableName()).First(&r, id).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Table(m.TableName()).Where("id = ?", id).Updates(m).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Table(new(CasbinRule).TableName()).
+		Where("v1 = ? and v2 = ?", r.Path, r.Action).
+		Updates(&CasbinRule{
+			V1: m.Path,
+			V2: m.Action,
+		}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		return err
+	}
+
+	return tx.Error
 }

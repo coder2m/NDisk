@@ -17,6 +17,7 @@ import (
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	"github.com/myxy99/component/xmonitor"
 	xclient "github.com/myxy99/ndisk/internal/authority/client"
+	_map "github.com/myxy99/ndisk/internal/authority/map"
 	"github.com/myxy99/ndisk/internal/authority/model"
 	auth_server "github.com/myxy99/ndisk/internal/authority/server"
 	myValidator "github.com/myxy99/ndisk/internal/authority/validator"
@@ -139,6 +140,13 @@ func (s *Server) casbin() {
 	//})
 	//st, _ := xjson.Marshal(data)
 	//xconsole.Red(string(st))
+	
+	_ = auth_server.UpdateRolesMenuAndResources(context.Background(), _map.UpdateRolesMenuAndResourcesReq{
+		ID:        3,
+		Menus:     []uint{1, 2},
+		Resources: []uint{1, 2},
+	})
+
 	data, _ := auth_server.GetPermissionAndMenuByRoles(context.Background(), "3")
 	st, _ := xjson.Marshal(data)
 	xconsole.Red(string(st))
