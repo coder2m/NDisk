@@ -35,6 +35,12 @@ type (
 		Description string `validate:"required"`
 	}
 
+	UpdateRolesMenuAndResourcesReq struct {
+		ID        uint   `validate:"required"`
+		Menus     []uint `validate:"required"`
+		Resources []uint `validate:"required"`
+	}
+
 	//------------------------------
 	MenuResInfo struct {
 		ID          uint   `json:"id,omitempty"`

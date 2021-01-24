@@ -156,3 +156,39 @@ func GetPermissionAndMenuByRoles(ctx context.Context, IdOrName string) (data _ma
 		UpdatedAt:   xcast.ToUint64(r.UpdatedAt.Unix()),
 	}, err
 }
+
+// 更新角色添加权限和菜单
+func UpdateRolesMenuAndResources(ctx context.Context, req _map.UpdateRolesMenuAndResourcesReq) error {
+	var menuList = make([]model.Menu, len(req.Menus))
+	for i, menu := range req.Menus {
+		menuList[i] = model.Menu{
+			ID: menu,
+		}
+	}
+
+	var resourcesList = make([]model.Resources, len(req.Resources))
+	for i, menu := range req.Resources {
+		resourcesList[i] = model.Resources{
+			ID: menu,
+		}
+	}
+
+	r := model.Roles{
+		ID:        req.ID,
+		Menus:     menuList,
+		Resources: resourcesList,
+	}
+	err := r.UpdateRolesMenuAndResources(ctx)
+	if !errors.Is(err, nil) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return EmptyDataErr
+		}
+		xlog.Error("UpdateRolesMenuAndResources", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return errors.New("UpdateRolesMenuAndResources error")
+	}
+	return err
+}
+
+func GetMenuList(ctx context.Context, req _map.PageList) ([]_map.MenuResInfo, int64, error) {
+	panic("todo")
+}

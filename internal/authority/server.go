@@ -1,12 +1,14 @@
 package authority
 
 import (
+	"context"
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xcode"
 	"github.com/myxy99/component/pkg/xconsole"
 	"github.com/myxy99/component/pkg/xdefer"
 	"github.com/myxy99/component/pkg/xflag"
+	"github.com/myxy99/component/pkg/xjson"
 	"github.com/myxy99/component/pkg/xvalidator"
 	"github.com/myxy99/component/xcfg"
 	"github.com/myxy99/component/xcfg/datasource/manager"
@@ -16,6 +18,7 @@ import (
 	"github.com/myxy99/component/xmonitor"
 	xclient "github.com/myxy99/ndisk/internal/authority/client"
 	"github.com/myxy99/ndisk/internal/authority/model"
+	auth_server "github.com/myxy99/ndisk/internal/authority/server"
 	myValidator "github.com/myxy99/ndisk/internal/authority/validator"
 	"github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
@@ -136,4 +139,7 @@ func (s *Server) casbin() {
 	//})
 	//st, _ := xjson.Marshal(data)
 	//xconsole.Red(string(st))
+	data, _ := auth_server.GetPermissionAndMenuByRoles(context.Background(), "3")
+	st, _ := xjson.Marshal(data)
+	xconsole.Red(string(st))
 }

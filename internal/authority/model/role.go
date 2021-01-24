@@ -178,3 +178,27 @@ func (m *Roles) UpdateWhere(ctx context.Context, wheres map[string][]interface{}
 	}
 	return db.Update(column, value).Error
 }
+
+func (m *Roles) UpdateRolesMenuAndResources(ctx context.Context) error {
+	tx := MainDB().Begin().WithContext(ctx)
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Model(m).Association("Menus").Replace(m.Menus); err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Model(m).Association("Resources").Replace(m.Resources); err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		return err
+	}
+	return tx.Error
+}
