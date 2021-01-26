@@ -22,24 +22,10 @@ func init() {
 	// 管理员获取用户信息
 	admin.GET("/user/:uid", middleware.Auth(), middleware.Authority(), ah.UserById)
 
-	// 管理员获取所有权限列表
-	admin.GET("/authority", middleware.Auth(), middleware.Authority(), ah.CompetenceList)
-	// 管理员添加权限列表
-	admin.POST("/authority", middleware.Auth(), middleware.Authority(), ah.AddCompetence)
-	// 管理员删除权限
-	admin.DELETE("/authority", middleware.Auth(), middleware.Authority(), ah.DeleteCompetence)
-
 	// 管理员获取全部角色RoleList
 	admin.GET("/role", middleware.Auth(), middleware.Authority(), ah.RoleList)
-	// 管理员获取角色下的权限
-	admin.GET("/role2authority", middleware.Auth(), middleware.Authority(), ah.CompetenceByRole)
-	// 管理员给角色添加权限
-	admin.POST("/role/authority", middleware.Auth(), middleware.Authority(), ah.RoleAddCompetence)
 	// 获取角色下的所有用户
 	admin.GET("/role/authority", middleware.Auth(), middleware.Authority(), ah.UserByRole)
-
-	// 删除角色指定权限
-	admin.DELETE("/role/authority", middleware.Auth(), middleware.Authority(), ah.DeleteRoleCompetence)
 
 	// 管理员获取用户的角色
 	admin.GET("/user/:uid/role", middleware.Auth(), middleware.Authority(), ah.RoleByUser)

@@ -76,6 +76,45 @@ type (
 		Action    string `json:"action,omitempty"`
 	}
 
+	RolesListRes struct {
+		Count uint32         `json:"count,omitempty"`
+		Data  []RolesInfoRes `json:"data,omitempty"`
+	}
+
+	RolesInfoRes struct {
+		Id          uint32             `json:"id,omitempty"`
+		Name        string             ` json:"name,omitempty"`
+		Description string             ` json:"description,omitempty"`
+		Menus       []MenuInfoRes      ` json:"menus,omitempty"`
+		Resources   []ResourcesInfoRes ` json:"resources,omitempty"`
+		CreatedAt   uint64             ` json:"created_at,omitempty"`
+		UpdatedAt   uint64             ` json:"updated_at,omitempty"`
+		DeletedAt   uint64             ` json:"deleted_at,omitempty"`
+	}
+
+	MenuInfoRes struct {
+		Id          uint32 `json:"id,omitempty"`
+		ParentId    uint32 `json:"parent_id,omitempty"`
+		Path        string `json:"path,omitempty"`
+		Name        string ` json:"name,omitempty"`
+		Description string `json:"description,omitempty"`
+		IconClass   string `json:"icon_class,omitempty"`
+		CreatedAt   uint64 `json:"created_at,omitempty"`
+		UpdatedAt   uint64 ` json:"updated_at,omitempty"`
+		DeletedAt   uint64 `json:"deleted_at,omitempty"`
+	}
+
+	ResourcesInfoRes struct {
+		Id          uint32 `json:"id,omitempty"`
+		Name        string `json:"name,omitempty"`
+		Path        string `json:"path,omitempty"`
+		Action      string `json:"action,omitempty"`
+		Description string `json:"description,omitempty"`
+		CreatedAt   uint64 `json:"created_at,omitempty"`
+		UpdatedAt   uint64 `json:"updated_at,omitempty"`
+		DeletedAt   uint64 `json:"deleted_at,omitempty"`
+	}
+
 	CompetenceList struct {
 		Data []Competence `json:"data,omitempty"`
 	}

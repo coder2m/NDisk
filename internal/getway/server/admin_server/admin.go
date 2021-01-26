@@ -129,75 +129,32 @@ func UserById(ctx context.Context, req _map.Uid) (data _map.UserInfo, errs *xerr
 	}, nil
 }
 
-// 获取角色下的权限
-func CompetenceList(ctx context.Context, role string) (data _map.CompetenceList, errs *xerror.Err) {
-	rep, err := xclient.AuthorityServer.GetPermissionsForUser(ctx, &AuthorityPb.Single{
-		To: role,
+func GetAllRoles(ctx context.Context, req _map.PageList) (data _map.RolesListRes, errs *xerror.Err) {
+	rep, err := xclient.AuthorityServer.GetAllRoles(ctx, &AuthorityPb.PageRequest{
+		Keyword:  req.Keyword,
+		Page:     xcast.ToUint32(req.Page),
+		Limit:    xcast.ToUint32(req.PageSize),
+		IsDelete: req.IsDelete,
 	})
 	if !errors.Is(err, nil) {
 		return data, xerror.NewErrRPC(err)
 	}
-	var list = make([]_map.Competence, len(rep.List))
-	for i, array := range rep.List {
-		list[i] = _map.Competence{
-			Objective: array.Data[1],
-			Action:    array.Data[2],
+
+	var list = make([]_map.RolesInfoRes, len(rep.List))
+	for i, info := range rep.List {
+		list[i] = _map.RolesInfoRes{
+			Id:          info.Id,
+			Name:        info.Name,
+			Description: info.Description,
+			CreatedAt:   info.CreatedAt,
+			UpdatedAt:   info.UpdatedAt,
+			DeletedAt:   info.DeletedAt,
 		}
 	}
-	return _map.CompetenceList{
-		Data: list,
-	}, nil
-}
 
-// 给角色添加权限
-func RoleAddCompetence(ctx context.Context, role string, data _map.CompetenceReq) (errs *xerror.Err) {
-	_, err := xclient.AuthorityServer.AddPermissionForUser(ctx, &AuthorityPb.Resources{
-		Role:   role,
-		Obj:    data.Objective,
-		Action: data.Action,
-	})
-	if !errors.Is(err, nil) {
-		return xerror.NewErrRPC(err)
-	}
-	return nil
-}
-
-// 给角色删除权限
-func RoleDelCompetence(ctx context.Context, role string, data _map.CompetenceReq) (errs *xerror.Err) {
-	_, err := xclient.AuthorityServer.DeletePermissionForUser(ctx, &AuthorityPb.Batch{
-		To:      role,
-		Operate: []string{data.Objective, data.Action},
-	})
-	if !errors.Is(err, nil) {
-		return xerror.NewErrRPC(err)
-	}
-	return nil
-}
-
-func GetAllRoles(ctx context.Context) (data []string, errs *xerror.Err) {
-	rep, err := xclient.AuthorityServer.GetAllRoles(ctx, &AuthorityPb.Empty{})
-	if !errors.Is(err, nil) {
-		return nil, xerror.NewErrRPC(err)
-	}
-	return rep.Data, nil
-}
-
-func CompetenceByRole(ctx context.Context, role string) (data _map.CompetenceList, errs *xerror.Err) {
-	rep, err := xclient.AuthorityServer.GetPermissionsForUser(ctx, &AuthorityPb.Single{
-		To: role,
-	})
-	if !errors.Is(err, nil) {
-		return data, xerror.NewErrRPC(err)
-	}
-	var list = make([]_map.Competence, len(rep.List))
-	for i, array := range rep.List {
-		list[i] = _map.Competence{
-			Objective: array.Data[1],
-			Action:    array.Data[2],
-		}
-	}
-	return _map.CompetenceList{
-		Data: list,
+	return _map.RolesListRes{
+		Count: rep.Count,
+		Data:  list,
 	}, nil
 }
 

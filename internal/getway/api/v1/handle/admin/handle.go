@@ -140,103 +140,18 @@ func UserById(ctx *gin.Context) {
 	return
 }
 
-// 管理员获取所有权限列表
-func CompetenceList(ctx *gin.Context) {
-	if data, err := admin_server.CompetenceList(ctx, "admin"); err != nil {
-		R.Error(ctx, err)
-	} else {
-		R.Ok(ctx, data)
-	}
-	return
-}
-
-// 管理员添加权限列表
-func AddCompetence(ctx *gin.Context) {
-	var req _map.CompetenceReq
-	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
-		return
-	}
-	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
-		return
-	}
-	if err := admin_server.RoleAddCompetence(ctx, "admin", req); err != nil {
-		R.Error(ctx, err)
-	} else {
-		R.Ok(ctx, nil)
-	}
-	return
-}
-
-// 管理员删除权限
-func DeleteCompetence(ctx *gin.Context) {
-	var req _map.CompetenceReq
-	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
-		return
-	}
-	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
-		return
-	}
-	if err := admin_server.RoleDelCompetence(ctx, "admin", req); err != nil {
-		R.Error(ctx, err)
-	} else {
-		R.Ok(ctx, nil)
-	}
-	return
-}
-
 // 管理员获取全部角色
 func RoleList(ctx *gin.Context) {
-	if data, err := admin_server.GetAllRoles(ctx); err != nil {
-		R.Error(ctx, err)
-	} else {
-		R.Ok(ctx, data)
-	}
-	return
-}
-
-// 管理员获取角色下的权限
-func CompetenceByRole(ctx *gin.Context) {
-	var req _map.RoleReq
+	var req = _map.DefaultPageRequest
 	if err := ctx.ShouldBind(&req); err != nil {
 		httpError.HandleBadRequest(ctx, nil)
 		return
 	}
-	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
-		return
-	}
-	if data, err := admin_server.CompetenceByRole(ctx, req.Content); err != nil {
+	if data, err := admin_server.GetAllRoles(ctx, req); err != nil {
 		R.Error(ctx, err)
 	} else {
-		R.Ok(ctx, data)
+		R.Page(ctx, xcast.ToInt64(data.Count), req.Page, req.PageSize, data.Data)
 	}
-	return
-}
-
-// 管理员给角色添加权限
-func RoleAddCompetence(ctx *gin.Context) {
-	var req _map.RoleCompetenceReq
-	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
-		return
-	}
-	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
-		return
-	}
-	if err := admin_server.RoleAddCompetence(ctx, req.Role, _map.CompetenceReq{
-		Objective: req.Objective,
-		Action:    req.Action,
-	}); err != nil {
-		R.Error(ctx, err)
-	} else {
-		R.Ok(ctx, nil)
-	}
-	return
 }
 
 // 获取角色下的所有用户
@@ -254,28 +169,6 @@ func UserByRole(ctx *gin.Context) {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
-	}
-	return
-}
-
-// 删除角色指定权限
-func DeleteRoleCompetence(ctx *gin.Context) {
-	var req _map.RoleCompetenceReq
-	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
-		return
-	}
-	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
-		return
-	}
-	if err := admin_server.RoleDelCompetence(ctx, req.Role, _map.CompetenceReq{
-		Objective: req.Objective,
-		Action:    req.Action,
-	}); err != nil {
-		R.Error(ctx, err)
-	} else {
-		R.Ok(ctx, nil)
 	}
 	return
 }
