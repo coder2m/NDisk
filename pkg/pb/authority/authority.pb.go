@@ -24,6 +24,558 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+type MenuInfo struct {
+	Id                   uint32   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	ParentId             uint32   `protobuf:"varint,2,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
+	Path                 string   `protobuf:"bytes,3,opt,name=path,proto3" json:"path,omitempty"`
+	Name                 string   `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Description          string   `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	IconClass            string   `protobuf:"bytes,6,opt,name=icon_class,json=iconClass,proto3" json:"icon_class,omitempty"`
+	CreatedAt            uint64   `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt            uint64   `protobuf:"varint,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	DeletedAt            uint64   `protobuf:"varint,9,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *MenuInfo) Reset()         { *m = MenuInfo{} }
+func (m *MenuInfo) String() string { return proto.CompactTextString(m) }
+func (*MenuInfo) ProtoMessage()    {}
+func (*MenuInfo) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6a5a0640cd66a638, []int{0}
+}
+
+func (m *MenuInfo) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MenuInfo.Unmarshal(m, b)
+}
+func (m *MenuInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MenuInfo.Marshal(b, m, deterministic)
+}
+func (m *MenuInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MenuInfo.Merge(m, src)
+}
+func (m *MenuInfo) XXX_Size() int {
+	return xxx_messageInfo_MenuInfo.Size(m)
+}
+func (m *MenuInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_MenuInfo.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MenuInfo proto.InternalMessageInfo
+
+func (m *MenuInfo) GetId() uint32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *MenuInfo) GetParentId() uint32 {
+	if m != nil {
+		return m.ParentId
+	}
+	return 0
+}
+
+func (m *MenuInfo) GetPath() string {
+	if m != nil {
+		return m.Path
+	}
+	return ""
+}
+
+func (m *MenuInfo) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *MenuInfo) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+func (m *MenuInfo) GetIconClass() string {
+	if m != nil {
+		return m.IconClass
+	}
+	return ""
+}
+
+func (m *MenuInfo) GetCreatedAt() uint64 {
+	if m != nil {
+		return m.CreatedAt
+	}
+	return 0
+}
+
+func (m *MenuInfo) GetUpdatedAt() uint64 {
+	if m != nil {
+		return m.UpdatedAt
+	}
+	return 0
+}
+
+func (m *MenuInfo) GetDeletedAt() uint64 {
+	if m != nil {
+		return m.DeletedAt
+	}
+	return 0
+}
+
+type ResourcesInfo struct {
+	Id                   uint32   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name                 string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Path                 string   `protobuf:"bytes,3,opt,name=path,proto3" json:"path,omitempty"`
+	Action               string   `protobuf:"bytes,4,opt,name=action,proto3" json:"action,omitempty"`
+	Description          string   `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	CreatedAt            uint64   `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt            uint64   `protobuf:"varint,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	DeletedAt            uint64   `protobuf:"varint,9,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ResourcesInfo) Reset()         { *m = ResourcesInfo{} }
+func (m *ResourcesInfo) String() string { return proto.CompactTextString(m) }
+func (*ResourcesInfo) ProtoMessage()    {}
+func (*ResourcesInfo) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6a5a0640cd66a638, []int{1}
+}
+
+func (m *ResourcesInfo) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ResourcesInfo.Unmarshal(m, b)
+}
+func (m *ResourcesInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ResourcesInfo.Marshal(b, m, deterministic)
+}
+func (m *ResourcesInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ResourcesInfo.Merge(m, src)
+}
+func (m *ResourcesInfo) XXX_Size() int {
+	return xxx_messageInfo_ResourcesInfo.Size(m)
+}
+func (m *ResourcesInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_ResourcesInfo.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ResourcesInfo proto.InternalMessageInfo
+
+func (m *ResourcesInfo) GetId() uint32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *ResourcesInfo) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *ResourcesInfo) GetPath() string {
+	if m != nil {
+		return m.Path
+	}
+	return ""
+}
+
+func (m *ResourcesInfo) GetAction() string {
+	if m != nil {
+		return m.Action
+	}
+	return ""
+}
+
+func (m *ResourcesInfo) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+func (m *ResourcesInfo) GetCreatedAt() uint64 {
+	if m != nil {
+		return m.CreatedAt
+	}
+	return 0
+}
+
+func (m *ResourcesInfo) GetUpdatedAt() uint64 {
+	if m != nil {
+		return m.UpdatedAt
+	}
+	return 0
+}
+
+func (m *ResourcesInfo) GetDeletedAt() uint64 {
+	if m != nil {
+		return m.DeletedAt
+	}
+	return 0
+}
+
+type RolesInfo struct {
+	Id                   uint32           `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name                 string           `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description          string           `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Menus                []*MenuInfo      `protobuf:"bytes,4,rep,name=menus,proto3" json:"menus,omitempty"`
+	Resources            []*ResourcesInfo `protobuf:"bytes,5,rep,name=resources,proto3" json:"resources,omitempty"`
+	CreatedAt            uint64           `protobuf:"varint,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt            uint64           `protobuf:"varint,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	DeletedAt            uint64           `protobuf:"varint,8,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
+}
+
+func (m *RolesInfo) Reset()         { *m = RolesInfo{} }
+func (m *RolesInfo) String() string { return proto.CompactTextString(m) }
+func (*RolesInfo) ProtoMessage()    {}
+func (*RolesInfo) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6a5a0640cd66a638, []int{2}
+}
+
+func (m *RolesInfo) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RolesInfo.Unmarshal(m, b)
+}
+func (m *RolesInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RolesInfo.Marshal(b, m, deterministic)
+}
+func (m *RolesInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RolesInfo.Merge(m, src)
+}
+func (m *RolesInfo) XXX_Size() int {
+	return xxx_messageInfo_RolesInfo.Size(m)
+}
+func (m *RolesInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_RolesInfo.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RolesInfo proto.InternalMessageInfo
+
+func (m *RolesInfo) GetId() uint32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *RolesInfo) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *RolesInfo) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+func (m *RolesInfo) GetMenus() []*MenuInfo {
+	if m != nil {
+		return m.Menus
+	}
+	return nil
+}
+
+func (m *RolesInfo) GetResources() []*ResourcesInfo {
+	if m != nil {
+		return m.Resources
+	}
+	return nil
+}
+
+func (m *RolesInfo) GetCreatedAt() uint64 {
+	if m != nil {
+		return m.CreatedAt
+	}
+	return 0
+}
+
+func (m *RolesInfo) GetUpdatedAt() uint64 {
+	if m != nil {
+		return m.UpdatedAt
+	}
+	return 0
+}
+
+func (m *RolesInfo) GetDeletedAt() uint64 {
+	if m != nil {
+		return m.DeletedAt
+	}
+	return 0
+}
+
+type UpdateRolesMenuAndResourcesReq struct {
+	Id                   uint32   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Menus                []uint32 `protobuf:"varint,2,rep,packed,name=menus,proto3" json:"menus,omitempty"`
+	Resources            []uint32 `protobuf:"varint,3,rep,packed,name=resources,proto3" json:"resources,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpdateRolesMenuAndResourcesReq) Reset()         { *m = UpdateRolesMenuAndResourcesReq{} }
+func (m *UpdateRolesMenuAndResourcesReq) String() string { return proto.CompactTextString(m) }
+func (*UpdateRolesMenuAndResourcesReq) ProtoMessage()    {}
+func (*UpdateRolesMenuAndResourcesReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6a5a0640cd66a638, []int{3}
+}
+
+func (m *UpdateRolesMenuAndResourcesReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateRolesMenuAndResourcesReq.Unmarshal(m, b)
+}
+func (m *UpdateRolesMenuAndResourcesReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateRolesMenuAndResourcesReq.Marshal(b, m, deterministic)
+}
+func (m *UpdateRolesMenuAndResourcesReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateRolesMenuAndResourcesReq.Merge(m, src)
+}
+func (m *UpdateRolesMenuAndResourcesReq) XXX_Size() int {
+	return xxx_messageInfo_UpdateRolesMenuAndResourcesReq.Size(m)
+}
+func (m *UpdateRolesMenuAndResourcesReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateRolesMenuAndResourcesReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateRolesMenuAndResourcesReq proto.InternalMessageInfo
+
+func (m *UpdateRolesMenuAndResourcesReq) GetId() uint32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *UpdateRolesMenuAndResourcesReq) GetMenus() []uint32 {
+	if m != nil {
+		return m.Menus
+	}
+	return nil
+}
+
+func (m *UpdateRolesMenuAndResourcesReq) GetResources() []uint32 {
+	if m != nil {
+		return m.Resources
+	}
+	return nil
+}
+
+type RolesInfoListResponse struct {
+	List                 []*RolesInfo `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	Count                uint32       `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
+	XXX_unrecognized     []byte       `json:"-"`
+	XXX_sizecache        int32        `json:"-"`
+}
+
+func (m *RolesInfoListResponse) Reset()         { *m = RolesInfoListResponse{} }
+func (m *RolesInfoListResponse) String() string { return proto.CompactTextString(m) }
+func (*RolesInfoListResponse) ProtoMessage()    {}
+func (*RolesInfoListResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6a5a0640cd66a638, []int{4}
+}
+
+func (m *RolesInfoListResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RolesInfoListResponse.Unmarshal(m, b)
+}
+func (m *RolesInfoListResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RolesInfoListResponse.Marshal(b, m, deterministic)
+}
+func (m *RolesInfoListResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RolesInfoListResponse.Merge(m, src)
+}
+func (m *RolesInfoListResponse) XXX_Size() int {
+	return xxx_messageInfo_RolesInfoListResponse.Size(m)
+}
+func (m *RolesInfoListResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_RolesInfoListResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RolesInfoListResponse proto.InternalMessageInfo
+
+func (m *RolesInfoListResponse) GetList() []*RolesInfo {
+	if m != nil {
+		return m.List
+	}
+	return nil
+}
+
+func (m *RolesInfoListResponse) GetCount() uint32 {
+	if m != nil {
+		return m.Count
+	}
+	return 0
+}
+
+type PageRequest struct {
+	Keyword              string   `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Page                 uint32   `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
+	Limit                uint32   `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
+	IsDelete             bool     `protobuf:"varint,4,opt,name=is_delete,json=isDelete,proto3" json:"is_delete,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *PageRequest) Reset()         { *m = PageRequest{} }
+func (m *PageRequest) String() string { return proto.CompactTextString(m) }
+func (*PageRequest) ProtoMessage()    {}
+func (*PageRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6a5a0640cd66a638, []int{5}
+}
+
+func (m *PageRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PageRequest.Unmarshal(m, b)
+}
+func (m *PageRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PageRequest.Marshal(b, m, deterministic)
+}
+func (m *PageRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PageRequest.Merge(m, src)
+}
+func (m *PageRequest) XXX_Size() int {
+	return xxx_messageInfo_PageRequest.Size(m)
+}
+func (m *PageRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_PageRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PageRequest proto.InternalMessageInfo
+
+func (m *PageRequest) GetKeyword() string {
+	if m != nil {
+		return m.Keyword
+	}
+	return ""
+}
+
+func (m *PageRequest) GetPage() uint32 {
+	if m != nil {
+		return m.Page
+	}
+	return 0
+}
+
+func (m *PageRequest) GetLimit() uint32 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *PageRequest) GetIsDelete() bool {
+	if m != nil {
+		return m.IsDelete
+	}
+	return false
+}
+
+type MenuInfoListResponse struct {
+	List                 []*MenuInfo `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	Count                uint32      `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
+}
+
+func (m *MenuInfoListResponse) Reset()         { *m = MenuInfoListResponse{} }
+func (m *MenuInfoListResponse) String() string { return proto.CompactTextString(m) }
+func (*MenuInfoListResponse) ProtoMessage()    {}
+func (*MenuInfoListResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6a5a0640cd66a638, []int{6}
+}
+
+func (m *MenuInfoListResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MenuInfoListResponse.Unmarshal(m, b)
+}
+func (m *MenuInfoListResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MenuInfoListResponse.Marshal(b, m, deterministic)
+}
+func (m *MenuInfoListResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MenuInfoListResponse.Merge(m, src)
+}
+func (m *MenuInfoListResponse) XXX_Size() int {
+	return xxx_messageInfo_MenuInfoListResponse.Size(m)
+}
+func (m *MenuInfoListResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MenuInfoListResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MenuInfoListResponse proto.InternalMessageInfo
+
+func (m *MenuInfoListResponse) GetList() []*MenuInfo {
+	if m != nil {
+		return m.List
+	}
+	return nil
+}
+
+func (m *MenuInfoListResponse) GetCount() uint32 {
+	if m != nil {
+		return m.Count
+	}
+	return 0
+}
+
+type ResourcesInfoListResponse struct {
+	List                 []*ResourcesInfo `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	Count                uint32           `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
+}
+
+func (m *ResourcesInfoListResponse) Reset()         { *m = ResourcesInfoListResponse{} }
+func (m *ResourcesInfoListResponse) String() string { return proto.CompactTextString(m) }
+func (*ResourcesInfoListResponse) ProtoMessage()    {}
+func (*ResourcesInfoListResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6a5a0640cd66a638, []int{7}
+}
+
+func (m *ResourcesInfoListResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ResourcesInfoListResponse.Unmarshal(m, b)
+}
+func (m *ResourcesInfoListResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ResourcesInfoListResponse.Marshal(b, m, deterministic)
+}
+func (m *ResourcesInfoListResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ResourcesInfoListResponse.Merge(m, src)
+}
+func (m *ResourcesInfoListResponse) XXX_Size() int {
+	return xxx_messageInfo_ResourcesInfoListResponse.Size(m)
+}
+func (m *ResourcesInfoListResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ResourcesInfoListResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ResourcesInfoListResponse proto.InternalMessageInfo
+
+func (m *ResourcesInfoListResponse) GetList() []*ResourcesInfo {
+	if m != nil {
+		return m.List
+	}
+	return nil
+}
+
+func (m *ResourcesInfoListResponse) GetCount() uint32 {
+	if m != nil {
+		return m.Count
+	}
+	return 0
+}
+
 type Empty struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -34,7 +586,7 @@ func (m *Empty) Reset()         { *m = Empty{} }
 func (m *Empty) String() string { return proto.CompactTextString(m) }
 func (*Empty) ProtoMessage()    {}
 func (*Empty) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6a5a0640cd66a638, []int{0}
+	return fileDescriptor_6a5a0640cd66a638, []int{8}
 }
 
 func (m *Empty) XXX_Unmarshal(b []byte) error {
@@ -55,6 +607,45 @@ func (m *Empty) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Empty proto.InternalMessageInfo
 
+type ChangeNumRes struct {
+	Count                uint32   `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ChangeNumRes) Reset()         { *m = ChangeNumRes{} }
+func (m *ChangeNumRes) String() string { return proto.CompactTextString(m) }
+func (*ChangeNumRes) ProtoMessage()    {}
+func (*ChangeNumRes) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6a5a0640cd66a638, []int{9}
+}
+
+func (m *ChangeNumRes) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ChangeNumRes.Unmarshal(m, b)
+}
+func (m *ChangeNumRes) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ChangeNumRes.Marshal(b, m, deterministic)
+}
+func (m *ChangeNumRes) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ChangeNumRes.Merge(m, src)
+}
+func (m *ChangeNumRes) XXX_Size() int {
+	return xxx_messageInfo_ChangeNumRes.Size(m)
+}
+func (m *ChangeNumRes) XXX_DiscardUnknown() {
+	xxx_messageInfo_ChangeNumRes.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ChangeNumRes proto.InternalMessageInfo
+
+func (m *ChangeNumRes) GetCount() uint32 {
+	if m != nil {
+		return m.Count
+	}
+	return 0
+}
+
 type Array struct {
 	Data                 []string `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -66,7 +657,7 @@ func (m *Array) Reset()         { *m = Array{} }
 func (m *Array) String() string { return proto.CompactTextString(m) }
 func (*Array) ProtoMessage()    {}
 func (*Array) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6a5a0640cd66a638, []int{1}
+	return fileDescriptor_6a5a0640cd66a638, []int{10}
 }
 
 func (m *Array) XXX_Unmarshal(b []byte) error {
@@ -105,7 +696,7 @@ func (m *Arrays) Reset()         { *m = Arrays{} }
 func (m *Arrays) String() string { return proto.CompactTextString(m) }
 func (*Arrays) ProtoMessage()    {}
 func (*Arrays) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6a5a0640cd66a638, []int{2}
+	return fileDescriptor_6a5a0640cd66a638, []int{11}
 }
 
 func (m *Arrays) XXX_Unmarshal(b []byte) error {
@@ -133,6 +724,45 @@ func (m *Arrays) GetList() []*Array {
 	return nil
 }
 
+type Ids struct {
+	To                   []uint32 `protobuf:"varint,1,rep,packed,name=to,proto3" json:"to,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Ids) Reset()         { *m = Ids{} }
+func (m *Ids) String() string { return proto.CompactTextString(m) }
+func (*Ids) ProtoMessage()    {}
+func (*Ids) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6a5a0640cd66a638, []int{12}
+}
+
+func (m *Ids) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Ids.Unmarshal(m, b)
+}
+func (m *Ids) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Ids.Marshal(b, m, deterministic)
+}
+func (m *Ids) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Ids.Merge(m, src)
+}
+func (m *Ids) XXX_Size() int {
+	return xxx_messageInfo_Ids.Size(m)
+}
+func (m *Ids) XXX_DiscardUnknown() {
+	xxx_messageInfo_Ids.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Ids proto.InternalMessageInfo
+
+func (m *Ids) GetTo() []uint32 {
+	if m != nil {
+		return m.To
+	}
+	return nil
+}
+
 type Target struct {
 	To                   string   `protobuf:"bytes,1,opt,name=to,proto3" json:"to,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -144,7 +774,7 @@ func (m *Target) Reset()         { *m = Target{} }
 func (m *Target) String() string { return proto.CompactTextString(m) }
 func (*Target) ProtoMessage()    {}
 func (*Target) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6a5a0640cd66a638, []int{3}
+	return fileDescriptor_6a5a0640cd66a638, []int{13}
 }
 
 func (m *Target) XXX_Unmarshal(b []byte) error {
@@ -184,7 +814,7 @@ func (m *Batch) Reset()         { *m = Batch{} }
 func (m *Batch) String() string { return proto.CompactTextString(m) }
 func (*Batch) ProtoMessage()    {}
 func (*Batch) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6a5a0640cd66a638, []int{4}
+	return fileDescriptor_6a5a0640cd66a638, []int{14}
 }
 
 func (m *Batch) XXX_Unmarshal(b []byte) error {
@@ -231,7 +861,7 @@ func (m *Single) Reset()         { *m = Single{} }
 func (m *Single) String() string { return proto.CompactTextString(m) }
 func (*Single) ProtoMessage()    {}
 func (*Single) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6a5a0640cd66a638, []int{5}
+	return fileDescriptor_6a5a0640cd66a638, []int{15}
 }
 
 func (m *Single) XXX_Unmarshal(b []byte) error {
@@ -277,7 +907,7 @@ func (m *Determine) Reset()         { *m = Determine{} }
 func (m *Determine) String() string { return proto.CompactTextString(m) }
 func (*Determine) ProtoMessage()    {}
 func (*Determine) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6a5a0640cd66a638, []int{6}
+	return fileDescriptor_6a5a0640cd66a638, []int{16}
 }
 
 func (m *Determine) XXX_Unmarshal(b []byte) error {
@@ -318,7 +948,7 @@ func (m *Resources) Reset()         { *m = Resources{} }
 func (m *Resources) String() string { return proto.CompactTextString(m) }
 func (*Resources) ProtoMessage()    {}
 func (*Resources) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6a5a0640cd66a638, []int{7}
+	return fileDescriptor_6a5a0640cd66a638, []int{17}
 }
 
 func (m *Resources) XXX_Unmarshal(b []byte) error {
@@ -361,9 +991,19 @@ func (m *Resources) GetAction() string {
 }
 
 func init() {
+	proto.RegisterType((*MenuInfo)(nil), "AuthorityPb.MenuInfo")
+	proto.RegisterType((*ResourcesInfo)(nil), "AuthorityPb.ResourcesInfo")
+	proto.RegisterType((*RolesInfo)(nil), "AuthorityPb.RolesInfo")
+	proto.RegisterType((*UpdateRolesMenuAndResourcesReq)(nil), "AuthorityPb.UpdateRolesMenuAndResourcesReq")
+	proto.RegisterType((*RolesInfoListResponse)(nil), "AuthorityPb.RolesInfoListResponse")
+	proto.RegisterType((*PageRequest)(nil), "AuthorityPb.PageRequest")
+	proto.RegisterType((*MenuInfoListResponse)(nil), "AuthorityPb.MenuInfoListResponse")
+	proto.RegisterType((*ResourcesInfoListResponse)(nil), "AuthorityPb.ResourcesInfoListResponse")
 	proto.RegisterType((*Empty)(nil), "AuthorityPb.Empty")
+	proto.RegisterType((*ChangeNumRes)(nil), "AuthorityPb.ChangeNumRes")
 	proto.RegisterType((*Array)(nil), "AuthorityPb.Array")
 	proto.RegisterType((*Arrays)(nil), "AuthorityPb.Arrays")
+	proto.RegisterType((*Ids)(nil), "AuthorityPb.Ids")
 	proto.RegisterType((*Target)(nil), "AuthorityPb.Target")
 	proto.RegisterType((*Batch)(nil), "AuthorityPb.Batch")
 	proto.RegisterType((*Single)(nil), "AuthorityPb.Single")
@@ -374,37 +1014,69 @@ func init() {
 func init() { proto.RegisterFile("authority.proto", fileDescriptor_6a5a0640cd66a638) }
 
 var fileDescriptor_6a5a0640cd66a638 = []byte{
-	// 473 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x94, 0xcf, 0x4e, 0xdb, 0x40,
-	0x10, 0xc6, 0xf3, 0x87, 0x38, 0x64, 0x22, 0x91, 0x74, 0xa1, 0xd4, 0x0a, 0x17, 0xb4, 0x87, 0x8a,
-	0x53, 0xd4, 0xa6, 0x07, 0x0e, 0x54, 0x45, 0x6e, 0x93, 0x86, 0xde, 0x90, 0x69, 0x1f, 0x60, 0x63,
-	0x4f, 0xc1, 0xc5, 0x78, 0xa2, 0xdd, 0xa1, 0x52, 0xde, 0xa2, 0x8f, 0x5c, 0x79, 0x13, 0x3b, 0x38,
-	0xd8, 0x51, 0xe0, 0xb6, 0xde, 0xdd, 0xdf, 0xf7, 0xcd, 0x7c, 0xb3, 0x32, 0xf4, 0xd4, 0x23, 0xdf,
-	0x91, 0x8e, 0x78, 0x31, 0x9c, 0x6b, 0x62, 0x12, 0x5d, 0x2f, 0xdb, 0xb8, 0x9e, 0xc9, 0x36, 0xb4,
-	0x26, 0x0f, 0x73, 0x5e, 0xc8, 0x13, 0x68, 0x79, 0x5a, 0xab, 0x85, 0x10, 0xb0, 0x17, 0x2a, 0x56,
-	0x6e, 0xfd, 0xb4, 0x79, 0xd6, 0xf1, 0xed, 0x5a, 0x7e, 0x00, 0xc7, 0x1e, 0x1a, 0xf1, 0x1e, 0xf6,
-	0xe2, 0xc8, 0xb0, 0x3d, 0xed, 0x8e, 0xc4, 0xf0, 0x89, 0xd6, 0xd0, 0x5e, 0xf1, 0xed, 0xb9, 0x74,
-	0xc1, 0xf9, 0xa9, 0xf4, 0x2d, 0xb2, 0x38, 0x80, 0x06, 0x93, 0x5b, 0x3f, 0xad, 0x9f, 0x75, 0xfc,
-	0x06, 0x93, 0xfc, 0x08, 0xad, 0xaf, 0x8a, 0x83, 0xbb, 0xcd, 0x03, 0xe1, 0x42, 0x9b, 0xe6, 0xa8,
-	0x15, 0xa3, 0xdb, 0xb0, 0xde, 0xd9, 0xa7, 0x1c, 0x81, 0x73, 0x13, 0x25, 0xb7, 0x31, 0x6e, 0x67,
-	0xea, 0x4f, 0x99, 0x13, 0xe8, 0x8c, 0x91, 0x51, 0x3f, 0x44, 0x89, 0xc5, 0xe8, 0xde, 0x62, 0xfb,
-	0x7e, 0x83, 0xee, 0xe5, 0x0f, 0xe8, 0xf8, 0x68, 0xe8, 0x51, 0x07, 0x68, 0xd2, 0x86, 0x35, 0xc5,
-	0xb8, 0x52, 0xb5, 0x6b, 0xd1, 0x87, 0x26, 0xcd, 0xfe, 0xac, 0x34, 0xd3, 0xa5, 0x38, 0x06, 0x47,
-	0x05, 0x1c, 0x51, 0xe2, 0x36, 0xed, 0xe6, 0xea, 0x6b, 0xf4, 0x6f, 0x1f, 0xfa, 0x79, 0x08, 0x37,
-	0xa8, 0xff, 0x46, 0x01, 0x8a, 0x73, 0xe8, 0x4e, 0x91, 0xbd, 0x38, 0xf6, 0x29, 0x4e, 0x1d, 0x0a,
-	0x31, 0xd9, 0xbc, 0x07, 0x25, 0xd1, 0xc9, 0x9a, 0x38, 0x07, 0x18, 0x63, 0x8c, 0x8c, 0x29, 0x28,
-	0x0e, 0x0b, 0x77, 0x96, 0x79, 0x0e, 0x4a, 0xc4, 0x64, 0x4d, 0x7c, 0x86, 0xde, 0x14, 0xd9, 0xda,
-	0x7d, 0x27, 0xfd, 0xcb, 0xa0, 0xde, 0x85, 0xce, 0x6c, 0x2f, 0xa0, 0xe7, 0x85, 0x61, 0x81, 0x2e,
-	0x5e, 0xb4, 0x13, 0xab, 0xb0, 0xbe, 0x84, 0x83, 0x2b, 0x65, 0x52, 0xb8, 0xdc, 0x79, 0x39, 0xba,
-	0xc1, 0x71, 0x61, 0x33, 0x9f, 0x8d, 0xac, 0x89, 0x2f, 0xf0, 0x66, 0xdd, 0xf4, 0x56, 0x8d, 0xf2,
-	0x02, 0xf2, 0xd0, 0x5e, 0x0a, 0x5e, 0x82, 0x58, 0x1b, 0x9b, 0x57, 0x38, 0x2f, 0x53, 0x4f, 0xa9,
-	0x94, 0x2e, 0x99, 0x59, 0x29, 0x9d, 0xa5, 0x3e, 0x86, 0x23, 0x2f, 0x0c, 0xaf, 0xd3, 0x1c, 0x8c,
-	0x89, 0x28, 0xc9, 0x0a, 0x28, 0x26, 0x95, 0x3f, 0xd4, 0x8a, 0x1a, 0xbe, 0xc1, 0xdb, 0x29, 0xf2,
-	0x5a, 0x65, 0x7b, 0x1f, 0x87, 0xcf, 0x2b, 0x31, 0x56, 0xe4, 0xdd, 0x32, 0x89, 0xe7, 0xd5, 0xec,
-	0xfe, 0x10, 0x26, 0xe0, 0x6e, 0x8a, 0xbc, 0x2e, 0xd4, 0xfe, 0xa6, 0x8c, 0x28, 0x09, 0xb0, 0x82,
-	0x1e, 0xc3, 0xd1, 0x95, 0x32, 0xbb, 0xb5, 0x51, 0xfd, 0x24, 0x2f, 0xa0, 0x3d, 0x49, 0x7e, 0x93,
-	0x0e, 0xb0, 0x72, 0x1a, 0x95, 0xf0, 0xcc, 0xb1, 0xff, 0xd9, 0x4f, 0xff, 0x03, 0x00, 0x00, 0xff,
-	0xff, 0x65, 0xd7, 0x64, 0x2d, 0x7a, 0x05, 0x00, 0x00,
+	// 984 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x57, 0x6d, 0x8f, 0xdb, 0x44,
+	0x10, 0xce, 0x7b, 0xe2, 0x49, 0xd3, 0x94, 0xe5, 0xae, 0x72, 0x13, 0x40, 0xc1, 0x42, 0x55, 0xa0,
+	0xd2, 0x09, 0x0e, 0x09, 0x8a, 0xae, 0x82, 0xa6, 0x77, 0xa5, 0x8d, 0x68, 0xd1, 0x69, 0xcb, 0x09,
+	0xf1, 0xe9, 0xd8, 0xb3, 0xb7, 0x39, 0x73, 0x8e, 0x37, 0xdd, 0xdd, 0x80, 0xf2, 0x43, 0xf8, 0x71,
+	0x7c, 0xe1, 0x9f, 0x20, 0xa1, 0xdd, 0xb5, 0x1d, 0x6f, 0x6a, 0x5b, 0x8d, 0x10, 0xdf, 0xbc, 0x33,
+	0xf3, 0xcc, 0xce, 0x3c, 0xfb, 0xcc, 0x28, 0x81, 0x21, 0x59, 0xcb, 0x6b, 0xc6, 0x43, 0xb9, 0x39,
+	0x5a, 0x71, 0x26, 0x19, 0xea, 0xcf, 0x52, 0xc3, 0xf9, 0x95, 0xf7, 0x4f, 0x1d, 0x7a, 0x2f, 0x69,
+	0xbc, 0x9e, 0xc7, 0xaf, 0x19, 0xba, 0x0d, 0x8d, 0x30, 0x70, 0xeb, 0x93, 0xfa, 0x74, 0x80, 0x1b,
+	0x61, 0x80, 0xc6, 0xe0, 0xac, 0x08, 0xa7, 0xb1, 0xbc, 0x0c, 0x03, 0xb7, 0xa1, 0xcd, 0x3d, 0x63,
+	0x98, 0x07, 0x08, 0x41, 0x6b, 0x45, 0xe4, 0xb5, 0xdb, 0x9c, 0xd4, 0xa7, 0x0e, 0xd6, 0xdf, 0xca,
+	0x16, 0x93, 0x25, 0x75, 0x5b, 0xc6, 0xa6, 0xbe, 0xd1, 0x04, 0xfa, 0x01, 0x15, 0x3e, 0x0f, 0x57,
+	0x32, 0x64, 0xb1, 0xdb, 0xd6, 0xae, 0xbc, 0x09, 0x7d, 0x08, 0x10, 0xfa, 0x2c, 0xbe, 0xf4, 0x23,
+	0x22, 0x84, 0xdb, 0xd1, 0x01, 0x8e, 0xb2, 0x9c, 0x2a, 0x83, 0x72, 0xfb, 0x9c, 0x12, 0x49, 0x83,
+	0x4b, 0x22, 0xdd, 0xee, 0xa4, 0x3e, 0x6d, 0x61, 0x27, 0xb1, 0xcc, 0xa4, 0x72, 0xaf, 0x57, 0x41,
+	0xea, 0xee, 0x19, 0x77, 0x62, 0x31, 0xee, 0x80, 0x46, 0x34, 0x71, 0x3b, 0xc6, 0x9d, 0x58, 0x66,
+	0xd2, 0xfb, 0xbb, 0x0e, 0x03, 0x4c, 0x05, 0x5b, 0x73, 0x9f, 0x8a, 0x42, 0x12, 0xd2, 0x9e, 0x1a,
+	0xb9, 0x9e, 0x8a, 0x7a, 0xbf, 0x0b, 0x1d, 0xe2, 0xeb, 0x16, 0x4d, 0xf7, 0xc9, 0xe9, 0xdd, 0xfa,
+	0xff, 0xff, 0x1a, 0xfc, 0xb3, 0x01, 0x0e, 0x66, 0xd1, 0x1e, 0xcd, 0xed, 0x14, 0xdc, 0x7c, 0xbb,
+	0xe0, 0x07, 0xd0, 0x5e, 0xd2, 0x78, 0x2d, 0xdc, 0xd6, 0xa4, 0x39, 0xed, 0x1f, 0x1f, 0x1e, 0xe5,
+	0x14, 0x75, 0x94, 0xaa, 0x09, 0x9b, 0x18, 0xf4, 0x10, 0x1c, 0x9e, 0x12, 0xec, 0xb6, 0x35, 0x60,
+	0x64, 0x01, 0x2c, 0xfa, 0xf1, 0x36, 0x78, 0x87, 0x97, 0x4e, 0x35, 0x2f, 0xdd, 0x6a, 0x5e, 0x7a,
+	0xbb, 0xbc, 0x04, 0xf0, 0xd1, 0x85, 0x8e, 0xd5, 0xe4, 0xa8, 0xa2, 0x67, 0x71, 0x90, 0x95, 0x82,
+	0xe9, 0x9b, 0xb7, 0xb8, 0x3a, 0x48, 0xbb, 0x6e, 0x4c, 0x9a, 0xd3, 0x41, 0xda, 0xde, 0x07, 0xf9,
+	0xf6, 0x9a, 0xda, 0xb3, 0x35, 0x78, 0xbf, 0xc0, 0x61, 0x46, 0xfe, 0x8b, 0x50, 0x48, 0x4c, 0xc5,
+	0x8a, 0xc5, 0x82, 0xa2, 0xcf, 0xa0, 0x15, 0x85, 0x42, 0xba, 0x75, 0x4d, 0xc8, 0x5d, 0x9b, 0x90,
+	0x14, 0x81, 0x75, 0x8c, 0xba, 0xd8, 0x67, 0xeb, 0x58, 0x26, 0x23, 0x68, 0x0e, 0x5e, 0x0c, 0xfd,
+	0x73, 0xb2, 0xa0, 0x98, 0xbe, 0x59, 0x53, 0x21, 0x91, 0x0b, 0xdd, 0x1b, 0xba, 0xf9, 0x83, 0x71,
+	0x53, 0xb2, 0x83, 0xd3, 0xa3, 0x11, 0xeb, 0x82, 0x26, 0x68, 0xfd, 0xad, 0x52, 0x46, 0xe1, 0x32,
+	0x94, 0xfa, 0x75, 0x07, 0xd8, 0x1c, 0xd4, 0xbc, 0x87, 0xe2, 0xd2, 0x70, 0xa4, 0x55, 0xdc, 0xc3,
+	0xbd, 0x50, 0x9c, 0xe9, 0xb3, 0xf7, 0x33, 0x1c, 0xa4, 0x4f, 0x6b, 0x75, 0xf2, 0xa9, 0xd5, 0x49,
+	0x89, 0x16, 0xaa, 0x1a, 0x21, 0x70, 0xcf, 0x92, 0x80, 0x95, 0xfd, 0xc8, 0xca, 0x5e, 0x25, 0x9c,
+	0xaa, 0x2b, 0xba, 0xd0, 0x7e, 0xba, 0x5c, 0xc9, 0x8d, 0xf7, 0x09, 0xdc, 0x3a, 0xbd, 0x26, 0xf1,
+	0x82, 0xfe, 0xb8, 0x5e, 0x62, 0x2a, 0xb6, 0xe1, 0xf5, 0x7c, 0xf8, 0x18, 0xda, 0x33, 0xce, 0xc9,
+	0x46, 0x51, 0x17, 0x10, 0x49, 0xf4, 0xed, 0x0e, 0xd6, 0xdf, 0xde, 0xe7, 0xd0, 0xd1, 0x4e, 0x81,
+	0xee, 0x5b, 0xb5, 0x21, 0xab, 0x36, 0x1d, 0x62, 0x6a, 0xf2, 0x0e, 0xa1, 0x39, 0x0f, 0x84, 0xd2,
+	0x93, 0x64, 0x3a, 0x78, 0x80, 0x1b, 0x92, 0x79, 0x2e, 0x74, 0x7e, 0x22, 0x7c, 0x41, 0x65, 0xe6,
+	0x51, 0xcf, 0xa6, 0x3c, 0x5f, 0x40, 0xfb, 0x09, 0x91, 0xfe, 0xf5, 0xae, 0x43, 0x3d, 0x32, 0x5b,
+	0x51, 0x4e, 0x24, 0xd5, 0x22, 0x74, 0x70, 0x7a, 0xf4, 0x8e, 0xa1, 0xf3, 0x2a, 0x8c, 0x17, 0x11,
+	0xad, 0xc6, 0xd4, 0xf3, 0x98, 0x31, 0x38, 0x67, 0x54, 0x52, 0xbe, 0x0c, 0x63, 0x0d, 0x63, 0x37,
+	0x1a, 0xd6, 0xc3, 0x0d, 0x76, 0xe3, 0xcd, 0xc1, 0xc9, 0xf8, 0x55, 0x3c, 0x70, 0x16, 0xd1, 0x24,
+	0xab, 0xfe, 0x46, 0x77, 0xa0, 0xc9, 0xae, 0x7e, 0x4b, 0x72, 0xaa, 0xcf, 0xdc, 0x06, 0x6c, 0xe6,
+	0x37, 0xe0, 0xf1, 0x5f, 0x7d, 0xb8, 0x93, 0x71, 0xf3, 0x8a, 0xf2, 0xdf, 0x43, 0x9f, 0xa2, 0x97,
+	0xd0, 0x7f, 0x46, 0xe5, 0x2c, 0x8a, 0xb4, 0xda, 0x91, 0x6b, 0xb1, 0x97, 0x13, 0xf6, 0xc8, 0x2b,
+	0x9e, 0x8d, 0xbc, 0x4a, 0xbc, 0x1a, 0x7a, 0x04, 0x7d, 0xa3, 0x53, 0x93, 0xee, 0x8e, 0x05, 0x9a,
+	0x07, 0x62, 0x74, 0xcf, 0xb2, 0xe4, 0x45, 0xe0, 0xd5, 0xd0, 0x43, 0xe8, 0xcd, 0x82, 0xc0, 0x40,
+	0x4b, 0x66, 0x71, 0x64, 0xbf, 0xaf, 0x91, 0x53, 0x0d, 0x9d, 0x40, 0x3f, 0xb7, 0x46, 0xf6, 0x04,
+	0xff, 0x00, 0x60, 0x38, 0x50, 0x73, 0x52, 0x41, 0xc1, 0xc7, 0x85, 0x43, 0xb5, 0xc3, 0xc0, 0x09,
+	0x80, 0x61, 0x40, 0x27, 0xdb, 0x93, 0x80, 0xaf, 0xa0, 0x3b, 0x0b, 0x02, 0x8d, 0x2c, 0x9e, 0xe0,
+	0x92, 0x0e, 0xbe, 0x01, 0x30, 0xed, 0xef, 0x0f, 0xbd, 0x80, 0x61, 0x22, 0x80, 0x4c, 0x66, 0xe5,
+	0x0c, 0xdc, 0x2f, 0x1f, 0xfc, 0x1d, 0x1a, 0x1e, 0xc3, 0x30, 0x11, 0x42, 0x96, 0x76, 0x4f, 0x2e,
+	0x1e, 0xc3, 0x2d, 0x25, 0x86, 0x0c, 0x5e, 0xb1, 0x74, 0x4a, 0x5a, 0x3b, 0x85, 0x61, 0x22, 0x8a,
+	0xff, 0x90, 0xe4, 0x91, 0xe6, 0x47, 0x4b, 0xe8, 0x7b, 0xc6, 0x2f, 0x04, 0xe5, 0xe8, 0x7d, 0x2b,
+	0xd0, 0x2c, 0x8f, 0x51, 0xc1, 0xde, 0xd1, 0x6a, 0x18, 0xa6, 0x8a, 0x4e, 0xd1, 0x76, 0xa0, 0x5e,
+	0x30, 0x25, 0x57, 0x7f, 0x07, 0xb7, 0x9f, 0x13, 0xa1, 0xc0, 0xc5, 0x37, 0x9b, 0x4d, 0x33, 0xb2,
+	0xc5, 0x9e, 0xad, 0x12, 0xaf, 0x86, 0xbe, 0x85, 0xf7, 0xb6, 0xd3, 0x58, 0x99, 0xa3, 0xb8, 0x80,
+	0xaf, 0x53, 0x2d, 0xef, 0x0b, 0x34, 0xa4, 0x29, 0x94, 0x6a, 0x5b, 0xdd, 0xfe, 0x2e, 0xe8, 0x94,
+	0xb4, 0x5f, 0x61, 0x5c, 0xf1, 0x9b, 0x00, 0x3d, 0xb0, 0x40, 0xd5, 0xbf, 0x1e, 0x4a, 0xea, 0x7b,
+	0x01, 0xe3, 0x67, 0x54, 0x9e, 0x2b, 0xa2, 0x84, 0x08, 0x59, 0x3c, 0x8b, 0xf5, 0xd0, 0x3d, 0xd9,
+	0x98, 0xf5, 0x51, 0xf8, 0xc0, 0x25, 0x3b, 0xc5, 0xab, 0xa1, 0x33, 0x38, 0x78, 0x4e, 0xc4, 0x36,
+	0x5b, 0xd5, 0x4b, 0x97, 0x3f, 0xd6, 0x09, 0x74, 0x9f, 0xc6, 0xaf, 0x19, 0xf7, 0xe9, 0xee, 0xfa,
+	0x4a, 0xfb, 0x29, 0x07, 0x5f, 0x75, 0xf4, 0x7f, 0x8a, 0x2f, 0xff, 0x0d, 0x00, 0x00, 0xff, 0xff,
+	0x6b, 0x22, 0x3a, 0x28, 0x66, 0x0c, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -419,10 +1091,30 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type AuthorityServiceClient interface {
-	//  获取角色列表 全部
-	GetAllRoles(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Array, error)
-	//  删除角色
-	DeleteRole(ctx context.Context, in *Target, opts ...grpc.CallOption) (*Empty, error)
+	//  获取角色列表 分页
+	GetAllRoles(ctx context.Context, in *PageRequest, opts ...grpc.CallOption) (*RolesInfoListResponse, error)
+	//  批量删除角色
+	DeleteRoles(ctx context.Context, in *Ids, opts ...grpc.CallOption) (*ChangeNumRes, error)
+	// 添加角色
+	AddRoles(ctx context.Context, in *RolesInfo, opts ...grpc.CallOption) (*Empty, error)
+	// 更新角色
+	UpdateRoles(ctx context.Context, in *RolesInfo, opts ...grpc.CallOption) (*Empty, error)
+	//  获取菜单列表 分页
+	GetAllMenu(ctx context.Context, in *PageRequest, opts ...grpc.CallOption) (*MenuInfoListResponse, error)
+	//  批量删除菜单
+	DeleteMenu(ctx context.Context, in *Ids, opts ...grpc.CallOption) (*ChangeNumRes, error)
+	// 添加菜单
+	AddMenu(ctx context.Context, in *MenuInfo, opts ...grpc.CallOption) (*Empty, error)
+	// 更新菜单
+	UpdateMenu(ctx context.Context, in *MenuInfo, opts ...grpc.CallOption) (*Empty, error)
+	//  获取 api 资源 分页
+	GetAllResources(ctx context.Context, in *PageRequest, opts ...grpc.CallOption) (*ResourcesInfoListResponse, error)
+	//  批量删除 api 资源
+	DeleteResources(ctx context.Context, in *Ids, opts ...grpc.CallOption) (*ChangeNumRes, error)
+	// 添加 api 资源
+	AddResources(ctx context.Context, in *ResourcesInfo, opts ...grpc.CallOption) (*Empty, error)
+	// 更新 api 资源
+	UpdateResources(ctx context.Context, in *ResourcesInfo, opts ...grpc.CallOption) (*Empty, error)
 	//  获取用户的所有角色
 	GetRolesForUser(ctx context.Context, in *Target, opts ...grpc.CallOption) (*Array, error)
 	//  给用户批量添加角色
@@ -433,20 +1125,12 @@ type AuthorityServiceClient interface {
 	DeleteRoleForUser(ctx context.Context, in *Single, opts ...grpc.CallOption) (*Empty, error)
 	//  删除用户
 	DeleteUser(ctx context.Context, in *Single, opts ...grpc.CallOption) (*Empty, error)
-	//  删除用户的全部角色
-	DeleteRolesForUser(ctx context.Context, in *Single, opts ...grpc.CallOption) (*Empty, error)
 	//  获取角色下的所有用户
 	GetUsersForRole(ctx context.Context, in *Single, opts ...grpc.CallOption) (*Array, error)
-	//  给角色添加权限
-	AddPermissionForUser(ctx context.Context, in *Resources, opts ...grpc.CallOption) (*Empty, error)
-	//  获取角色下全部权限
-	GetPermissionsForUser(ctx context.Context, in *Single, opts ...grpc.CallOption) (*Arrays, error)
-	//  删除角色下的指定权限
-	DeletePermissionForUser(ctx context.Context, in *Batch, opts ...grpc.CallOption) (*Empty, error)
-	//  删除角色的全部权限
-	DeletePermissionsForUser(ctx context.Context, in *Single, opts ...grpc.CallOption) (*Empty, error)
-	//  删除权限
-	DeletePermission(ctx context.Context, in *Array, opts ...grpc.CallOption) (*Empty, error)
+	//  更新角色添加权限和菜单
+	UpdateRolesMenuAndResources(ctx context.Context, in *UpdateRolesMenuAndResourcesReq, opts ...grpc.CallOption) (*Empty, error)
+	//  获取角色下全部权限和菜单
+	GetPermissionAndMenuByRoles(ctx context.Context, in *Target, opts ...grpc.CallOption) (*RolesInfo, error)
 	//  判断角色是否有权限
 	HasPermissionForUser(ctx context.Context, in *Batch, opts ...grpc.CallOption) (*Determine, error)
 	//  判断用户对资源有没有权限
@@ -461,8 +1145,8 @@ func NewAuthorityServiceClient(cc *grpc.ClientConn) AuthorityServiceClient {
 	return &authorityServiceClient{cc}
 }
 
-func (c *authorityServiceClient) GetAllRoles(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Array, error) {
-	out := new(Array)
+func (c *authorityServiceClient) GetAllRoles(ctx context.Context, in *PageRequest, opts ...grpc.CallOption) (*RolesInfoListResponse, error) {
+	out := new(RolesInfoListResponse)
 	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/GetAllRoles", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -470,9 +1154,99 @@ func (c *authorityServiceClient) GetAllRoles(ctx context.Context, in *Empty, opt
 	return out, nil
 }
 
-func (c *authorityServiceClient) DeleteRole(ctx context.Context, in *Target, opts ...grpc.CallOption) (*Empty, error) {
+func (c *authorityServiceClient) DeleteRoles(ctx context.Context, in *Ids, opts ...grpc.CallOption) (*ChangeNumRes, error) {
+	out := new(ChangeNumRes)
+	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/DeleteRoles", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorityServiceClient) AddRoles(ctx context.Context, in *RolesInfo, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/DeleteRole", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/AddRoles", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorityServiceClient) UpdateRoles(ctx context.Context, in *RolesInfo, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/UpdateRoles", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorityServiceClient) GetAllMenu(ctx context.Context, in *PageRequest, opts ...grpc.CallOption) (*MenuInfoListResponse, error) {
+	out := new(MenuInfoListResponse)
+	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/GetAllMenu", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorityServiceClient) DeleteMenu(ctx context.Context, in *Ids, opts ...grpc.CallOption) (*ChangeNumRes, error) {
+	out := new(ChangeNumRes)
+	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/DeleteMenu", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorityServiceClient) AddMenu(ctx context.Context, in *MenuInfo, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/AddMenu", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorityServiceClient) UpdateMenu(ctx context.Context, in *MenuInfo, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/UpdateMenu", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorityServiceClient) GetAllResources(ctx context.Context, in *PageRequest, opts ...grpc.CallOption) (*ResourcesInfoListResponse, error) {
+	out := new(ResourcesInfoListResponse)
+	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/GetAllResources", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorityServiceClient) DeleteResources(ctx context.Context, in *Ids, opts ...grpc.CallOption) (*ChangeNumRes, error) {
+	out := new(ChangeNumRes)
+	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/DeleteResources", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorityServiceClient) AddResources(ctx context.Context, in *ResourcesInfo, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/AddResources", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorityServiceClient) UpdateResources(ctx context.Context, in *ResourcesInfo, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/UpdateResources", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -524,15 +1298,6 @@ func (c *authorityServiceClient) DeleteUser(ctx context.Context, in *Single, opt
 	return out, nil
 }
 
-func (c *authorityServiceClient) DeleteRolesForUser(ctx context.Context, in *Single, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/DeleteRolesForUser", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *authorityServiceClient) GetUsersForRole(ctx context.Context, in *Single, opts ...grpc.CallOption) (*Array, error) {
 	out := new(Array)
 	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/GetUsersForRole", in, out, opts...)
@@ -542,45 +1307,18 @@ func (c *authorityServiceClient) GetUsersForRole(ctx context.Context, in *Single
 	return out, nil
 }
 
-func (c *authorityServiceClient) AddPermissionForUser(ctx context.Context, in *Resources, opts ...grpc.CallOption) (*Empty, error) {
+func (c *authorityServiceClient) UpdateRolesMenuAndResources(ctx context.Context, in *UpdateRolesMenuAndResourcesReq, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/AddPermissionForUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/UpdateRolesMenuAndResources", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authorityServiceClient) GetPermissionsForUser(ctx context.Context, in *Single, opts ...grpc.CallOption) (*Arrays, error) {
-	out := new(Arrays)
-	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/GetPermissionsForUser", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authorityServiceClient) DeletePermissionForUser(ctx context.Context, in *Batch, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/DeletePermissionForUser", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authorityServiceClient) DeletePermissionsForUser(ctx context.Context, in *Single, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/DeletePermissionsForUser", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authorityServiceClient) DeletePermission(ctx context.Context, in *Array, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/DeletePermission", in, out, opts...)
+func (c *authorityServiceClient) GetPermissionAndMenuByRoles(ctx context.Context, in *Target, opts ...grpc.CallOption) (*RolesInfo, error) {
+	out := new(RolesInfo)
+	err := c.cc.Invoke(ctx, "/AuthorityPb.AuthorityService/GetPermissionAndMenuByRoles", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -607,10 +1345,30 @@ func (c *authorityServiceClient) Enforce(ctx context.Context, in *Resources, opt
 
 // AuthorityServiceServer is the server API for AuthorityService service.
 type AuthorityServiceServer interface {
-	//  获取角色列表 全部
-	GetAllRoles(context.Context, *Empty) (*Array, error)
-	//  删除角色
-	DeleteRole(context.Context, *Target) (*Empty, error)
+	//  获取角色列表 分页
+	GetAllRoles(context.Context, *PageRequest) (*RolesInfoListResponse, error)
+	//  批量删除角色
+	DeleteRoles(context.Context, *Ids) (*ChangeNumRes, error)
+	// 添加角色
+	AddRoles(context.Context, *RolesInfo) (*Empty, error)
+	// 更新角色
+	UpdateRoles(context.Context, *RolesInfo) (*Empty, error)
+	//  获取菜单列表 分页
+	GetAllMenu(context.Context, *PageRequest) (*MenuInfoListResponse, error)
+	//  批量删除菜单
+	DeleteMenu(context.Context, *Ids) (*ChangeNumRes, error)
+	// 添加菜单
+	AddMenu(context.Context, *MenuInfo) (*Empty, error)
+	// 更新菜单
+	UpdateMenu(context.Context, *MenuInfo) (*Empty, error)
+	//  获取 api 资源 分页
+	GetAllResources(context.Context, *PageRequest) (*ResourcesInfoListResponse, error)
+	//  批量删除 api 资源
+	DeleteResources(context.Context, *Ids) (*ChangeNumRes, error)
+	// 添加 api 资源
+	AddResources(context.Context, *ResourcesInfo) (*Empty, error)
+	// 更新 api 资源
+	UpdateResources(context.Context, *ResourcesInfo) (*Empty, error)
 	//  获取用户的所有角色
 	GetRolesForUser(context.Context, *Target) (*Array, error)
 	//  给用户批量添加角色
@@ -621,20 +1379,12 @@ type AuthorityServiceServer interface {
 	DeleteRoleForUser(context.Context, *Single) (*Empty, error)
 	//  删除用户
 	DeleteUser(context.Context, *Single) (*Empty, error)
-	//  删除用户的全部角色
-	DeleteRolesForUser(context.Context, *Single) (*Empty, error)
 	//  获取角色下的所有用户
 	GetUsersForRole(context.Context, *Single) (*Array, error)
-	//  给角色添加权限
-	AddPermissionForUser(context.Context, *Resources) (*Empty, error)
-	//  获取角色下全部权限
-	GetPermissionsForUser(context.Context, *Single) (*Arrays, error)
-	//  删除角色下的指定权限
-	DeletePermissionForUser(context.Context, *Batch) (*Empty, error)
-	//  删除角色的全部权限
-	DeletePermissionsForUser(context.Context, *Single) (*Empty, error)
-	//  删除权限
-	DeletePermission(context.Context, *Array) (*Empty, error)
+	//  更新角色添加权限和菜单
+	UpdateRolesMenuAndResources(context.Context, *UpdateRolesMenuAndResourcesReq) (*Empty, error)
+	//  获取角色下全部权限和菜单
+	GetPermissionAndMenuByRoles(context.Context, *Target) (*RolesInfo, error)
 	//  判断角色是否有权限
 	HasPermissionForUser(context.Context, *Batch) (*Determine, error)
 	//  判断用户对资源有没有权限
@@ -645,11 +1395,41 @@ type AuthorityServiceServer interface {
 type UnimplementedAuthorityServiceServer struct {
 }
 
-func (*UnimplementedAuthorityServiceServer) GetAllRoles(ctx context.Context, req *Empty) (*Array, error) {
+func (*UnimplementedAuthorityServiceServer) GetAllRoles(ctx context.Context, req *PageRequest) (*RolesInfoListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllRoles not implemented")
 }
-func (*UnimplementedAuthorityServiceServer) DeleteRole(ctx context.Context, req *Target) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteRole not implemented")
+func (*UnimplementedAuthorityServiceServer) DeleteRoles(ctx context.Context, req *Ids) (*ChangeNumRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteRoles not implemented")
+}
+func (*UnimplementedAuthorityServiceServer) AddRoles(ctx context.Context, req *RolesInfo) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddRoles not implemented")
+}
+func (*UnimplementedAuthorityServiceServer) UpdateRoles(ctx context.Context, req *RolesInfo) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRoles not implemented")
+}
+func (*UnimplementedAuthorityServiceServer) GetAllMenu(ctx context.Context, req *PageRequest) (*MenuInfoListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllMenu not implemented")
+}
+func (*UnimplementedAuthorityServiceServer) DeleteMenu(ctx context.Context, req *Ids) (*ChangeNumRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
+}
+func (*UnimplementedAuthorityServiceServer) AddMenu(ctx context.Context, req *MenuInfo) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddMenu not implemented")
+}
+func (*UnimplementedAuthorityServiceServer) UpdateMenu(ctx context.Context, req *MenuInfo) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateMenu not implemented")
+}
+func (*UnimplementedAuthorityServiceServer) GetAllResources(ctx context.Context, req *PageRequest) (*ResourcesInfoListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllResources not implemented")
+}
+func (*UnimplementedAuthorityServiceServer) DeleteResources(ctx context.Context, req *Ids) (*ChangeNumRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteResources not implemented")
+}
+func (*UnimplementedAuthorityServiceServer) AddResources(ctx context.Context, req *ResourcesInfo) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddResources not implemented")
+}
+func (*UnimplementedAuthorityServiceServer) UpdateResources(ctx context.Context, req *ResourcesInfo) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateResources not implemented")
 }
 func (*UnimplementedAuthorityServiceServer) GetRolesForUser(ctx context.Context, req *Target) (*Array, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRolesForUser not implemented")
@@ -666,26 +1446,14 @@ func (*UnimplementedAuthorityServiceServer) DeleteRoleForUser(ctx context.Contex
 func (*UnimplementedAuthorityServiceServer) DeleteUser(ctx context.Context, req *Single) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
-func (*UnimplementedAuthorityServiceServer) DeleteRolesForUser(ctx context.Context, req *Single) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteRolesForUser not implemented")
-}
 func (*UnimplementedAuthorityServiceServer) GetUsersForRole(ctx context.Context, req *Single) (*Array, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUsersForRole not implemented")
 }
-func (*UnimplementedAuthorityServiceServer) AddPermissionForUser(ctx context.Context, req *Resources) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddPermissionForUser not implemented")
+func (*UnimplementedAuthorityServiceServer) UpdateRolesMenuAndResources(ctx context.Context, req *UpdateRolesMenuAndResourcesReq) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRolesMenuAndResources not implemented")
 }
-func (*UnimplementedAuthorityServiceServer) GetPermissionsForUser(ctx context.Context, req *Single) (*Arrays, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetPermissionsForUser not implemented")
-}
-func (*UnimplementedAuthorityServiceServer) DeletePermissionForUser(ctx context.Context, req *Batch) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeletePermissionForUser not implemented")
-}
-func (*UnimplementedAuthorityServiceServer) DeletePermissionsForUser(ctx context.Context, req *Single) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeletePermissionsForUser not implemented")
-}
-func (*UnimplementedAuthorityServiceServer) DeletePermission(ctx context.Context, req *Array) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeletePermission not implemented")
+func (*UnimplementedAuthorityServiceServer) GetPermissionAndMenuByRoles(ctx context.Context, req *Target) (*RolesInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPermissionAndMenuByRoles not implemented")
 }
 func (*UnimplementedAuthorityServiceServer) HasPermissionForUser(ctx context.Context, req *Batch) (*Determine, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HasPermissionForUser not implemented")
@@ -699,7 +1467,7 @@ func RegisterAuthorityServiceServer(s *grpc.Server, srv AuthorityServiceServer) 
 }
 
 func _AuthorityService_GetAllRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(PageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -711,25 +1479,205 @@ func _AuthorityService_GetAllRoles_Handler(srv interface{}, ctx context.Context,
 		FullMethod: "/AuthorityPb.AuthorityService/GetAllRoles",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthorityServiceServer).GetAllRoles(ctx, req.(*Empty))
+		return srv.(AuthorityServiceServer).GetAllRoles(ctx, req.(*PageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthorityService_DeleteRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Target)
+func _AuthorityService_DeleteRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Ids)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthorityServiceServer).DeleteRole(ctx, in)
+		return srv.(AuthorityServiceServer).DeleteRoles(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/AuthorityPb.AuthorityService/DeleteRole",
+		FullMethod: "/AuthorityPb.AuthorityService/DeleteRoles",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthorityServiceServer).DeleteRole(ctx, req.(*Target))
+		return srv.(AuthorityServiceServer).DeleteRoles(ctx, req.(*Ids))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthorityService_AddRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RolesInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorityServiceServer).AddRoles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AuthorityPb.AuthorityService/AddRoles",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorityServiceServer).AddRoles(ctx, req.(*RolesInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthorityService_UpdateRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RolesInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorityServiceServer).UpdateRoles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AuthorityPb.AuthorityService/UpdateRoles",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorityServiceServer).UpdateRoles(ctx, req.(*RolesInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthorityService_GetAllMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorityServiceServer).GetAllMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AuthorityPb.AuthorityService/GetAllMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorityServiceServer).GetAllMenu(ctx, req.(*PageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthorityService_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Ids)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorityServiceServer).DeleteMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AuthorityPb.AuthorityService/DeleteMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorityServiceServer).DeleteMenu(ctx, req.(*Ids))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthorityService_AddMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MenuInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorityServiceServer).AddMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AuthorityPb.AuthorityService/AddMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorityServiceServer).AddMenu(ctx, req.(*MenuInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthorityService_UpdateMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MenuInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorityServiceServer).UpdateMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AuthorityPb.AuthorityService/UpdateMenu",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorityServiceServer).UpdateMenu(ctx, req.(*MenuInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthorityService_GetAllResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorityServiceServer).GetAllResources(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AuthorityPb.AuthorityService/GetAllResources",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorityServiceServer).GetAllResources(ctx, req.(*PageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthorityService_DeleteResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Ids)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorityServiceServer).DeleteResources(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AuthorityPb.AuthorityService/DeleteResources",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorityServiceServer).DeleteResources(ctx, req.(*Ids))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthorityService_AddResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResourcesInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorityServiceServer).AddResources(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AuthorityPb.AuthorityService/AddResources",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorityServiceServer).AddResources(ctx, req.(*ResourcesInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthorityService_UpdateResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResourcesInfo)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorityServiceServer).UpdateResources(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AuthorityPb.AuthorityService/UpdateResources",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorityServiceServer).UpdateResources(ctx, req.(*ResourcesInfo))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -824,24 +1772,6 @@ func _AuthorityService_DeleteUser_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthorityService_DeleteRolesForUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Single)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthorityServiceServer).DeleteRolesForUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/AuthorityPb.AuthorityService/DeleteRolesForUser",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthorityServiceServer).DeleteRolesForUser(ctx, req.(*Single))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _AuthorityService_GetUsersForRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Single)
 	if err := dec(in); err != nil {
@@ -860,92 +1790,38 @@ func _AuthorityService_GetUsersForRole_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthorityService_AddPermissionForUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Resources)
+func _AuthorityService_UpdateRolesMenuAndResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateRolesMenuAndResourcesReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthorityServiceServer).AddPermissionForUser(ctx, in)
+		return srv.(AuthorityServiceServer).UpdateRolesMenuAndResources(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/AuthorityPb.AuthorityService/AddPermissionForUser",
+		FullMethod: "/AuthorityPb.AuthorityService/UpdateRolesMenuAndResources",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthorityServiceServer).AddPermissionForUser(ctx, req.(*Resources))
+		return srv.(AuthorityServiceServer).UpdateRolesMenuAndResources(ctx, req.(*UpdateRolesMenuAndResourcesReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthorityService_GetPermissionsForUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Single)
+func _AuthorityService_GetPermissionAndMenuByRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Target)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthorityServiceServer).GetPermissionsForUser(ctx, in)
+		return srv.(AuthorityServiceServer).GetPermissionAndMenuByRoles(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/AuthorityPb.AuthorityService/GetPermissionsForUser",
+		FullMethod: "/AuthorityPb.AuthorityService/GetPermissionAndMenuByRoles",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthorityServiceServer).GetPermissionsForUser(ctx, req.(*Single))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthorityService_DeletePermissionForUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Batch)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthorityServiceServer).DeletePermissionForUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/AuthorityPb.AuthorityService/DeletePermissionForUser",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthorityServiceServer).DeletePermissionForUser(ctx, req.(*Batch))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthorityService_DeletePermissionsForUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Single)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthorityServiceServer).DeletePermissionsForUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/AuthorityPb.AuthorityService/DeletePermissionsForUser",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthorityServiceServer).DeletePermissionsForUser(ctx, req.(*Single))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthorityService_DeletePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Array)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthorityServiceServer).DeletePermission(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/AuthorityPb.AuthorityService/DeletePermission",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthorityServiceServer).DeletePermission(ctx, req.(*Array))
+		return srv.(AuthorityServiceServer).GetPermissionAndMenuByRoles(ctx, req.(*Target))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -995,8 +1871,48 @@ var _AuthorityService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _AuthorityService_GetAllRoles_Handler,
 		},
 		{
-			MethodName: "DeleteRole",
-			Handler:    _AuthorityService_DeleteRole_Handler,
+			MethodName: "DeleteRoles",
+			Handler:    _AuthorityService_DeleteRoles_Handler,
+		},
+		{
+			MethodName: "AddRoles",
+			Handler:    _AuthorityService_AddRoles_Handler,
+		},
+		{
+			MethodName: "UpdateRoles",
+			Handler:    _AuthorityService_UpdateRoles_Handler,
+		},
+		{
+			MethodName: "GetAllMenu",
+			Handler:    _AuthorityService_GetAllMenu_Handler,
+		},
+		{
+			MethodName: "DeleteMenu",
+			Handler:    _AuthorityService_DeleteMenu_Handler,
+		},
+		{
+			MethodName: "AddMenu",
+			Handler:    _AuthorityService_AddMenu_Handler,
+		},
+		{
+			MethodName: "UpdateMenu",
+			Handler:    _AuthorityService_UpdateMenu_Handler,
+		},
+		{
+			MethodName: "GetAllResources",
+			Handler:    _AuthorityService_GetAllResources_Handler,
+		},
+		{
+			MethodName: "DeleteResources",
+			Handler:    _AuthorityService_DeleteResources_Handler,
+		},
+		{
+			MethodName: "AddResources",
+			Handler:    _AuthorityService_AddResources_Handler,
+		},
+		{
+			MethodName: "UpdateResources",
+			Handler:    _AuthorityService_UpdateResources_Handler,
 		},
 		{
 			MethodName: "GetRolesForUser",
@@ -1019,32 +1935,16 @@ var _AuthorityService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _AuthorityService_DeleteUser_Handler,
 		},
 		{
-			MethodName: "DeleteRolesForUser",
-			Handler:    _AuthorityService_DeleteRolesForUser_Handler,
-		},
-		{
 			MethodName: "GetUsersForRole",
 			Handler:    _AuthorityService_GetUsersForRole_Handler,
 		},
 		{
-			MethodName: "AddPermissionForUser",
-			Handler:    _AuthorityService_AddPermissionForUser_Handler,
+			MethodName: "UpdateRolesMenuAndResources",
+			Handler:    _AuthorityService_UpdateRolesMenuAndResources_Handler,
 		},
 		{
-			MethodName: "GetPermissionsForUser",
-			Handler:    _AuthorityService_GetPermissionsForUser_Handler,
-		},
-		{
-			MethodName: "DeletePermissionForUser",
-			Handler:    _AuthorityService_DeletePermissionForUser_Handler,
-		},
-		{
-			MethodName: "DeletePermissionsForUser",
-			Handler:    _AuthorityService_DeletePermissionsForUser_Handler,
-		},
-		{
-			MethodName: "DeletePermission",
-			Handler:    _AuthorityService_DeletePermission_Handler,
+			MethodName: "GetPermissionAndMenuByRoles",
+			Handler:    _AuthorityService_GetPermissionAndMenuByRoles_Handler,
 		},
 		{
 			MethodName: "HasPermissionForUser",

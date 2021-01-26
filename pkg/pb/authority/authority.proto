@@ -3,10 +3,33 @@ syntax = "proto3";
 package AuthorityPb;
 
 service AuthorityService {
-  //  获取角色列表 全部
-  rpc GetAllRoles (Empty) returns (Array) {}
-  //  删除角色
-  rpc DeleteRole (Target) returns (Empty) {}
+  //  获取角色列表 分页
+  rpc GetAllRoles (PageRequest) returns (RolesInfoListResponse) {}
+  //  批量删除角色
+  rpc DeleteRoles (Ids) returns (ChangeNumRes) {}
+  // 添加角色
+  rpc AddRoles(RolesInfo) returns (Empty) {}
+  // 更新角色
+  rpc UpdateRoles(RolesInfo) returns (Empty) {}
+
+  //  获取菜单列表 分页
+  rpc GetAllMenu (PageRequest) returns (MenuInfoListResponse) {}
+  //  批量删除菜单
+  rpc DeleteMenu (Ids) returns (ChangeNumRes) {}
+  // 添加菜单
+  rpc AddMenu(MenuInfo) returns (Empty) {}
+  // 更新菜单
+  rpc UpdateMenu(MenuInfo) returns (Empty) {}
+
+  //  获取 api 资源 分页
+  rpc GetAllResources (PageRequest) returns (ResourcesInfoListResponse) {}
+  //  批量删除 api 资源
+  rpc DeleteResources (Ids) returns (ChangeNumRes) {}
+  // 添加 api 资源
+  rpc AddResources(ResourcesInfo) returns (Empty) {}
+  // 更新 api 资源
+  rpc UpdateResources(ResourcesInfo) returns (Empty) {}
+
   //  获取用户的所有角色
   rpc GetRolesForUser (Target) returns (Array) {}
   //  给用户批量添加角色
@@ -17,27 +40,84 @@ service AuthorityService {
   rpc DeleteRoleForUser (Single) returns (Empty) {}
   //  删除用户
   rpc DeleteUser (Single) returns (Empty) {}
-  //  删除用户的全部角色
-  rpc DeleteRolesForUser (Single) returns (Empty) {}
   //  获取角色下的所有用户
   rpc GetUsersForRole (Single) returns (Array) {}
-  //  给角色添加权限
-  rpc AddPermissionForUser (Resources) returns (Empty) {}
-  //  获取角色下全部权限
-  rpc GetPermissionsForUser (Single) returns (Arrays) {}
-  //  删除角色下的指定权限
-  rpc DeletePermissionForUser (Batch) returns (Empty) {}
-  //  删除角色的全部权限
-  rpc DeletePermissionsForUser (Single) returns (Empty) {}
-  //  删除权限
-  rpc DeletePermission (Array) returns (Empty) {}
+
+  //  更新角色添加权限和菜单
+  rpc UpdateRolesMenuAndResources (UpdateRolesMenuAndResourcesReq) returns (Empty) {}
+  //  获取角色下全部权限和菜单
+  rpc GetPermissionAndMenuByRoles (Target) returns (RolesInfo) {}
+
   //  判断角色是否有权限
   rpc HasPermissionForUser (Batch) returns (Determine) {}
   //  判断用户对资源有没有权限
   rpc Enforce (Resources) returns (Determine) {}
 }
+message MenuInfo {
+  uint32 id = 1;
+  uint32 parent_id = 2;
+  string path = 3;
+  string name = 4;
+  string description = 5;
+  string icon_class = 6;
+  uint64 created_at = 7;
+  uint64 updated_at = 8;
+  uint64 deleted_at = 9;
+}
+message ResourcesInfo {
+  uint32 id = 1;
+  string name = 2;
+  string path = 3;
+  string action = 4;
+  string description = 5;
+  uint64 created_at = 7;
+  uint64 updated_at = 8;
+  uint64 deleted_at = 9;
+}
+message RolesInfo {
+  uint32 id = 1;
+  string name = 2;
+  string description = 3;
+  repeated MenuInfo menus = 4;
+  repeated ResourcesInfo resources = 5;
+  uint64 created_at = 6;
+  uint64 updated_at = 7;
+  uint64 deleted_at = 8;
+}
+
+message UpdateRolesMenuAndResourcesReq {
+  uint32 id = 1;
+  repeated uint32 menus = 2;
+  repeated uint32 resources = 3;
+}
+
+message RolesInfoListResponse {
+  repeated RolesInfo list = 1;
+  uint32 count = 2;
+}
+
+message PageRequest{
+  string keyword = 1;
+  uint32 page = 2;
+  uint32 limit = 3;
+  bool is_delete = 4;
+}
+
+message MenuInfoListResponse{
+  repeated MenuInfo list = 1;
+  uint32 count = 2;
+}
+
+message ResourcesInfoListResponse{
+  repeated ResourcesInfo list = 1;
+  uint32 count = 2;
+}
 
 message Empty {}
+
+message ChangeNumRes {
+  uint32 count = 1;
+}
 
 message Array {
   repeated string data = 1;
@@ -45,6 +125,10 @@ message Array {
 
 message Arrays {
   repeated Array list = 1;
+}
+
+message Ids {
+  repeated uint32 to = 1;
 }
 
 message Target {

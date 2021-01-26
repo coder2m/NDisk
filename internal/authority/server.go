@@ -1,14 +1,12 @@
 package authority
 
 import (
-	"context"
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xcode"
 	"github.com/myxy99/component/pkg/xconsole"
 	"github.com/myxy99/component/pkg/xdefer"
 	"github.com/myxy99/component/pkg/xflag"
-	"github.com/myxy99/component/pkg/xjson"
 	"github.com/myxy99/component/pkg/xvalidator"
 	"github.com/myxy99/component/xcfg"
 	"github.com/myxy99/component/xcfg/datasource/manager"
@@ -17,10 +15,10 @@ import (
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	"github.com/myxy99/component/xmonitor"
 	xclient "github.com/myxy99/ndisk/internal/authority/client"
-	_map "github.com/myxy99/ndisk/internal/authority/map"
 	"github.com/myxy99/ndisk/internal/authority/model"
-	auth_server "github.com/myxy99/ndisk/internal/authority/server"
+	"github.com/myxy99/ndisk/internal/authority/rpc"
 	myValidator "github.com/myxy99/ndisk/internal/authority/validator"
+	AuthorityPb "github.com/myxy99/ndisk/pkg/pb/authority"
 	"github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
 	"net"
@@ -73,7 +71,7 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 		xconsole.Red("grpc server shutdown success ")
 		return nil
 	})
-	//NFilePb.RegisterNFileServiceServer(serve, new(rpcError.Server))
+	AuthorityPb.RegisterAuthorityServiceServer(serve, new(rpc.Server))
 	xconsole.Greenf("grpc server start up success:", grpcCfg.Addr())
 	s.err = serve.Serve(lis)
 	s.Wait()
@@ -140,14 +138,14 @@ func (s *Server) casbin() {
 	//})
 	//st, _ := xjson.Marshal(data)
 	//xconsole.Red(string(st))
-	
-	_ = auth_server.UpdateRolesMenuAndResources(context.Background(), _map.UpdateRolesMenuAndResourcesReq{
-		ID:        3,
-		Menus:     []uint{1, 2},
-		Resources: []uint{1, 2},
-	})
-
-	data, _ := auth_server.GetPermissionAndMenuByRoles(context.Background(), "3")
-	st, _ := xjson.Marshal(data)
-	xconsole.Red(string(st))
+	//
+	//_ = auth_server.UpdateRolesMenuAndResources(context.Background(), _map.UpdateRolesMenuAndResourcesReq{
+	//	ID:        3,
+	//	Menus:     []uint32{1, 2},
+	//	Resources: []uint32{1, 2},
+	//})
+	//
+	//data, _ := auth_server.GetPermissionAndMenuByRoles(context.Background(), "3")
+	//st, _ := xjson.Marshal(data)
+	//xconsole.Red(string(st))
 }

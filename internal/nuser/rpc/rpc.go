@@ -583,16 +583,11 @@ func (s Server) GetUserById(ctx context.Context, info *NUserPb.UserInfo) (rep *N
 }
 
 func (s Server) GetUserList(ctx context.Context, request *NUserPb.PageRequest) (rep *NUserPb.UserListResponse, err error) {
-	req := _map.PageList{
-		Page:     request.Page,
-		PageSize: request.Limit,
-		Keyword:  request.Keyword,
-		IsDelete: request.IsDelete,
-	}
-	err = xvalidator.Struct(req)
-	if !errors.Is(err, nil) {
-		return rep, xcode.BusinessCode(xrpc.ValidationErrCode).SetMsgf("GetUserList data validation error : %s", xvalidator.GetMsg(err).Error())
-	}
+	var req = _map.DefaultPageRequest
+	req.Page = request.Page
+	req.PageSize = request.Limit
+	req.Keyword = request.Keyword
+	req.IsDelete = request.IsDelete
 	var (
 		data  []model.User
 		where map[string][]interface{}

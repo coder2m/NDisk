@@ -53,21 +53,26 @@ const (
 	DelManyAgencyUserErrCode
 
 	//Authority
-	DeleteRoleErrCode
 	GetRolesForUserErrCode
 	AddRolesForUserErrCode
 	HasRoleForUserErrCode
 	DeleteRoleForUserErrCode
-	DeleteUserErrCode
 	DeleteRolesForUserErrCode
-	GetUsersForRoleErrCode
-	AddPermissionForUserErrCode
-	GetPermissionsForUserErrCode
-	DeletePermissionForUserErrCode
-	DeletePermissionsForUserErrCode
-	DeletePermissionErrCode
-	HasPermissionForUserErrCode
 	EnforceErrCode
+	GetAllRolesErrCode
+	DeleteRolesErrCode
+	AddRolesErrCode
+	UpdateRolesErrCode
+	GetAllMenuErrCode
+	DeleteMenuErrCode
+	AddMenuErrCode
+	UpdateMenuErrCode
+	GetAllResourcesErrCode
+	DeleteResourcesErrCode
+	AddResourcesErrCode
+	UpdateResourcesErrCode
+	UpdateRolesMenuAndResourcesErrCode
+	GetPermissionAndMenuByRolesErrCode
 )
 
 var (
@@ -111,21 +116,26 @@ var (
 		{xcode.BusinessType, UpdateStatusAgencyUserErrCode, "UpdateStatusAgency error"},
 		{xcode.BusinessType, DelManyAgencyUserErrCode, "DelManyAgencyUser error"},
 
-		{xcode.BusinessType, DeleteRoleErrCode, "delete role error"},
 		{xcode.BusinessType, GetRolesForUserErrCode, "get roles for user error"},
 		{xcode.BusinessType, AddRolesForUserErrCode, "AddRolesForUse error"},
 		{xcode.BusinessType, HasRoleForUserErrCode, "HasRoleForUserErrCode error"},
 		{xcode.BusinessType, DeleteRoleForUserErrCode, "DeleteRoleForUserErrCode error"},
-		{xcode.BusinessType, DeleteUserErrCode, "DeleteUser error"},
 		{xcode.BusinessType, DeleteRolesForUserErrCode, "DeleteRolesForUser error"},
-		{xcode.BusinessType, GetUsersForRoleErrCode, "GetUsersForRoleErr error"},
-		{xcode.BusinessType, AddPermissionForUserErrCode, "AddPermissionForUser error"},
-		{xcode.BusinessType, GetPermissionsForUserErrCode, "GetPermissionsForUser error"},
-		{xcode.BusinessType, DeletePermissionForUserErrCode, "DeletePermissionForUser error"},
-		{xcode.BusinessType, DeletePermissionsForUserErrCode, "DeletePermissionsForUser error"},
-		{xcode.BusinessType, DeletePermissionErrCode, "DeletePermission error"},
-		{xcode.BusinessType, HasPermissionForUserErrCode, "HasPermissionForUser error"},
 		{xcode.BusinessType, EnforceErrCode, "Enforce error"},
+		{xcode.BusinessType, GetAllRolesErrCode, "GetAllRoles error"},
+		{xcode.BusinessType, DeleteRolesErrCode, "DeleteRoles error"},
+		{xcode.BusinessType, AddRolesErrCode, "AddRoles error"},
+		{xcode.BusinessType, UpdateRolesErrCode, "UpdateRoles error"},
+		{xcode.BusinessType, GetAllMenuErrCode, "GetAllMenu error"},
+		{xcode.BusinessType, DeleteMenuErrCode, "DeleteMenu error"},
+		{xcode.BusinessType, AddMenuErrCode, "AddMenuErr error"},
+		{xcode.BusinessType, UpdateMenuErrCode, "UpdateMenu error"},
+		{xcode.BusinessType, GetAllResourcesErrCode, "GetAllResources error"},
+		{xcode.BusinessType, DeleteResourcesErrCode, "DeleteResources error"},
+		{xcode.BusinessType, AddResourcesErrCode, "AddResources error"},
+		{xcode.BusinessType, UpdateResourcesErrCode, "UpdateResources error"},
+		{xcode.BusinessType, UpdateRolesMenuAndResourcesErrCode, "UpdateRolesMenuAndResources error"},
+		{xcode.BusinessType, GetPermissionAndMenuByRolesErrCode, "GetPermissionAndMenuByRoles error"},
 	}
 )
 

@@ -164,19 +164,19 @@ func UpdateRolesMenuAndResources(ctx context.Context, req _map.UpdateRolesMenuAn
 	var menuList = make([]model.Menu, len(req.Menus))
 	for i, menu := range req.Menus {
 		menuList[i] = model.Menu{
-			ID: menu,
+			ID: xcast.ToUint(menu),
 		}
 	}
 
 	var resourcesList = make([]model.Resources, len(req.Resources))
-	for i, menu := range req.Resources {
+	for i, resources := range req.Resources {
 		resourcesList[i] = model.Resources{
-			ID: menu,
+			ID: xcast.ToUint(resources),
 		}
 	}
 
 	r := model.Roles{
-		ID:        req.ID,
+		ID:        xcast.ToUint(req.ID),
 		Menus:     menuList,
 		Resources: resourcesList,
 	}

@@ -51,9 +51,9 @@ type (
 	}
 
 	UpdateRolesMenuAndResourcesReq struct {
-		ID        uint   `validate:"required"`
-		Menus     []uint `validate:"required"`
-		Resources []uint `validate:"required"`
+		ID        uint32   `validate:"required"`
+		Menus     []uint32 `validate:"required"`
+		Resources []uint32 `validate:"required"`
 	}
 
 	//------------------------------
