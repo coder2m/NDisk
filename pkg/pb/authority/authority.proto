@@ -42,6 +42,8 @@ service AuthorityService {
   rpc DeleteUser (Single) returns (Empty) {}
   //  获取角色下的所有用户
   rpc GetUsersForRole (Single) returns (Array) {}
+  //  批量获取用户角色
+  rpc GetUsersRoles (Ids) returns (UsersRole) {}
 
   //  更新角色添加权限和菜单
   rpc UpdateRolesMenuAndResources (UpdateRolesMenuAndResourcesReq) returns (Empty) {}
@@ -147,6 +149,10 @@ message Single {
 
 message Determine {
   bool ok = 1;
+}
+
+message UsersRole {
+  map<uint32, string> data = 1;
 }
 
 message Resources {

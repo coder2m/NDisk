@@ -387,3 +387,19 @@ func UpdateResources(ctx context.Context, id uint, req _map.ResourcesReq) error 
 	_ = xclient.CasbinClient().LoadPolicy()
 	return err
 }
+
+func GetUsersRoles(ctx context.Context, ids []uint32) (map[uint32]string, error) {
+	data, err := new(model.CasbinRule).GetUsersRoles(ctx, ids)
+	if !errors.Is(err, nil) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, EmptyDataErr
+		}
+		xlog.Error("GetUsersRoles", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
+		return nil, errors.New("get UsersRoles error")
+	}
+	var list = make(map[uint32]string)
+	for _, datum := range data {
+		list[datum.Uid] = datum.Roles
+	}
+	return list, err
+}

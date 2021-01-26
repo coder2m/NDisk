@@ -486,3 +486,16 @@ func (s Server) Enforce(ctx context.Context, resources *AuthorityPb.Resources) (
 		Ok: ok,
 	}, nil
 }
+
+func (s Server) GetUsersRoles(ctx context.Context, req *AuthorityPb.Ids) (res *AuthorityPb.UsersRole, err error) {
+	data, err := auth_server.GetUsersRoles(ctx, req.To)
+	if !errors.Is(err, nil) {
+		if err == auth_server.EmptyDataErr {
+			return nil, xcode.BusinessCode(xrpc.EmptyData)
+		}
+		return nil, xcode.BusinessCode(xrpc.GetUsersRolesErrCode)
+	}
+	return &AuthorityPb.UsersRole{
+		Data: data,
+	}, err
+}

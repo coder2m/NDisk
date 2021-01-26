@@ -716,6 +716,9 @@ func (s Server) DelUsers(ctx context.Context, list *NUserPb.UidList) (rep *NUser
 		xlog.Error("DelUsers", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.DelUsersErrCode)
 	}
+	for _, u := range list.Uid {
+		_ = xclient.RedisToken().ClearAccessToken(ctx, xcast.ToUint64(u))
+	}
 	rep = new(NUserPb.ChangeNumResponse)
 	rep.Count = xcast.ToUint32(count)
 	return rep, nil

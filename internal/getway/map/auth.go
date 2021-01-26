@@ -64,6 +64,7 @@ type (
 		Tel         string `json:"tel,omitempty"`
 		Email       string `json:"email,omitempty"`
 		Status      uint32 `json:"status,omitempty"`
+		Authority   string `json:"authority,omitempty"`
 		EmailStatus uint32 `json:"email_status,omitempty"`
 		Password    string `json:"password,omitempty"`
 		CreatedAt   uint64 `json:"created_at,omitempty"`

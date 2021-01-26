@@ -66,6 +66,16 @@ func UserList(ctx context.Context, req _map.PageList) (data _map.UserList, errs 
 	if !errors.Is(err, nil) {
 		return data, xerror.NewErrRPC(err)
 	}
+	uidList := make([]uint32, len(rep.List))
+	for i, info := range rep.List {
+		uidList[i] = xcast.ToUint32(info.Uid)
+	}
+	rolesData, err := xclient.AuthorityServer.GetUsersRoles(ctx, &AuthorityPb.Ids{
+		To: uidList,
+	})
+	if !errors.Is(err, nil) {
+		return data, xerror.NewErrRPC(err)
+	}
 	list := make([]_map.UserInfo, len(rep.List))
 	for i, info := range rep.List {
 		list[i] = _map.UserInfo{
@@ -73,6 +83,7 @@ func UserList(ctx context.Context, req _map.PageList) (data _map.UserList, errs 
 			Name:        info.Name,
 			Alias:       info.Alias,
 			Tel:         info.Tel,
+			Authority:   rolesData.Data[xcast.ToUint32(info.Uid)],
 			Email:       info.Email,
 			Status:      info.Status,
 			EmailStatus: info.EmailStatus,

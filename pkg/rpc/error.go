@@ -73,6 +73,7 @@ const (
 	UpdateResourcesErrCode
 	UpdateRolesMenuAndResourcesErrCode
 	GetPermissionAndMenuByRolesErrCode
+	GetUsersRolesErrCode
 )
 
 var (
@@ -136,6 +137,7 @@ var (
 		{xcode.BusinessType, UpdateResourcesErrCode, "UpdateResources error"},
 		{xcode.BusinessType, UpdateRolesMenuAndResourcesErrCode, "UpdateRolesMenuAndResources error"},
 		{xcode.BusinessType, GetPermissionAndMenuByRolesErrCode, "GetPermissionAndMenuByRoles error"},
+		{xcode.BusinessType, GetUsersRolesErrCode, "GetUsersRoles error"},
 	}
 )
 
