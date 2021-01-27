@@ -27,7 +27,7 @@ var (
 	slash     = []byte("/")
 )
 
-func RecoverMiddleware(slowQueryThresholdInMilli int64) gin.HandlerFunc {
+func RecoverMiddleware(slowQueryThresholdInMilli time.Duration) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var beg = time.Now()
 		var fields = make([]xlog.Field, 0, 8)
@@ -35,8 +35,8 @@ func RecoverMiddleware(slowQueryThresholdInMilli int64) gin.HandlerFunc {
 		defer func() {
 			fields = append(fields, zap.Float64("cost", time.Since(beg).Seconds()))
 			if slowQueryThresholdInMilli > 0 {
-				if cost := int64(time.Since(beg)) / 1e6; cost > slowQueryThresholdInMilli {
-					fields = append(fields, zap.Int64("slow", cost))
+				if cost := time.Since(beg); cost > slowQueryThresholdInMilli {
+					fields = append(fields, zap.Float64("slow", cost.Seconds()))
 				}
 			}
 			if rec := recover(); rec != nil {
