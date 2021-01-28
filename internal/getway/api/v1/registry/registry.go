@@ -21,6 +21,11 @@ func Engine() *gin.Engine {
 			gin.SetMode(gin.ReleaseMode)
 		}
 		router = gin.New()
+		router.Use(
+			middleware.RecoverMiddleware(20*time.Second),
+			middleware.XMonitor(),
+			middleware.XTrace(),
+		)
 	}
 	return router
 }
@@ -30,9 +35,6 @@ func V1() *gin.RouterGroup {
 		r := Engine()
 		v1 = r.Group("/api/v1")
 		v1.Use(
-			middleware.RecoverMiddleware(20*time.Second),
-			middleware.XMonitor(),
-			middleware.XTrace(),
 			middleware.Cors(),
 			//middleware.CSRF(),
 		)
