@@ -7,6 +7,7 @@ import (
 	"github.com/myxy99/ndisk/internal/getway/error/httpError"
 	_map "github.com/myxy99/ndisk/internal/getway/map"
 	"github.com/myxy99/ndisk/internal/getway/server/admin_server"
+	"github.com/myxy99/ndisk/internal/getway/server/auth_server"
 	R "github.com/myxy99/ndisk/pkg/response"
 )
 
@@ -173,25 +174,6 @@ func UserByRole(ctx *gin.Context) {
 	return
 }
 
-// 管理员获取用户的角色
-func RoleByUser(ctx *gin.Context) {
-	var req _map.Uid
-	if err := ctx.BindUri(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
-		return
-	}
-	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
-		return
-	}
-	if data, err := admin_server.RoleByUser(ctx, xcast.ToString(req.Uid)); err != nil {
-		R.Error(ctx, err)
-	} else {
-		R.Ok(ctx, data)
-	}
-	return
-}
-
 // 管理员给用户添加角色
 func UserAddRoles(ctx *gin.Context) {
 	var req _map.UserRolesReq
@@ -225,6 +207,251 @@ func DeleteUserRole(ctx *gin.Context) {
 		return
 	}
 	if err := admin_server.UserDelRoles(ctx, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, nil)
+	}
+	return
+}
+
+//菜单
+//列表
+func MenuList(ctx *gin.Context) {
+	var req = _map.DefaultPageRequest
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if data, err := admin_server.MenuList(ctx, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Page(ctx, xcast.ToInt64(data.Count), req.Page, req.PageSize, data.Data)
+	}
+}
+
+//删除
+func DelMenu(ctx *gin.Context) {
+	var req _map.UidList
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if data, err := admin_server.DelMenu(ctx, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, data)
+	}
+	return
+}
+
+//更新
+func UpdateMenu(ctx *gin.Context) {
+	var req _map.MenuReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	id := xcast.ToUint32(ctx.Param("id"))
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if id <= 0 {
+		httpError.HandleBadRequest(ctx, "id is not cant 0")
+		return
+	}
+	if err := admin_server.UpdateMenu(ctx, id, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, nil)
+	}
+	return
+}
+
+//添加
+func AddMenu(ctx *gin.Context) {
+	var req _map.MenuReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if err := admin_server.AddMenu(ctx, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, nil)
+	}
+	return
+}
+
+//api资源
+func ResourcesList(ctx *gin.Context) {
+	var req = _map.DefaultPageRequest
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if data, err := admin_server.ResourcesList(ctx, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Page(ctx, xcast.ToInt64(data.Count), req.Page, req.PageSize, data.Data)
+	}
+}
+
+func DelResources(ctx *gin.Context) {
+	var req _map.UidList
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if data, err := admin_server.DelResources(ctx, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, data)
+	}
+	return
+}
+
+func UpdateResources(ctx *gin.Context) {
+	var req _map.ResourcesReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	id := xcast.ToUint32(ctx.Param("id"))
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if id <= 0 {
+		httpError.HandleBadRequest(ctx, "id is not cant 0")
+		return
+	}
+	if err := admin_server.UpdateResources(ctx, id, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, nil)
+	}
+	return
+}
+
+func AddResources(ctx *gin.Context) {
+	var req _map.ResourcesReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if err := admin_server.AddResources(ctx, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, nil)
+	}
+	return
+}
+
+// 获取角色下的所有菜单权限
+func GetPermissionAndMenuByRoles(ctx *gin.Context) {
+	id := ctx.Param("id")
+	if id == "" {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if data, err := auth_server.GetPermissionAndMenuByRoles(ctx, []string{id}); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, data)
+	}
+}
+
+// 更新角色下的所有菜单权限
+func UpdateRolesMenuAndResources(ctx *gin.Context) {
+	var req _map.UpdateRolesMenuAndResourcesReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if err := admin_server.UpdateRolesMenuAndResources(ctx, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, nil)
+	}
+	return
+}
+
+// 添加角色
+func AddRoles(ctx *gin.Context) {
+	var req _map.RoleInfoReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if err := admin_server.AddRoles(ctx, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, nil)
+	}
+	return
+}
+
+// 删除角色
+func DelRoles(ctx *gin.Context) {
+	var req _map.UidList
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if data, err := admin_server.DelRoles(ctx, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, data)
+	}
+	return
+}
+
+// 更新角色
+func UpdateRoles(ctx *gin.Context) {
+	var req _map.RoleInfoReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	id := xcast.ToUint32(ctx.Param("id"))
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if id <= 0 {
+		httpError.HandleBadRequest(ctx, "id is not cant 0")
+		return
+	}
+	if err := admin_server.UpdateRoles(ctx, id, req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)

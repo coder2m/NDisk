@@ -9,6 +9,7 @@ import (
 	_map "github.com/myxy99/ndisk/internal/getway/map"
 	AuthorityPb "github.com/myxy99/ndisk/pkg/pb/authority"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
+	xrpc "github.com/myxy99/ndisk/pkg/rpc"
 )
 
 func CreateUser(ctx context.Context, user _map.CreateUser) (data _map.Batch, errs *xerror.Err) {
@@ -26,7 +27,11 @@ func CreateUser(ctx context.Context, user _map.CreateUser) (data _map.Batch, err
 		List: list,
 	})
 	if !errors.Is(err, nil) {
-		return data, xerror.NewErrRPC(err)
+		e := xerror.NewErrRPC(err)
+		if e.ErrorCode == xrpc.DataExistErrCode {
+			e = e.SetMessage("data exist")
+		}
+		return data, e
 	}
 	return _map.Batch{Count: rep.Count}, nil
 }
@@ -126,12 +131,19 @@ func UserById(ctx context.Context, req _map.Uid) (data _map.UserInfo, errs *xerr
 	if !errors.Is(err, nil) {
 		return data, xerror.NewErrRPC(err)
 	}
+	rolesData, err := xclient.AuthorityServer.GetUsersRoles(ctx, &AuthorityPb.Ids{
+		To: []uint32{xcast.ToUint32(req.Uid)},
+	})
+	if !errors.Is(err, nil) {
+		return data, xerror.NewErrRPC(err)
+	}
 	return _map.UserInfo{
 		Uid:         rep.Uid,
 		Name:        rep.Name,
 		Alias:       rep.Alias,
 		Tel:         rep.Tel,
 		Email:       rep.Email,
+		Authority:   rolesData.Data[xcast.ToUint32(req.Uid)],
 		Status:      rep.Status,
 		EmailStatus: rep.EmailStatus,
 		CreatedAt:   rep.CreatedAt,
@@ -205,16 +217,6 @@ func UserByRole(ctx context.Context, role string) (data _map.UserList, errs *xer
 	}, nil
 }
 
-func RoleByUser(ctx context.Context, uid string) (data []string, errs *xerror.Err) {
-	rep, err := xclient.AuthorityServer.GetRolesForUser(ctx, &AuthorityPb.Target{
-		To: uid,
-	})
-	if !errors.Is(err, nil) {
-		return data, xerror.NewErrRPC(err)
-	}
-	return rep.Data, nil
-}
-
 func UserAddRoles(ctx context.Context, req _map.UserRolesReq) (errs *xerror.Err) {
 	_, err := xclient.AuthorityServer.AddRolesForUser(ctx, &AuthorityPb.Batch{
 		To:      xcast.ToString(req.Uid),
@@ -230,6 +232,192 @@ func UserDelRoles(ctx context.Context, req _map.UserRoleReq) (errs *xerror.Err) 
 	_, err := xclient.AuthorityServer.DeleteRoleForUser(ctx, &AuthorityPb.Single{
 		To:      xcast.ToString(req.Uid),
 		Operate: req.Role,
+	})
+	if !errors.Is(err, nil) {
+		return xerror.NewErrRPC(err)
+	}
+	return nil
+}
+
+func MenuList(ctx context.Context, req _map.PageList) (data _map.MenuListRes, errs *xerror.Err) {
+	rep, err := xclient.AuthorityServer.GetAllMenu(ctx, &AuthorityPb.PageRequest{
+		Keyword:  req.Keyword,
+		Page:     xcast.ToUint32(req.Page),
+		Limit:    xcast.ToUint32(req.PageSize),
+		IsDelete: req.IsDelete,
+	})
+	if !errors.Is(err, nil) {
+		e := xerror.NewErrRPC(err)
+		return data, e
+	}
+	list := make([]_map.MenuInfoRes, len(rep.List))
+	for i, info := range rep.List {
+		list[i] = _map.MenuInfoRes{
+			Id:          info.Id,
+			ParentId:    info.ParentId,
+			Path:        info.Path,
+			Name:        info.Name,
+			Description: info.Description,
+			IconClass:   info.IconClass,
+			CreatedAt:   info.CreatedAt,
+			UpdatedAt:   info.UpdatedAt,
+			DeletedAt:   info.DeletedAt,
+		}
+	}
+	return _map.MenuListRes{
+		Count: rep.Count,
+		Data:  list,
+	}, nil
+}
+
+func DelMenu(ctx context.Context, req _map.UidList) (data _map.Batch, errs *xerror.Err) {
+	rep, err := xclient.AuthorityServer.DeleteMenu(ctx, &AuthorityPb.Ids{
+		To: req.List,
+	})
+	if !errors.Is(err, nil) {
+		return data, xerror.NewErrRPC(err)
+	}
+	return _map.Batch{Count: rep.Count}, nil
+}
+
+func AddMenu(ctx context.Context, req _map.MenuReq) (errs *xerror.Err) {
+	_, err := xclient.AuthorityServer.AddMenu(ctx, &AuthorityPb.MenuInfo{
+		ParentId:    req.ParentId,
+		Path:        req.Path,
+		Name:        req.Name,
+		Description: req.Description,
+		IconClass:   req.IconClass,
+	})
+	if !errors.Is(err, nil) {
+		return xerror.NewErrRPC(err)
+	}
+	return nil
+}
+
+func UpdateMenu(ctx context.Context, id uint32, req _map.MenuReq) (errs *xerror.Err) {
+	_, err := xclient.AuthorityServer.UpdateMenu(ctx, &AuthorityPb.MenuInfo{
+		Id:          id,
+		ParentId:    req.ParentId,
+		Path:        req.Path,
+		Name:        req.Name,
+		Description: req.Description,
+		IconClass:   req.IconClass,
+	})
+	if !errors.Is(err, nil) {
+		return xerror.NewErrRPC(err)
+	}
+	return nil
+}
+
+func ResourcesList(ctx context.Context, req _map.PageList) (data _map.ResourcesListRes, errs *xerror.Err) {
+	rep, err := xclient.AuthorityServer.GetAllResources(ctx, &AuthorityPb.PageRequest{
+		Keyword:  req.Keyword,
+		Page:     xcast.ToUint32(req.Page),
+		Limit:    xcast.ToUint32(req.PageSize),
+		IsDelete: req.IsDelete,
+	})
+	if !errors.Is(err, nil) {
+		e := xerror.NewErrRPC(err)
+		return data, e
+	}
+	list := make([]_map.ResourcesInfoRes, len(rep.List))
+	for i, info := range rep.List {
+		list[i] = _map.ResourcesInfoRes{
+			Id:          info.Id,
+			Name:        info.Name,
+			Path:        info.Path,
+			Action:      info.Action,
+			Description: info.Description,
+			CreatedAt:   info.CreatedAt,
+			UpdatedAt:   info.UpdatedAt,
+			DeletedAt:   info.DeletedAt,
+		}
+	}
+	return _map.ResourcesListRes{
+		Count: rep.Count,
+		Data:  list,
+	}, nil
+}
+
+func DelResources(ctx context.Context, req _map.UidList) (data _map.Batch, errs *xerror.Err) {
+	rep, err := xclient.AuthorityServer.DeleteResources(ctx, &AuthorityPb.Ids{
+		To: req.List,
+	})
+	if !errors.Is(err, nil) {
+		return data, xerror.NewErrRPC(err)
+	}
+	return _map.Batch{Count: rep.Count}, nil
+}
+
+func AddResources(ctx context.Context, req _map.ResourcesReq) (errs *xerror.Err) {
+	_, err := xclient.AuthorityServer.AddResources(ctx, &AuthorityPb.ResourcesInfo{
+		Name:        req.Name,
+		Path:        req.Path,
+		Action:      req.Action,
+		Description: req.Description,
+	})
+	if !errors.Is(err, nil) {
+		return xerror.NewErrRPC(err)
+	}
+	return nil
+}
+
+func UpdateResources(ctx context.Context, id uint32, req _map.ResourcesReq) (errs *xerror.Err) {
+	_, err := xclient.AuthorityServer.UpdateResources(ctx, &AuthorityPb.ResourcesInfo{
+		Id:          id,
+		Name:        req.Name,
+		Path:        req.Path,
+		Action:      req.Action,
+		Description: req.Description,
+	})
+	if !errors.Is(err, nil) {
+		return xerror.NewErrRPC(err)
+	}
+	return nil
+}
+
+// 更新角色下的所有菜单权限
+func UpdateRolesMenuAndResources(ctx context.Context, req _map.UpdateRolesMenuAndResourcesReq) (errs *xerror.Err) {
+	_, err := xclient.AuthorityServer.UpdateRolesMenuAndResources(ctx, &AuthorityPb.UpdateRolesMenuAndResourcesReq{
+		Id:        req.Id,
+		Menus:     req.Menus,
+		Resources: req.Resources,
+	})
+	if !errors.Is(err, nil) {
+		return xerror.NewErrRPC(err)
+	}
+	return nil
+}
+
+// 删除角色
+func DelRoles(ctx context.Context, req _map.UidList) (data _map.Batch, errs *xerror.Err) {
+	rep, err := xclient.AuthorityServer.DeleteRoles(ctx, &AuthorityPb.Ids{
+		To: req.List,
+	})
+	if !errors.Is(err, nil) {
+		return data, xerror.NewErrRPC(err)
+	}
+	return _map.Batch{Count: rep.Count}, nil
+}
+
+// 添加角色
+func AddRoles(ctx context.Context, req _map.RoleInfoReq) (errs *xerror.Err) {
+	_, err := xclient.AuthorityServer.AddRoles(ctx, &AuthorityPb.RolesInfo{
+		Name:        req.Name,
+		Description: req.Description,
+	})
+	if !errors.Is(err, nil) {
+		return xerror.NewErrRPC(err)
+	}
+	return nil
+}
+
+// 更新角色
+func UpdateRoles(ctx context.Context, id uint32, req _map.RoleInfoReq) (errs *xerror.Err) {
+	_, err := xclient.AuthorityServer.UpdateRoles(ctx, &AuthorityPb.RolesInfo{
+		Id:          id,
+		Name:        req.Name,
+		Description: req.Description,
 	})
 	if !errors.Is(err, nil) {
 		return xerror.NewErrRPC(err)

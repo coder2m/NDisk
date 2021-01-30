@@ -25,12 +25,40 @@ func init() {
 	// 管理员获取全部角色RoleList
 	admin.GET("/role", middleware.Auth(), middleware.Authority(), ah.RoleList)
 	// 获取角色下的所有用户
-	admin.GET("/role/authority", middleware.Auth(), middleware.Authority(), ah.UserByRole)
+	admin.GET("/role/user", middleware.Auth(), middleware.Authority(), ah.UserByRole)
+	// 获取角色下的所有菜单权限
+	admin.GET("/role/info", middleware.Auth(), middleware.Authority(), ah.GetPermissionAndMenuByRoles)
+	// 更新角色下的所有菜单权限
+	admin.POST("/role/info", middleware.Auth(), middleware.Authority(), ah.UpdateRolesMenuAndResources)
+	// 添加角色
+	admin.POST("/role", middleware.Auth(), middleware.Authority(), ah.AddRoles)
+	// 删除角色
+	admin.DELETE("/role", middleware.Auth(), middleware.Authority(), ah.DelRoles)
+	// 更新角色
+	admin.PUT("/role/:id", middleware.Auth(), middleware.Authority(), ah.UpdateRoles)
 
-	// 管理员获取用户的角色
-	admin.GET("/user/:uid/role", middleware.Auth(), middleware.Authority(), ah.RoleByUser)
 	// 管理员给用户添加角色
 	admin.POST("/user/:uid/role", middleware.Auth(), middleware.Authority(), ah.UserAddRoles)
 	// 管理员删除用户角色
 	admin.DELETE("/user/:uid/role", middleware.Auth(), middleware.Authority(), ah.DeleteUserRole)
+
+	//menu
+	//add
+	admin.POST("/menu", middleware.Auth(), middleware.Authority(), ah.AddMenu)
+	//del
+	admin.DELETE("/menu", middleware.Auth(), middleware.Authority(), ah.DelMenu)
+	//get
+	admin.GET("/menu", middleware.Auth(), middleware.Authority(), ah.MenuList)
+	//update
+	admin.PUT("/menu/:id", middleware.Auth(), middleware.Authority(), ah.UpdateMenu)
+
+	//Resources
+	//add
+	admin.POST("/resources", middleware.Auth(), middleware.Authority(), ah.AddResources)
+	//del
+	admin.DELETE("/resources", middleware.Auth(), middleware.Authority(), ah.DelResources)
+	//get
+	admin.GET("/resources", middleware.Auth(), middleware.Authority(), ah.ResourcesList)
+	//update
+	admin.PUT("/resources/:id", middleware.Auth(), middleware.Authority(), ah.UpdateResources)
 }

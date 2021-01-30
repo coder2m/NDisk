@@ -6,6 +6,7 @@
 package middleware
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/myxy99/component/pkg/xcast"
 	xclient "github.com/myxy99/ndisk/internal/getway/client"
@@ -32,12 +33,21 @@ func Auth() gin.HandlerFunc {
 			ctx.Abort()
 			return
 		}
+		rolesData, err := xclient.AuthorityServer.GetUsersRoles(ctx, &AuthorityPb.Ids{
+			To: []uint32{xcast.ToUint32(userInfo.Uid)},
+		})
+		if !errors.Is(err, nil) {
+			httpError.HandleForbidden(ctx, nil)
+			ctx.Abort()
+			return
+		}
 		var info = _map.UserInfo{
 			Uid:         userInfo.Uid,
 			Name:        userInfo.Name,
 			Alias:       userInfo.Alias,
 			Tel:         userInfo.Tel,
 			Email:       userInfo.Email,
+			Authority:   rolesData.Data[xcast.ToUint32(userInfo.Uid)],
 			Status:      userInfo.Status,
 			EmailStatus: userInfo.EmailStatus,
 			CreatedAt:   userInfo.CreatedAt,

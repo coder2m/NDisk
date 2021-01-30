@@ -647,6 +647,9 @@ func (s Server) UpdateUserStatus(ctx context.Context, info *NUserPb.UserInfo) (r
 		xlog.Error("UpdateUserStatus", xlog.FieldErr(err), xlog.FieldName(xapp.Name()), xlog.FieldType("mysql"))
 		return nil, xcode.BusinessCode(xrpc.UpdateUserStatusErrCode)
 	}
+	if req.Status != 1 {
+		_ = xclient.RedisToken().ClearAccessToken(ctx, xcast.ToUint64(req.Uid))
+	}
 	return new(NUserPb.NilResponse), nil
 }
 

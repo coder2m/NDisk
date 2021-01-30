@@ -45,6 +45,11 @@ type (
 		Content string `json:"content" validate:"required"`
 	}
 
+	RoleInfoReq struct {
+		Name        string ` json:"name" validate:"required"`
+		Description string ` json:"description" validate:"required"`
+	}
+
 	RoleCompetenceReq struct {
 		Role      string `json:"role" validate:"required"`
 		Objective string `json:"objective"  validate:"required"`
@@ -59,6 +64,27 @@ type (
 	UserRoleReq struct {
 		Uid  uint64 `uri:"uid" json:"uid" validate:"required,number,min=1" label:"uid"`
 		Role string `json:"role" validate:"required"`
+	}
+
+	MenuReq struct {
+		ParentId    uint32 `json:"parent_id" validate:"required"`
+		Path        string `json:"path" validate:"required"`
+		Name        string `json:"name" validate:"required"`
+		Description string `json:"description" validate:"required"`
+		IconClass   string `json:"icon_class" validate:"required"`
+	}
+
+	ResourcesReq struct {
+		Name        string `json:"name" validate:"required"`
+		Path        string `json:"path" validate:"required"`
+		Action      string `json:"action" validate:"required"`
+		Description string `json:"description" validate:"required"`
+	}
+
+	UpdateRolesMenuAndResourcesReq struct {
+		Id        uint32   ` json:"id" validate:"required"`
+		Menus     []uint32 ` json:"menus" validate:"required"`
+		Resources []uint32 `json:"resources" validate:"required"`
 	}
 
 	// 返回
@@ -79,6 +105,16 @@ type (
 	RolesListRes struct {
 		Count uint32         `json:"count,omitempty"`
 		Data  []RolesInfoRes `json:"data,omitempty"`
+	}
+
+	MenuListRes struct {
+		Count uint32        `json:"count,omitempty"`
+		Data  []MenuInfoRes `json:"data,omitempty"`
+	}
+
+	ResourcesListRes struct {
+		Count uint32             `json:"count,omitempty"`
+		Data  []ResourcesInfoRes `json:"data,omitempty"`
 	}
 
 	RolesInfoRes struct {

@@ -13,6 +13,7 @@ import (
 	"github.com/myxy99/ndisk/internal/getway/server/auth_server"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
 	R "github.com/myxy99/ndisk/pkg/response"
+	"strings"
 )
 
 //  账号登录
@@ -176,7 +177,11 @@ func RefreshToken(ctx *gin.Context) {
 func Info(ctx *gin.Context) {
 	if i, ok := ctx.Get("user"); ok {
 		info := i.(_map.UserInfo)
-		R.Ok(ctx, info)
+		menu, _ := auth_server.GetPermissionAndMenuByRoles(ctx, strings.Split(info.Authority, ","))
+		R.Ok(ctx, gin.H{
+			"info": info,
+			"menu": menu,
+		})
 	} else {
 		httpError.HandleForbidden(ctx, nil)
 	}

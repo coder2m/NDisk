@@ -8,14 +8,16 @@ package auth_server
 import (
 	"context"
 	"errors"
+	"github.com/myxy99/component/pkg/xcast"
 	xclient "github.com/myxy99/ndisk/internal/getway/client"
 	xerror "github.com/myxy99/ndisk/internal/getway/error"
 	_map "github.com/myxy99/ndisk/internal/getway/map"
+	AuthorityPb "github.com/myxy99/ndisk/pkg/pb/authority"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
 	xrpc "github.com/myxy99/ndisk/pkg/rpc"
 )
 
-func AccountLogin(ctx context.Context, login _map.AccountLogin) (map[string]interface{}, *xerror.Err) {
+func AccountLogin(ctx context.Context, login _map.AccountLogin) (interface{}, *xerror.Err) {
 	rep, err := xclient.NUserServer.AccountLogin(ctx, &NUserPb.UserLoginRequest{
 		Account:  login.Account,
 		Password: login.Password,
@@ -29,22 +31,9 @@ func AccountLogin(ctx context.Context, login _map.AccountLogin) (map[string]inte
 		}
 		return nil, e
 	}
-	return map[string]interface{}{
-		"info": _map.UserInfo{
-			Uid:         rep.Info.Uid,
-			Name:        rep.Info.Name,
-			Alias:       rep.Info.Alias,
-			Tel:         rep.Info.Tel,
-			Email:       rep.Info.Email,
-			Status:      rep.Info.Status,
-			EmailStatus: rep.Info.EmailStatus,
-			CreatedAt:   rep.Info.CreatedAt,
-			UpdatedAt:   rep.Info.UpdatedAt,
-		},
-		"token": _map.Token{
-			AccountToken: rep.Token.AccountToken,
-			RefreshToken: rep.Token.RefreshToken,
-		},
+	return _map.Token{
+		AccountToken: rep.Token.AccountToken,
+		RefreshToken: rep.Token.RefreshToken,
 	}, nil
 }
 
@@ -63,7 +52,7 @@ func SMSSend(ctx context.Context, to _map.SMSSend) *xerror.Err {
 	return nil
 }
 
-func SMSLogin(ctx context.Context, to _map.SMSLogin) (map[string]interface{}, *xerror.Err) {
+func SMSLogin(ctx context.Context, to _map.SMSLogin) (interface{}, *xerror.Err) {
 	rep, err := xclient.NUserServer.SMSLogin(ctx, &NUserPb.SMSLoginRequest{
 		Tel:  to.Tel,
 		Code: to.Code,
@@ -77,22 +66,9 @@ func SMSLogin(ctx context.Context, to _map.SMSLogin) (map[string]interface{}, *x
 		}
 		return nil, e
 	}
-	return map[string]interface{}{
-		"info": _map.UserInfo{
-			Uid:         rep.Info.Uid,
-			Name:        rep.Info.Name,
-			Alias:       rep.Info.Alias,
-			Tel:         rep.Info.Tel,
-			Email:       rep.Info.Email,
-			EmailStatus: rep.Info.EmailStatus,
-			Status:      rep.Info.Status,
-			CreatedAt:   rep.Info.CreatedAt,
-			UpdatedAt:   rep.Info.UpdatedAt,
-		},
-		"token": _map.Token{
-			AccountToken: rep.Token.AccountToken,
-			RefreshToken: rep.Token.RefreshToken,
-		},
+	return _map.Token{
+		AccountToken: rep.Token.AccountToken,
+		RefreshToken: rep.Token.RefreshToken,
 	}, nil
 }
 
@@ -184,4 +160,29 @@ func BindEmail(ctx context.Context, r _map.BindEmail) *xerror.Err {
 		return e
 	}
 	return nil
+}
+
+func GetPermissionAndMenuByRoles(ctx context.Context, roles []string) (map[string]interface{}, *xerror.Err) {
+	data := make(map[string]interface{})
+	for _, role := range roles {
+		res, _ := xclient.AuthorityServer.GetPermissionAndMenuByRoles(ctx, &AuthorityPb.Target{
+			To: role,
+		})
+		var menusList = make([]_map.MenuInfoRes, len(res.Menus))
+		for i, menu := range res.Menus {
+			menusList[i] = _map.MenuInfoRes{
+				Id:          xcast.ToUint32(menu.Id),
+				ParentId:    xcast.ToUint32(menu.ParentId),
+				Path:        menu.Path,
+				Name:        menu.Name,
+				Description: menu.Description,
+				IconClass:   menu.IconClass,
+			}
+		}
+		data[role] = _map.RolesInfoRes{
+			Name:  res.Name,
+			Menus: menusList,
+		}
+	}
+	return data, nil
 }
