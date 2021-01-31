@@ -61,4 +61,23 @@ func init() {
 	admin.GET("/resources", middleware.Auth(), middleware.Authority(), ah.ResourcesList)
 	//update
 	admin.PUT("/resources/:id", middleware.Auth(), middleware.Authority(), ah.UpdateResources)
+
+	//机构 	agency
+	//todo
+	//add
+	admin.POST("/agency", middleware.Auth(), middleware.Authority(), ah.AddAgency)
+	//del
+	admin.DELETE("/agency", middleware.Auth(), middleware.Authority(), ah.DelAgency)
+	//get
+	admin.GET("/agency/:pid", middleware.Auth(), middleware.Authority(), ah.AgencyList)
+	//update
+	admin.PUT("/agency/:id", middleware.Auth(), middleware.Authority(), ah.UpdateAgency)
+	//修改状态
+	admin.PATCH("/agency/:id/status", middleware.Auth(), middleware.Authority(), ah.UpdateAgencyStatus)
+	//恢复删除
+	admin.PATCH("/agency/restore", middleware.Auth(), middleware.Authority(), ah.RecoverDelAgency)
+	//把用户剔除组织
+	admin.POST("/agency/remove", middleware.Auth(), middleware.Authority(), ah.RemoveAgency)
+	//获取加入的用户
+	admin.GET("/agency/user", middleware.Auth(), middleware.Authority(), ah.ListUserByJoinAgency)
 }

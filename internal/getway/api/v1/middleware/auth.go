@@ -63,6 +63,7 @@ func Authority() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if i, ok := ctx.Get("user"); ok {
 			info := i.(_map.UserInfo)
+			ctx.Set("Uid", info.Uid)
 			rep, _ := xclient.AuthorityServer.Enforce(ctx, &AuthorityPb.Resources{
 				Role:   xcast.ToString(info.Uid),
 				Obj:    ctx.FullPath(),

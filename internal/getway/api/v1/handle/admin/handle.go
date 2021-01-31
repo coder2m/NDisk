@@ -458,3 +458,174 @@ func UpdateRoles(ctx *gin.Context) {
 	}
 	return
 }
+
+//Agency
+//列表
+func AgencyList(ctx *gin.Context) {
+	var req = _map.DefaultPageRequest
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	parentId := xcast.ToUint32(ctx.Param("pid"))
+	if parentId < 0 {
+		httpError.HandleBadRequest(ctx, "pid is greater than 0")
+		return
+	}
+	if data, err := admin_server.AgencyList(ctx, parentId, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Page(ctx, xcast.ToInt64(data.Count), req.Page, req.PageSize, data.Data)
+	}
+}
+
+//删除
+func DelAgency(ctx *gin.Context) {
+	var req _map.UidList
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if data, err := admin_server.DelAgency(ctx, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, data)
+	}
+	return
+}
+
+//更新
+func UpdateAgency(ctx *gin.Context) {
+	var req _map.AgencyInfoReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	id := xcast.ToUint32(ctx.Param("id"))
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if id <= 0 {
+		httpError.HandleBadRequest(ctx, "id is not cant 0")
+		return
+	}
+	if err := admin_server.UpdateAgency(ctx, id, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, nil)
+	}
+	return
+}
+
+//添加
+func AddAgency(ctx *gin.Context) {
+	var req _map.AgencyInfoReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if get, ok := ctx.Get("Uid"); ok {
+		uid := xcast.ToUint32(get)
+		if err := admin_server.AddAgency(ctx, uid, req); err != nil {
+			R.Error(ctx, err)
+		} else {
+			R.Ok(ctx, nil)
+		}
+	} else {
+		httpError.HandleForbidden(ctx, nil)
+	}
+	return
+}
+
+//恢复删除 RecoverDelAgency
+func RecoverDelAgency(ctx *gin.Context) {
+	var req _map.UidList
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if data, err := admin_server.RecoverDelAgency(ctx, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, data)
+	}
+	return
+}
+
+//修改状态 UpdateAgencyStatus
+func UpdateAgencyStatus(ctx *gin.Context) {
+	var req _map.UpdateStatus
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if req.Uid <= 0 || (req.Status != 1 && req.Status != 2) {
+		httpError.HandleBadRequest(ctx, "id >= 0 or status error")
+		return
+	}
+	if err := admin_server.UpdateAgencyStatus(ctx, xcast.ToUint32(req.Uid), req.Status); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, nil)
+	}
+	return
+}
+
+//退出 RemoveAgency
+func RemoveAgency(ctx *gin.Context) {
+	var req _map.UidList
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if data, err := admin_server.RemoveAgency(ctx, req); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, data)
+	}
+	return
+}
+
+//加入的用户 ListUserByJoinAgency
+func ListUserByJoinAgency(ctx *gin.Context) {
+	var req _map.UpdateStatus
+	if err := ctx.ShouldBind(&req); err != nil {
+		httpError.HandleBadRequest(ctx, nil)
+		return
+	}
+	if err := xvalidator.Struct(req); err != nil {
+		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		return
+	}
+	if req.Uid <= 0 || (req.Status != 1 && req.Status != 2) {
+		httpError.HandleBadRequest(ctx, "id >= 0 or status error")
+		return
+	}
+	if data, err := admin_server.ListUserByJoinAgency(ctx, xcast.ToUint32(req.Uid), req.Status); err != nil {
+		R.Error(ctx, err)
+	} else {
+		R.Ok(ctx, data)
+	}
+	return
+}

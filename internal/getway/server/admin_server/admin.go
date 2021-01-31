@@ -424,3 +424,150 @@ func UpdateRoles(ctx context.Context, id uint32, req _map.RoleInfoReq) (errs *xe
 	}
 	return nil
 }
+
+func AgencyList(ctx context.Context, parentId uint32, req _map.PageList) (data _map.AgencyListRes, errs *xerror.Err) {
+	rep, err := xclient.NUserServer.ListAgency(ctx, &NUserPb.ListAgencyPageRequest{
+		Page: &NUserPb.PageRequest{
+			Keyword:  req.Keyword,
+			Page:     xcast.ToUint32(req.Page),
+			Limit:    xcast.ToUint32(req.PageSize),
+			IsDelete: req.IsDelete,
+		},
+		ParentId: parentId,
+	})
+	if !errors.Is(err, nil) {
+		e := xerror.NewErrRPC(err)
+		return data, e
+	}
+	list := make([]_map.AgencyInfoRes, len(rep.List))
+	for i, info := range rep.List {
+		list[i] = _map.AgencyInfoRes{
+			Id:       info.Id,
+			ParentId: info.ParentId,
+			Name:     info.Name,
+			Remark:   info.Remark,
+			Status:   info.Status,
+			CreateUser: &_map.UserInfo{
+				Uid:   info.CreateUser.Uid,
+				Name:  info.CreateUser.Name,
+				Alias: info.CreateUser.Alias,
+				Tel:   info.CreateUser.Tel,
+				Email: info.CreateUser.Email,
+			},
+			CreatedAt: info.CreatedAt,
+			UpdatedAt: info.UpdatedAt,
+			DeletedAt: info.DeletedAt,
+		}
+	}
+	return _map.AgencyListRes{
+		Count: rep.Count,
+		Data:  list,
+	}, nil
+}
+
+func DelAgency(ctx context.Context, req _map.UidList) (data _map.Batch, errs *xerror.Err) {
+	rep, err := xclient.NUserServer.DelManyAgency(ctx, &NUserPb.IdList{
+		Id: req.List,
+	})
+	if !errors.Is(err, nil) {
+		return data, xerror.NewErrRPC(err)
+	}
+	return _map.Batch{Count: rep.Count}, nil
+}
+
+func AddAgency(ctx context.Context, uid uint32, req _map.AgencyInfoReq) (errs *xerror.Err) {
+	_, err := xclient.NUserServer.CreateManyAgency(ctx, &NUserPb.CreateManyAgencyReq{
+		Uid: uid,
+		Agency: []*NUserPb.AgencyReq{
+			{
+				ParentId: req.ParentId,
+				Name:     req.Name,
+				Remark:   req.Remark,
+			},
+		},
+	})
+	if !errors.Is(err, nil) {
+		return xerror.NewErrRPC(err)
+	}
+	return nil
+}
+
+func UpdateAgency(ctx context.Context, id uint32, req _map.AgencyInfoReq) (errs *xerror.Err) {
+	_, err := xclient.NUserServer.UpdateAgency(ctx, &NUserPb.AgencyInfo{
+		Id:       id,
+		ParentId: req.ParentId,
+		Name:     req.Name,
+		Remark:   req.Remark,
+	})
+	if !errors.Is(err, nil) {
+		return xerror.NewErrRPC(err)
+	}
+	return nil
+}
+
+func UpdateAgencyStatus(ctx context.Context, aid, status uint32) (errs *xerror.Err) {
+	_, err := xclient.NUserServer.UpdateAgencyStatus(ctx, &NUserPb.AgencyInfo{
+		Id:     aid,
+		Status: status,
+	})
+	if !errors.Is(err, nil) {
+		return xerror.NewErrRPC(err)
+	}
+	return nil
+}
+
+func RecoverDelAgency(ctx context.Context, req _map.UidList) (data _map.Batch, errs *xerror.Err) {
+	rep, err := xclient.NUserServer.RecoverDelAgency(ctx, &NUserPb.IdList{
+		Id: req.List,
+	})
+	if !errors.Is(err, nil) {
+		return data, xerror.NewErrRPC(err)
+	}
+	return _map.Batch{Count: rep.Count}, nil
+}
+
+func ListUserByJoinAgency(ctx context.Context, aid, status uint32) (data []_map.UserInfo, errs *xerror.Err) {
+	rep, err := xclient.NUserServer.ListUserByJoinAgency(ctx, &NUserPb.Id{
+		Id:     aid,
+		Status: status,
+	})
+	if !errors.Is(err, nil) {
+		return data, xerror.NewErrRPC(err)
+	}
+
+	data = make([]_map.UserInfo, len(rep.List))
+
+	for i, info := range rep.List {
+		data[i] = _map.UserInfo{
+			AuId:  xcast.ToUint32(info.AuId),
+			Uid:   xcast.ToUint64(info.Uid),
+			Name:  info.Name,
+			Alias: info.Alias,
+			Email: info.Email,
+			Tel:   info.Tel,
+		}
+	}
+
+	return data, nil
+}
+
+func UpdateStatusAgencyUser(ctx context.Context, auid, status uint32) (errs *xerror.Err) {
+	_, err := xclient.NUserServer.UpdateStatusAgencyUser(ctx, &NUserPb.Id{
+		Id:     auid,
+		Status: status,
+	})
+	if !errors.Is(err, nil) {
+		return xerror.NewErrRPC(err)
+	}
+	return nil
+}
+
+func RemoveAgency(ctx context.Context, req _map.UidList) (data _map.Batch, errs *xerror.Err) {
+	rep, err := xclient.NUserServer.DelManyAgencyUser(ctx, &NUserPb.IdList{
+		Id: req.List,
+	})
+	if !errors.Is(err, nil) {
+		return data, xerror.NewErrRPC(err)
+	}
+	return _map.Batch{Count: rep.Count}, nil
+}

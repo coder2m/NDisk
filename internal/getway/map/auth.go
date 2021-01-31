@@ -58,6 +58,7 @@ type (
 
 	/*-----------------响应------------------*/
 	UserInfo struct {
+		AuId        uint32 `json:"auid,omitempty"`
 		Uid         uint64 `json:"uid,omitempty"`
 		Name        string `json:"name,omitempty"`
 		Alias       string `json:"alias,omitempty"`

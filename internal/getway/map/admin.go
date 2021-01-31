@@ -32,6 +32,7 @@ type (
 		Uid    uint64 `validate:"required,number" json:"uid"`
 		Status uint32 `validate:"required,number" json:"status"`
 	}
+
 	Uid struct {
 		Uid uint64 `uri:"uid" json:"uid" validate:"required,number,min=1" label:"uid"`
 	}
@@ -87,6 +88,12 @@ type (
 		Resources []uint32 `json:"resources" validate:"required"`
 	}
 
+	AgencyInfoReq struct {
+		ParentId uint32 `json:"parentId" validate:"required"`
+		Name     string `json:"name" validate:"required"`
+		Remark   string `json:"remark" validate:"required"`
+	}
+
 	// 返回
 	Batch struct {
 		Count uint32 `json:"count,omitempty"`
@@ -115,6 +122,24 @@ type (
 	ResourcesListRes struct {
 		Count uint32             `json:"count,omitempty"`
 		Data  []ResourcesInfoRes `json:"data,omitempty"`
+	}
+
+	AgencyListRes struct {
+		Count uint32          `json:"count,omitempty"`
+		Data  []AgencyInfoRes `json:"data,omitempty"`
+	}
+
+	AgencyInfoRes struct {
+		AuId       uint32    `json:"auId"`
+		Id         uint32    `json:"id"`
+		ParentId   uint32    `json:"parentId"`
+		Name       string    `json:"name"`
+		Remark     string    `json:"remark"`
+		Status     uint32    `json:"status"`
+		CreateUser *UserInfo `json:"createUser"`
+		CreatedAt  uint64    `json:"created_at"`
+		UpdatedAt  uint64    `json:"updated_at"`
+		DeletedAt  uint64    `json:"deleted_at"`
 	}
 
 	RolesInfoRes struct {
