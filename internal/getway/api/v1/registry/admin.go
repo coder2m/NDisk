@@ -75,9 +75,9 @@ func init() {
 	//修改状态
 	admin.PATCH("/agency/:id/status", middleware.Auth(), middleware.Authority(), ah.UpdateAgencyStatus)
 	//恢复删除
-	admin.PATCH("/agency/restore", middleware.Auth(), middleware.Authority(), ah.RecoverDelAgency)
+	admin.PATCH("/agency_res", middleware.Auth(), middleware.Authority(), ah.RecoverDelAgency)
 	//把用户剔除组织
 	admin.POST("/agency/remove", middleware.Auth(), middleware.Authority(), ah.RemoveAgency)
 	//获取加入的用户
-	admin.GET("/agency/user", middleware.Auth(), middleware.Authority(), ah.ListUserByJoinAgency)
+	admin.GET("/agency_user", middleware.Auth(), middleware.Authority(), ah.ListUserByJoinAgency)
 }
