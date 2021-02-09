@@ -81,8 +81,8 @@ func (m *AgencyUser) Get(ctx context.Context, start int, size int, data *[]Agenc
 		db = db.Where(map[string]interface{}{"deleted_at": nil})
 	}
 	tx := db.Limit(size).Offset(start).Find(data)
-	total = tx.RowsAffected
 	err = tx.Error
+	total, err = m.Count(ctx, wheres, isDelete)
 	return
 }
 
@@ -167,4 +167,18 @@ func (m *AgencyUser) ListUserByJoinAgency(ctx context.Context, aid uint, status 
 		Joins("JOIN user ON user.id = agency_user.agency_id AND (user.status = ? and user.deleted_at is null)", 1).
 		Find(&data)
 	return data, tx.Error
+}
+
+func (m *AgencyUser) Count(ctx context.Context, wheres map[string][]interface{}, isDelete bool) (count int64, err error) {
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
+	for s, i := range wheres {
+		db = db.Where(s, i...)
+	}
+	if isDelete {
+		db = db.Unscoped().Where("deleted_at is not null")
+	} else {
+		db = db.Where(map[string]interface{}{"deleted_at": nil})
+	}
+	tx := db.Count(&count)
+	return count, tx.Error
 }

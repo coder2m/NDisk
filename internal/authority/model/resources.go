@@ -105,8 +105,8 @@ func (m *Resources) Get(ctx context.Context, start int, size int, data *[]Resour
 		db = db.Preload("Roles")
 	}
 	tx := db.Limit(size).Offset(start).Find(data)
-	total = tx.RowsAffected
 	err = tx.Error
+	total, err = m.Count(ctx, wheres, isDelete)
 	return
 }
 
@@ -196,4 +196,19 @@ func (m Resources) UpdatesWhereById(ctx context.Context, id uint) error {
 	}
 
 	return tx.Error
+}
+
+
+func (m *Resources) Count(ctx context.Context, wheres map[string][]interface{}, isDelete bool) (count int64, err error) {
+	db := MainDB().Table(m.TableName()).WithContext(ctx)
+	for s, i := range wheres {
+		db = db.Where(s, i...)
+	}
+	if isDelete {
+		db = db.Unscoped().Where("deleted_at is not null")
+	} else {
+		db = db.Where(map[string]interface{}{"deleted_at": nil})
+	}
+	tx := db.Count(&count)
+	return count, tx.Error
 }
