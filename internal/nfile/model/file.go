@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/myxy99/component/xcfg"
 	"gorm.io/gorm"
 )
 
@@ -49,6 +50,10 @@ func (f *File) SliceSize() uint64 {
 	return (f.Size + f.BlockSize - 1) / f.BlockSize
 }
 
-func (f *File) FullPath(idx int) string {
-	return fmt.Sprintf("%s/%d/%d", f.FileRealPath, f.ID, idx)
+func (f *File) FullPath() string {
+	return fmt.Sprintf("%s/%d", f.FileRealPath, f.ID)
+}
+
+func (f *File) TmpFilePath(idx int) string {
+	return fmt.Sprintf("%s/%d/%d/%d", xcfg.GetString("tmp_file_path"), f.FileSystem, f.ID, idx)
 }

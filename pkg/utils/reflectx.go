@@ -56,11 +56,8 @@ func PtrRange(ptr interface{}, handler func(t StructField, v Value) error) error
 	if err := IsPtr(ptr); err != nil {
 		return err
 	}
-	t := TypeOf(ptr)
-	value := ValueOf(ptr)
-	if t.Kind() == Ptr {
-		value = value.Elem()
-	}
+	t := TypeOf(ptr).Elem()
+	value := ValueOf(ptr).Elem()
 
 	for i := 0; i < t.NumField(); i++ {
 		var (
