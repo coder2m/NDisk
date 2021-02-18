@@ -31,7 +31,7 @@ type (
 	Header struct {
 		Token      string `header:"token"`
 		FileId     uint   `header:"file_id"`
-		SliceIndex uint   `header:"slice_index"`
+		SliceIndex int    `header:"slice_index"`
 		Size       uint   `header:"size"`
 		HashType   string `header:"hash_type"`
 		HashCode   string `header:"hash_code"`

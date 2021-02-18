@@ -97,7 +97,7 @@ func Upload(c *gin.Context) {
 		R.Error(c, errors.New("hash error"))
 		return
 	}
-	if err = service.WriteFileSliceData(file, sliceData); err != nil {
+	if err = service.WriteFileSliceData(file, sliceData, header.SliceIndex); err != nil {
 		R.Error(c, err.Error())
 		return
 	}

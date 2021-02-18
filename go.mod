@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/BurntSushi/toml v0.3.1
+	github.com/aliyun/aliyun-oss-go-sdk v2.1.5+incompatible
 	github.com/casbin/casbin/v2 v2.12.0
 	github.com/casbin/gorm-adapter/v3 v3.0.4
 	github.com/gin-gonic/gin v1.6.3
