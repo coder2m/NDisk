@@ -6,20 +6,52 @@ import (
 )
 
 var (
-	ossFile standard.Oss
-	ossAli  standard.Oss
+	disk     standard.Oss
+	oss      standard.Oss
+	cos      standard.Oss
+	tfs      standard.Oss
+	gfs      standard.Oss
+	sevenNiu standard.Oss
 )
 
-func OssFile() standard.Oss {
-	if ossFile == nil {
-		ossFile = xoss.Invoker("file")
+func Disk() standard.Oss {
+	if disk == nil {
+		disk = xoss.Invoker("file")
 	}
-	return ossFile
+	return disk
 }
 
-func OssAli() standard.Oss {
-	if ossAli == nil {
-		ossAli = xoss.Invoker("aliyun")
+func Oss() standard.Oss {
+	if oss == nil {
+		oss = xoss.Invoker("aliyun")
 	}
-	return ossAli
+	return oss
+}
+
+func Cos() standard.Oss {
+	if cos == nil {
+		cos = xoss.Invoker("cos")
+	}
+	return cos
+}
+
+func Tfs() standard.Oss {
+	if tfs == nil {
+		tfs = xoss.Invoker("tfs")
+	}
+	return tfs
+}
+
+func Gfs() standard.Oss {
+	if gfs == nil {
+		gfs = xoss.Invoker("gfs")
+	}
+	return gfs
+}
+
+func SevenNiu() standard.Oss {
+	if sevenNiu == nil {
+		sevenNiu = xoss.Invoker("sevenNiu")
+	}
+	return sevenNiu
 }

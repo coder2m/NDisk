@@ -20,6 +20,7 @@ type (
 		FileSystem   uint8
 		FileRealPath string
 		BlockSize    uint64
+		Creator      uint64
 	}
 )
 
@@ -56,4 +57,7 @@ func (f *File) FullPath() string {
 
 func (f *File) TmpFilePath(idx int) string {
 	return fmt.Sprintf("%s/%d/%d/%d", xcfg.GetString("tmp_file_path"), f.FileSystem, f.ID, idx)
+}
+func (f *File) TmpMergeFilePath() string {
+	return fmt.Sprintf("%s/%d/%d/final_file", xcfg.GetString("tmp_file_path"), f.FileSystem, f.ID)
 }

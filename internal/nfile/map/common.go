@@ -1,9 +1,12 @@
 package _map
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strings"
+
+	xclient "github.com/myxy99/ndisk/internal/nfile/client"
 )
 
 const (
@@ -38,8 +41,9 @@ type (
 	}
 )
 
-func (h *Header) GetUid() uint32 {
-	return 0
+func (h *Header) GetUid() uint64 {
+	uinfo, _ := xclient.GetUserInfoByToken(context.Background(), h.Token)
+	return uinfo.GetUid()
 }
 
 func (h *Header) Validate() error {

@@ -41,10 +41,11 @@ func Start(c *gin.Context) {
 		return
 	}
 	file = &model.File{
-		Model: gorm.Model{},
-		Name:  param.Name,
-		Size:  param.Size,
-		Type:  param.Type,
+		Model:   gorm.Model{},
+		Name:    param.Name,
+		Size:    param.Size,
+		Type:    param.Type,
+		Creator: header.GetUid(),
 	}
 	_ = file.SetHash(hashType, hashCode)
 
@@ -105,6 +106,19 @@ func Upload(c *gin.Context) {
 }
 
 func End(c *gin.Context) {
-	//header := GetHeader(c)
-
+	var (
+		header = GetHeader(c)
+		file   *model.File
+		err    error
+	)
+	//数据库查询
+	if file, err = model.GetFileById(header.FileId); err != nil {
+		R.Error(c, err.Error())
+		return
+	}
+	if err = service.MergeFile(file); err != nil {
+		R.Error(c, err.Error())
+		return
+	}
+	R.Ok(c, nil)
 }
