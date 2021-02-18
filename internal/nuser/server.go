@@ -1,6 +1,9 @@
 package nuser
 
 import (
+	"net"
+	"sync"
+
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xcode"
@@ -25,8 +28,6 @@ import (
 	"github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"net"
-	"sync"
 )
 
 type Server struct {

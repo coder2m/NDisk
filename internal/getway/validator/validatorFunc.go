@@ -5,8 +5,9 @@
 package validator
 
 import (
-	"github.com/go-playground/validator/v10"
 	"regexp"
+
+	"github.com/go-playground/validator/v10"
 )
 
 func phoneValidationFunc(fl validator.FieldLevel) bool {

@@ -3,6 +3,8 @@ package agency_server
 import (
 	"context"
 	"errors"
+	"strings"
+
 	"github.com/go-sql-driver/mysql"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xcast"
@@ -10,7 +12,6 @@ import (
 	_map "github.com/myxy99/ndisk/internal/nuser/map"
 	"github.com/myxy99/ndisk/internal/nuser/model"
 	"gorm.io/gorm"
-	"strings"
 )
 
 var (

@@ -2,8 +2,9 @@ package rpc
 
 import (
 	"fmt"
-	NFilePb "github.com/myxy99/ndisk/pkg/pb/nfile"
 	"io"
+
+	NFilePb "github.com/myxy99/ndisk/pkg/pb/nfile"
 )
 
 type Server struct{}

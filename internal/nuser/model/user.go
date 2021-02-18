@@ -7,9 +7,10 @@ package model
 
 import (
 	"context"
+	"time"
+
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-	"time"
 )
 
 type (

@@ -1,6 +1,9 @@
 package authority
 
 import (
+	"net"
+	"sync"
+
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xcode"
@@ -14,15 +17,14 @@ import (
 	"github.com/myxy99/component/xinvoker"
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	"github.com/myxy99/component/xmonitor"
+	"google.golang.org/grpc"
+
 	xclient "github.com/myxy99/ndisk/internal/authority/client"
 	"github.com/myxy99/ndisk/internal/authority/model"
 	"github.com/myxy99/ndisk/internal/authority/rpc"
 	myValidator "github.com/myxy99/ndisk/internal/authority/validator"
 	AuthorityPb "github.com/myxy99/ndisk/pkg/pb/authority"
 	"github.com/myxy99/ndisk/pkg/rpc"
-	"google.golang.org/grpc"
-	"net"
-	"sync"
 )
 
 type Server struct {

@@ -2,8 +2,9 @@ package model
 
 import (
 	"context"
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Roles struct {
@@ -245,7 +246,6 @@ func (m *Roles) UpdateRolesMenuAndResources(ctx context.Context) error {
 	}
 	return tx.Error
 }
-
 
 func (m *Roles) Count(ctx context.Context, wheres map[string][]interface{}, isDelete bool) (count int64, err error) {
 	db := MainDB().Table(m.TableName()).WithContext(ctx)

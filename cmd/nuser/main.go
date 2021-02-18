@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/myxy99/component/pkg/xcolor"
 	"github.com/myxy99/component/pkg/xflag"
 	"github.com/myxy99/component/pkg/xsignals"
+
 	"github.com/myxy99/ndisk/cmd/nuser/app"
-	"os"
 )
 
 //run -c=etcd://ip:2379?username=&password=&key=/dev/ndisk/config/user

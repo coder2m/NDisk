@@ -2,8 +2,9 @@ package model
 
 import (
 	"context"
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 // api 资源集合
@@ -197,7 +198,6 @@ func (m Resources) UpdatesWhereById(ctx context.Context, id uint) error {
 
 	return tx.Error
 }
-
 
 func (m *Resources) Count(ctx context.Context, wheres map[string][]interface{}, isDelete bool) (count int64, err error) {
 	db := MainDB().Table(m.TableName()).WithContext(ctx)

@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/myxy99/component/pkg/xcolor"
 	"github.com/myxy99/component/pkg/xflag"
 	"github.com/myxy99/component/pkg/xsignals"
+
 	"github.com/myxy99/ndisk/cmd/getway/app"
-	"os"
 )
 
 func main() {

@@ -6,10 +6,11 @@
 package middleware
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/myxy99/component/xmonitor"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/myxy99/component/xmonitor"
 )
 
 func extractAID(ctx *gin.Context) string {

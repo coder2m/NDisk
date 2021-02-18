@@ -8,9 +8,6 @@ package middleware
 import (
 	"bytes"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/myxy99/component/xlog"
-	"go.uber.org/zap"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -18,6 +15,10 @@ import (
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/myxy99/component/xlog"
+	"go.uber.org/zap"
 )
 
 var (

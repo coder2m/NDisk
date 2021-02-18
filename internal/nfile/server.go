@@ -2,6 +2,10 @@ package nfile
 
 import (
 	"context"
+	"net"
+	"net/http"
+	"sync"
+
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xcode"
@@ -23,9 +27,6 @@ import (
 	NFilePb "github.com/myxy99/ndisk/pkg/pb/nfile"
 	"github.com/myxy99/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
-	"net"
-	"net/http"
-	"sync"
 )
 
 type Server struct {

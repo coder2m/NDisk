@@ -1,10 +1,11 @@
 package registry
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/ndisk/internal/getway/api/v1/middleware"
-	"time"
 )
 
 var (

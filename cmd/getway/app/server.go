@@ -1,9 +1,10 @@
 package app
 
 import (
+	"sync"
+
 	"github.com/myxy99/ndisk/cmd"
 	s "github.com/myxy99/ndisk/internal/getway"
-	"sync"
 )
 
 func Run(stopCh <-chan struct{}) error {

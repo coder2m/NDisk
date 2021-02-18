@@ -71,7 +71,6 @@ func DefaultClientOption(c *GRPCConfig) []grpc.DialOption {
 			clientinterceptors.XAidUnaryClientInterceptor(),
 			clientinterceptors.XLoggerUnaryClientInterceptor(c.ServerName),
 			clientinterceptors.PrometheusUnaryClientInterceptor(c.ServerName),
-
 		),
 		xgrpc.WithStreamClientInterceptors(
 			clientinterceptors.PrometheusStreamClientInterceptor(c.ServerName),

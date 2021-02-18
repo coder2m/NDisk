@@ -2,6 +2,9 @@ package getway
 
 import (
 	"context"
+	"net/http"
+	"sync"
+
 	"github.com/BurntSushi/toml"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xcode"
@@ -19,8 +22,6 @@ import (
 	"github.com/myxy99/ndisk/internal/getway/client"
 	myValidator "github.com/myxy99/ndisk/internal/getway/validator"
 	"github.com/myxy99/ndisk/pkg/recaptcha"
-	"net/http"
-	"sync"
 )
 
 type Server struct {

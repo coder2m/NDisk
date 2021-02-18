@@ -6,6 +6,8 @@
 package auth
 
 import (
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/myxy99/component/pkg/xvalidator"
 	"github.com/myxy99/ndisk/internal/getway/error/httpError"
@@ -13,7 +15,6 @@ import (
 	"github.com/myxy99/ndisk/internal/getway/server/auth_server"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
 	R "github.com/myxy99/ndisk/pkg/response"
-	"strings"
 )
 
 //  账号登录

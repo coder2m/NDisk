@@ -3,15 +3,17 @@ package auth_server
 import (
 	"context"
 	"errors"
+	"strings"
+
 	"github.com/go-sql-driver/mysql"
 	xapp "github.com/myxy99/component"
 	"github.com/myxy99/component/pkg/xcast"
 	"github.com/myxy99/component/xlog"
+	"gorm.io/gorm"
+
 	xclient "github.com/myxy99/ndisk/internal/authority/client"
 	_map "github.com/myxy99/ndisk/internal/authority/map"
 	"github.com/myxy99/ndisk/internal/authority/model"
-	"gorm.io/gorm"
-	"strings"
 )
 
 var (

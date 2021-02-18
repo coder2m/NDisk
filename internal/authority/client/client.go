@@ -2,6 +2,7 @@ package xclient
 
 import (
 	"errors"
+
 	"github.com/casbin/casbin/v2"
 	casbinModel "github.com/casbin/casbin/v2/model"
 	"github.com/myxy99/component/xcfg"

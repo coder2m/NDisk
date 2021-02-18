@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	"github.com/myxy99/component/xlog"
