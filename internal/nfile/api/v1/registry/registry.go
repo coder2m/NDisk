@@ -1,15 +1,36 @@
 package registry
 
 import (
+	"sync"
+
 	"github.com/gin-gonic/gin"
+
+	"github.com/myxy99/ndisk/internal/nfile/api/v1/handle"
+	"github.com/myxy99/ndisk/internal/nfile/api/v1/middleware"
 )
 
-var router *gin.Engine
+var (
+	router *gin.Engine
+	once   sync.Once
+)
+
+func init() {
+	once = sync.Once{}
+}
+
+func regFileHandler(e *gin.Engine) {
+	g := e.Group("/file")
+	g.POST("/start", handle.Start)
+	g.POST("/upload", handle.Upload)
+	g.POST("/end", handle.End)
+}
 
 func Engine() *gin.Engine {
-	if router == nil {
+	once.Do(func() {
 		gin.SetMode(gin.ReleaseMode)
 		router = gin.Default()
-	}
+		router.Use(middleware.GetHeader())
+		regFileHandler(router)
+	})
 	return router
 }

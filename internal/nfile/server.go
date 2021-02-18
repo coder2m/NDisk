@@ -20,13 +20,16 @@ import (
 	xgorm "github.com/myxy99/component/xinvoker/gorm"
 	xoss "github.com/myxy99/component/xinvoker/oss"
 	xredis "github.com/myxy99/component/xinvoker/redis"
+	"github.com/myxy99/component/xlog"
 	"github.com/myxy99/component/xmonitor"
+	"google.golang.org/grpc"
+
 	"github.com/myxy99/ndisk/internal/nfile/api/v1/registry"
+	"github.com/myxy99/ndisk/internal/nfile/model"
 	rpcServer "github.com/myxy99/ndisk/internal/nfile/rpc"
 	myValidator "github.com/myxy99/ndisk/internal/nfile/validator"
 	NFilePb "github.com/myxy99/ndisk/pkg/pb/nfile"
 	"github.com/myxy99/ndisk/pkg/rpc"
-	"google.golang.org/grpc"
 )
 
 type Server struct {
@@ -98,6 +101,8 @@ func (s *Server) invoker() {
 		xoss.Register("oss"),
 	)
 	s.err = xinvoker.Init()
+	db := model.MainDB()
+	xlog.Infow("AutoMigrate", "model.File", db.AutoMigrate(&model.File{}))
 }
 
 func (s *Server) initHttpServer() {
