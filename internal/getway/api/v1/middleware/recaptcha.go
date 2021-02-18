@@ -7,15 +7,15 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/myxy99/ndisk/internal/nfile/error/httpError"
 	"github.com/myxy99/ndisk/pkg/recaptcha"
+	R "github.com/myxy99/ndisk/pkg/response"
 )
 
 func Recaptcha() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if !recaptcha.Verify(ctx.GetHeader("captcha")).Success {
 			ctx.Abort()
-			httpError.HandleCaptchaError(ctx)
+			R.HandleCaptchaError(ctx)
 			return
 		}
 		ctx.Next()
