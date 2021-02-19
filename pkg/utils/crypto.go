@@ -15,15 +15,17 @@ func Base64Decode(data string) ([]byte, error) {
 }
 
 func Encrypto(htype string, data []byte) string {
-	var hash hash.Hash
+	var h hash.Hash
 	switch strings.ToLower(htype) {
 	case "md5":
-		hash = md5.New()
+		h = md5.New()
 	case "sha1":
-		hash = sha1.New()
+		h = sha1.New()
 	case "sha256":
-		hash = sha256.New()
+		h = sha256.New()
+	default:
+		panic("type unknown")
 	}
-	hash.Write(data)
-	return fmt.Sprintf("%x", hash.Sum(nil))
+	h.Write(data)
+	return fmt.Sprintf("%x", h.Sum(nil))
 }
