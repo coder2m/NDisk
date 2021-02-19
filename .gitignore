@@ -50,3 +50,6 @@ test
 
 # config
 config/*.dev.toml
+
+# config
+doc/docker/etcd/bin/config/*.toml
