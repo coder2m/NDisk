@@ -14,7 +14,7 @@ func Base64Decode(data string) ([]byte, error) {
 	return base64.StdEncoding.DecodeString(data)
 }
 
-func Encrypto(htype string, data []byte) string {
+func Encrypt(htype string, data []byte) string {
 	var h hash.Hash
 	switch strings.ToLower(htype) {
 	case "md5":
