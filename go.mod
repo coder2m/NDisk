@@ -13,7 +13,7 @@ require (
 	github.com/go-resty/resty/v2 v2.3.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.4.3
-	github.com/myxy99/component v0.4.2
+	github.com/myxy99/component v0.4.3
 	github.com/pkg/errors v0.9.1
 	go.uber.org/zap v1.16.0
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
