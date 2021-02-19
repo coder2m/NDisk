@@ -3,7 +3,7 @@ build-image: build-authority-server
 
 .PHONY: build-authority-server
 build-authority-server:
-	docker build -f build/authority/Dockerfile -t ndisk-authority:v1 .
+	docker build -f build/authority/Dockerfile -t ndisk-authority:latest .
 
 .PHONY: run-authority
 run-authority:
