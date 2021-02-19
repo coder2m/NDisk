@@ -1,6 +1,7 @@
 package registry
 
 import (
+	R "github.com/myxy99/ndisk/pkg/response"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -22,6 +23,7 @@ func Engine() *gin.Engine {
 			gin.SetMode(gin.ReleaseMode)
 		}
 		router = gin.New()
+		router.NoRoute(R.HandleNotFound)
 		router.Use(
 			middleware.RecoverMiddleware(20*time.Second),
 			middleware.XMonitor(),

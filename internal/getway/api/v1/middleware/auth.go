@@ -7,11 +7,11 @@ package middleware
 
 import (
 	"errors"
+	R "github.com/myxy99/ndisk/pkg/response"
 
 	"github.com/gin-gonic/gin"
 	"github.com/myxy99/component/pkg/xcast"
 	xclient "github.com/myxy99/ndisk/internal/getway/client"
-	"github.com/myxy99/ndisk/internal/getway/error/httpError"
 	_map "github.com/myxy99/ndisk/internal/getway/map"
 	AuthorityPb "github.com/myxy99/ndisk/pkg/pb/authority"
 	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
@@ -21,7 +21,7 @@ func Auth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("Authorization")
 		if token == "" {
-			httpError.HandleForbidden(ctx, nil)
+			R.HandleForbidden(ctx)
 			ctx.Abort()
 			return
 		}
@@ -30,7 +30,7 @@ func Auth() gin.HandlerFunc {
 			AccountToken: token,
 		})
 		if err != nil {
-			httpError.HandleForbidden(ctx, nil)
+			R.HandleForbidden(ctx)
 			ctx.Abort()
 			return
 		}
@@ -38,7 +38,7 @@ func Auth() gin.HandlerFunc {
 			To: []uint32{xcast.ToUint32(userInfo.Uid)},
 		})
 		if !errors.Is(err, nil) {
-			httpError.HandleForbidden(ctx, nil)
+			R.HandleForbidden(ctx)
 			ctx.Abort()
 			return
 		}
@@ -73,11 +73,11 @@ func Authority() gin.HandlerFunc {
 			if rep != nil && rep.Ok {
 				ctx.Next()
 			} else {
-				httpError.HandleForbidden(ctx, nil)
+				R.HandleForbidden(ctx)
 				ctx.Abort()
 			}
 		} else {
-			httpError.HandleForbidden(ctx, nil)
+			R.HandleForbidden(ctx)
 			ctx.Abort()
 		}
 		return

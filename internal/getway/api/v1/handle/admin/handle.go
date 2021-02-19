@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/myxy99/component/pkg/xcast"
 	"github.com/myxy99/component/pkg/xvalidator"
-	"github.com/myxy99/ndisk/internal/getway/error/httpError"
 	_map "github.com/myxy99/ndisk/internal/getway/map"
 	"github.com/myxy99/ndisk/internal/getway/server/admin_server"
 	"github.com/myxy99/ndisk/internal/getway/server/auth_server"
@@ -15,11 +14,11 @@ import (
 func CreateUser(ctx *gin.Context) {
 	var req _map.CreateUser
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if data, err := admin_server.CreateUser(ctx, req); err != nil {
@@ -34,12 +33,12 @@ func CreateUser(ctx *gin.Context) {
 func UpdateUser(ctx *gin.Context) {
 	var req _map.UpdateUser
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	req.Uid = xcast.ToUint64(ctx.Param("uid"))
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if err := admin_server.UpdateUser(ctx, req); err != nil {
@@ -54,11 +53,11 @@ func UpdateUser(ctx *gin.Context) {
 func DeleteUser(ctx *gin.Context) {
 	var req _map.UidList
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if data, err := admin_server.DeleteUser(ctx, req); err != nil {
@@ -73,7 +72,7 @@ func DeleteUser(ctx *gin.Context) {
 func UserList(ctx *gin.Context) {
 	var req = _map.DefaultPageRequest
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if data, err := admin_server.UserList(ctx, req); err != nil {
@@ -87,12 +86,12 @@ func UserList(ctx *gin.Context) {
 func UpdateStatusUser(ctx *gin.Context) {
 	var req _map.UpdateStatus
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	req.Uid = xcast.ToUint64(ctx.Param("uid"))
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if err := admin_server.UpdateStatusUser(ctx, req); err != nil {
@@ -107,11 +106,11 @@ func UpdateStatusUser(ctx *gin.Context) {
 func RestoreDeleteUser(ctx *gin.Context) {
 	var req _map.UidList
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if data, err := admin_server.RestoreDeleteUser(ctx, req); err != nil {
@@ -126,11 +125,11 @@ func RestoreDeleteUser(ctx *gin.Context) {
 func UserById(ctx *gin.Context) {
 	var req _map.Uid
 	if err := ctx.BindUri(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if data, err := admin_server.UserById(ctx, req); err != nil {
@@ -145,7 +144,7 @@ func UserById(ctx *gin.Context) {
 func RoleList(ctx *gin.Context) {
 	var req = _map.DefaultPageRequest
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if data, err := admin_server.GetAllRoles(ctx, req); err != nil {
@@ -159,11 +158,11 @@ func RoleList(ctx *gin.Context) {
 func UserByRole(ctx *gin.Context) {
 	var req _map.RoleReq
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if data, err := admin_server.UserByRole(ctx, req.Content); err != nil {
@@ -178,12 +177,12 @@ func UserByRole(ctx *gin.Context) {
 func UserAddRoles(ctx *gin.Context) {
 	var req _map.UserRolesReq
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	req.Uid = xcast.ToUint64(ctx.Param("uid"))
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if err := admin_server.UserAddRoles(ctx, req); err != nil {
@@ -198,12 +197,12 @@ func UserAddRoles(ctx *gin.Context) {
 func DeleteUserRole(ctx *gin.Context) {
 	var req _map.UserRoleReq
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	req.Uid = xcast.ToUint64(ctx.Param("uid"))
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if err := admin_server.UserDelRoles(ctx, req); err != nil {
@@ -219,7 +218,7 @@ func DeleteUserRole(ctx *gin.Context) {
 func MenuList(ctx *gin.Context) {
 	var req = _map.DefaultPageRequest
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if data, err := admin_server.MenuList(ctx, req); err != nil {
@@ -233,11 +232,11 @@ func MenuList(ctx *gin.Context) {
 func DelMenu(ctx *gin.Context) {
 	var req _map.UidList
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if data, err := admin_server.DelMenu(ctx, req); err != nil {
@@ -252,16 +251,16 @@ func DelMenu(ctx *gin.Context) {
 func UpdateMenu(ctx *gin.Context) {
 	var req _map.MenuReq
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	id := xcast.ToUint32(ctx.Param("id"))
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if id <= 0 {
-		httpError.HandleBadRequest(ctx, "id is not cant 0")
+		R.HandleBadRequest(ctx, "id is not cant 0")
 		return
 	}
 	if err := admin_server.UpdateMenu(ctx, id, req); err != nil {
@@ -276,11 +275,11 @@ func UpdateMenu(ctx *gin.Context) {
 func AddMenu(ctx *gin.Context) {
 	var req _map.MenuReq
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if err := admin_server.AddMenu(ctx, req); err != nil {
@@ -295,7 +294,7 @@ func AddMenu(ctx *gin.Context) {
 func ResourcesList(ctx *gin.Context) {
 	var req = _map.DefaultPageRequest
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if data, err := admin_server.ResourcesList(ctx, req); err != nil {
@@ -308,11 +307,11 @@ func ResourcesList(ctx *gin.Context) {
 func DelResources(ctx *gin.Context) {
 	var req _map.UidList
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if data, err := admin_server.DelResources(ctx, req); err != nil {
@@ -326,16 +325,16 @@ func DelResources(ctx *gin.Context) {
 func UpdateResources(ctx *gin.Context) {
 	var req _map.ResourcesReq
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	id := xcast.ToUint32(ctx.Param("id"))
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if id <= 0 {
-		httpError.HandleBadRequest(ctx, "id is not cant 0")
+		R.HandleBadRequest(ctx, "id is not cant 0")
 		return
 	}
 	if err := admin_server.UpdateResources(ctx, id, req); err != nil {
@@ -349,11 +348,11 @@ func UpdateResources(ctx *gin.Context) {
 func AddResources(ctx *gin.Context) {
 	var req _map.ResourcesReq
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if err := admin_server.AddResources(ctx, req); err != nil {
@@ -368,7 +367,7 @@ func AddResources(ctx *gin.Context) {
 func GetPermissionAndMenuByRoles(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if data, err := auth_server.GetPermissionAndMenuByRoles(ctx, []string{id}); err != nil {
@@ -382,11 +381,11 @@ func GetPermissionAndMenuByRoles(ctx *gin.Context) {
 func UpdateRolesMenuAndResources(ctx *gin.Context) {
 	var req _map.UpdateRolesMenuAndResourcesReq
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if err := admin_server.UpdateRolesMenuAndResources(ctx, req); err != nil {
@@ -401,11 +400,11 @@ func UpdateRolesMenuAndResources(ctx *gin.Context) {
 func AddRoles(ctx *gin.Context) {
 	var req _map.RoleInfoReq
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if err := admin_server.AddRoles(ctx, req); err != nil {
@@ -420,11 +419,11 @@ func AddRoles(ctx *gin.Context) {
 func DelRoles(ctx *gin.Context) {
 	var req _map.UidList
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if data, err := admin_server.DelRoles(ctx, req); err != nil {
@@ -439,16 +438,16 @@ func DelRoles(ctx *gin.Context) {
 func UpdateRoles(ctx *gin.Context) {
 	var req _map.RoleInfoReq
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	id := xcast.ToUint32(ctx.Param("id"))
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if id <= 0 {
-		httpError.HandleBadRequest(ctx, "id is not cant 0")
+		R.HandleBadRequest(ctx, "id is not cant 0")
 		return
 	}
 	if err := admin_server.UpdateRoles(ctx, id, req); err != nil {
@@ -464,12 +463,12 @@ func UpdateRoles(ctx *gin.Context) {
 func AgencyList(ctx *gin.Context) {
 	var req = _map.DefaultPageRequest
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	parentId := xcast.ToUint32(ctx.Param("pid"))
 	if parentId < 0 {
-		httpError.HandleBadRequest(ctx, "pid is greater than 0")
+		R.HandleBadRequest(ctx, "pid is greater than 0")
 		return
 	}
 	if data, err := admin_server.AgencyList(ctx, parentId, req); err != nil {
@@ -483,11 +482,11 @@ func AgencyList(ctx *gin.Context) {
 func DelAgency(ctx *gin.Context) {
 	var req _map.UidList
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if data, err := admin_server.DelAgency(ctx, req); err != nil {
@@ -502,16 +501,16 @@ func DelAgency(ctx *gin.Context) {
 func UpdateAgency(ctx *gin.Context) {
 	var req _map.AgencyInfoReq
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	id := xcast.ToUint32(ctx.Param("id"))
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if id <= 0 {
-		httpError.HandleBadRequest(ctx, "id is not cant 0")
+		R.HandleBadRequest(ctx, "id is not cant 0")
 		return
 	}
 	if err := admin_server.UpdateAgency(ctx, id, req); err != nil {
@@ -526,11 +525,11 @@ func UpdateAgency(ctx *gin.Context) {
 func AddAgency(ctx *gin.Context) {
 	var req _map.AgencyInfoReq
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if get, ok := ctx.Get("Uid"); ok {
@@ -541,7 +540,7 @@ func AddAgency(ctx *gin.Context) {
 			R.Ok(ctx, nil)
 		}
 	} else {
-		httpError.HandleForbidden(ctx, nil)
+		R.HandleForbidden(ctx)
 	}
 	return
 }
@@ -550,11 +549,11 @@ func AddAgency(ctx *gin.Context) {
 func RecoverDelAgency(ctx *gin.Context) {
 	var req _map.UidList
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if data, err := admin_server.RecoverDelAgency(ctx, req); err != nil {
@@ -569,15 +568,15 @@ func RecoverDelAgency(ctx *gin.Context) {
 func UpdateAgencyStatus(ctx *gin.Context) {
 	var req _map.UpdateStatus
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if req.Uid <= 0 || (req.Status != 1 && req.Status != 2) {
-		httpError.HandleBadRequest(ctx, "id >= 0 or status error")
+		R.HandleBadRequest(ctx, "id >= 0 or status error")
 		return
 	}
 	if err := admin_server.UpdateAgencyStatus(ctx, xcast.ToUint32(req.Uid), req.Status); err != nil {
@@ -592,11 +591,11 @@ func UpdateAgencyStatus(ctx *gin.Context) {
 func RemoveAgency(ctx *gin.Context) {
 	var req _map.UidList
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if data, err := admin_server.RemoveAgency(ctx, req); err != nil {
@@ -611,15 +610,15 @@ func RemoveAgency(ctx *gin.Context) {
 func ListUserByJoinAgency(ctx *gin.Context) {
 	var req _map.UpdateStatus
 	if err := ctx.ShouldBind(&req); err != nil {
-		httpError.HandleBadRequest(ctx, nil)
+		R.HandleBadRequest(ctx, nil)
 		return
 	}
 	if err := xvalidator.Struct(req); err != nil {
-		httpError.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
+		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
 	if req.Uid <= 0 || (req.Status != 1 && req.Status != 2) {
-		httpError.HandleBadRequest(ctx, "id >= 0 or status error")
+		R.HandleBadRequest(ctx, "id >= 0 or status error")
 		return
 	}
 	if data, err := admin_server.ListUserByJoinAgency(ctx, xcast.ToUint32(req.Uid), req.Status); err != nil {
