@@ -1,0 +1,50 @@
+version: "3"
+services:
+  ndisk-auth:
+    container_name: ndisk-authority
+    image: yangzzzzzz/ndisk-authority:0.1
+    restart: always
+    ports:
+      - 5646:5646
+      - 8894:8894
+    command: /app/authority run -c=etcd://ip:2379?key=ndisk/dev/authority
+    networks:
+      - ndisk-network
+  ndisk-file:
+    container_name: ndisk-file
+    image: yangzzzzzz/ndisk-nfile:0.1
+    restart: always
+    ports:
+      - 1124:1124
+      - 7771:7771
+      - 7989:7989
+    command: /app/nfile run -c=etcd://ip:2379?key=ndisk/dev/nfile
+    networks:
+      - ndisk-network
+  ndisk-user:
+    container_name: ndisk-user
+    image: yangzzzzzz/ndisk-nuser:0.1
+    restart: always
+    ports:
+      - 8093:8093
+      - 4569:4569
+    command: /app/nuser run -c=etcd://ip:2379?key=ndisk/dev/nuser
+    networks:
+      - ndisk-network
+  ndisk-getway:
+    container_name: ndisk-getway
+    image: yangzzzzzz/ndisk-getway:0.1
+    restart: always
+    ports:
+      - 1234:1234
+      - 6789:6789
+    depends_on:
+      - ndisk-user
+      - ndisk-file
+      - ndisk-auth
+    command: /app/getway run -c=etcd://ip:2379?key=ndisk/dev/getway
+    networks:
+      - ndisk-network
+networks:
+  ndisk-network:
+    driver: bridge
