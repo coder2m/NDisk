@@ -51,6 +51,7 @@ func Start(c *gin.Context) {
 
 	service.SetBlock(file)
 	service.SetFile(file)
+	file.SliceSize()
 
 	if err = file.Add(); err != nil {
 		R.Error(c, err.Error())
@@ -59,9 +60,9 @@ func Start(c *gin.Context) {
 
 	R.Ok(c, _map.UploadStartRes{
 		FileId:    file.ID,
-		SecTrans:  true,
+		SecTrans:  false,
 		BlockSize: file.BlockSize,
-		SliceSize: file.SliceSize(),
+		SliceSize: file.SliceCount,
 	})
 	return
 }

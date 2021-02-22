@@ -21,6 +21,7 @@ type (
 		FileRealPath string
 		BlockSize    uint64
 		Creator      uint64
+		SliceCount   uint64
 	}
 )
 
@@ -47,8 +48,8 @@ func (f *File) Add() (err error) {
 	return
 }
 
-func (f *File) SliceSize() uint64 {
-	return (f.Size + f.BlockSize - 1) / f.BlockSize
+func (f *File) SliceSize() {
+	f.SliceCount = (f.Size + f.BlockSize - 1) / f.BlockSize
 }
 
 func (f *File) FullPath() string {
