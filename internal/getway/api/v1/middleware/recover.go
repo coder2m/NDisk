@@ -8,9 +8,9 @@ package middleware
 import (
 	"bytes"
 	"fmt"
+	R "github.com/myxy99/ndisk/pkg/response"
 	"io/ioutil"
 	"net"
-	"net/http"
 	"os"
 	"runtime"
 	"strings"
@@ -57,7 +57,8 @@ func RecoverMiddleware(slowQueryThresholdInMilli time.Duration) gin.HandlerFunc 
 					c.Abort()
 					return
 				}
-				c.AbortWithStatus(http.StatusInternalServerError)
+				R.HandleInternalError(c)
+				c.Abort()
 				return
 			}
 			fields = append(fields,

@@ -94,7 +94,7 @@ func Upload(c *gin.Context) {
 		return
 	}
 
-	if header.HashCode != utils.Encrypto(header.HashType, sliceData) {
+	if header.HashCode != utils.Encrypt(header.HashType, sliceData) {
 		R.Error(c, errors.New("hash error"))
 		return
 	}

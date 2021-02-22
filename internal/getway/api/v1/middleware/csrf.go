@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"crypto/subtle"
+	R "github.com/myxy99/ndisk/pkg/response"
 
 	"github.com/gin-gonic/gin"
-	"github.com/myxy99/ndisk/internal/getway/error/httpError"
 	"github.com/myxy99/ndisk/pkg/constant"
 	xrand "github.com/myxy99/ndisk/pkg/rand"
 )
@@ -23,12 +23,12 @@ func CSRF() gin.HandlerFunc {
 		default:
 			clientToken := c.Request.Header.Get("X-CSRF-TOKEN")
 			if clientToken == "" {
-				httpError.HandleForbidden(c, nil)
+				R.HandleForbidden(c)
 				c.Abort()
 				return
 			}
 			if !validateCSRFToken(token, clientToken) {
-				httpError.HandleForbidden(c, nil)
+				R.HandleForbidden(c)
 				c.Abort()
 				return
 			}

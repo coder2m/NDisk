@@ -1,0 +1,23 @@
+version: "3"
+services:
+  ndiskprometheus:
+    container_name: ndisk-prometheus
+    image: prom/prometheus
+    restart: always
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - code-prom-network
+  ndiskgrafana:
+    container_name: ndisk-grafana
+    image: grafana/grafana
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - code-prom-network
+networks:
+  code-prom-network:
+    driver: bridge

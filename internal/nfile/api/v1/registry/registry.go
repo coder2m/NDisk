@@ -1,6 +1,7 @@
 package registry
 
 import (
+	R "github.com/myxy99/ndisk/pkg/response"
 	"sync"
 
 	"github.com/gin-gonic/gin"
@@ -29,6 +30,7 @@ func Engine() *gin.Engine {
 	once.Do(func() {
 		gin.SetMode(gin.ReleaseMode)
 		router = gin.Default()
+		router.NoRoute(R.HandleNotFound)
 		router.Use(middleware.GetHeader())
 		regFileHandler(router)
 	})

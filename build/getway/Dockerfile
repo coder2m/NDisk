@@ -1,6 +1,11 @@
 FROM golang:1.14-alpine AS builder
 RUN apk update && mkdir /app
 WORKDIR /app
+#ENV GOPROXY https://goproxy.cn
+ENV GO111MODULE on
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
 COPY . /app
 RUN CGO_ENABLED=0 go build -o  dist/getway -a -ldflags "-w -s" ./cmd/getway
 
@@ -22,7 +27,5 @@ RUN apk update \
   && mkdir /app
 WORKDIR /app
 COPY --from=builder /app/dist/getway /app/getway
-
-EXPOSE 80
 
 CMD ["/app/getway"]

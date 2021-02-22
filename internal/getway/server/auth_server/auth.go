@@ -169,8 +169,8 @@ func GetPermissionAndMenuByRoles(ctx context.Context, roles []string) (map[strin
 		res, _ := xclient.AuthorityServer.GetPermissionAndMenuByRoles(ctx, &AuthorityPb.Target{
 			To: role,
 		})
-		var menusList = make([]_map.MenuInfoRes, len(res.Menus))
-		for i, menu := range res.Menus {
+		var menusList = make([]_map.MenuInfoRes, len(res.GetMenus()))
+		for i, menu := range res.GetMenus() {
 			menusList[i] = _map.MenuInfoRes{
 				Id:          xcast.ToUint32(menu.Id),
 				ParentId:    xcast.ToUint32(menu.ParentId),
@@ -180,10 +180,7 @@ func GetPermissionAndMenuByRoles(ctx context.Context, roles []string) (map[strin
 				IconClass:   menu.IconClass,
 			}
 		}
-		data[role] = _map.RolesInfoRes{
-			Name:  res.Name,
-			Menus: menusList,
-		}
+		data[role] = menusList
 	}
 	return data, nil
 }
