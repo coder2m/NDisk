@@ -61,11 +61,13 @@ func PtrRange(ptr interface{}, handler func(t StructField, v Value) error) error
 
 	for i := 0; i < t.NumField(); i++ {
 		var (
-			currField = value.Field(i)
-			tf        = t.Field(i)
+			fv = value.Field(i)
+			ft = t.Field(i)
 		)
-		if err := handler(tf, currField); err != nil {
-			return err
+		if fv.CanInterface() { //过滤不可访问的属性
+			if err := handler(ft, fv); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
