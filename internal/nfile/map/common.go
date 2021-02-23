@@ -32,12 +32,12 @@ type (
 	}
 
 	Header struct {
-		Token      string `header:"token"`
-		FileId     uint   `header:"file_id"`
-		SliceIndex int    `header:"slice_index"`
-		Size       uint   `header:"size"`
-		HashType   string `header:"hash_type"`
-		HashCode   string `header:"hash_code"`
+		Token      string `header:"Token"`
+		FileId     uint   `header:"File-Id"`
+		SliceIndex int    `header:"Slice-Index"`
+		Size       uint   `header:"Size"`
+		HashType   string `header:"Hash-Type"`
+		HashCode   string `header:"Hash-Code"`
 	}
 )
 

@@ -2,7 +2,7 @@ package handle
 
 import (
 	"fmt"
-	"net/http"
+	"io"
 
 	"github.com/gin-gonic/gin"
 
@@ -41,12 +41,12 @@ func Download(c *gin.Context) {
 		return
 	}
 
-	c.Header("file_id", fmt.Sprintf("%d", fileSilce.FileId))
-	c.Header("slice_index", fmt.Sprintf("%d", fileSilce.Index))
-	c.Header("size", fmt.Sprintf("%d", fileSilce.Size))
-	c.Header("hash_type", fileSilce.HashType)
-	c.Header("hash_code", fileSilce.HashCode)
+	c.Header("File-Id", fmt.Sprintf("%d", fileSilce.FileId))
+	c.Header("Slice-Index", fmt.Sprintf("%d", fileSilce.Index))
+	c.Header("Size", fmt.Sprintf("%d", fileSilce.Size))
+	c.Header("Hash-Type", fileSilce.HashType)
+	c.Header("Hash-Code", fileSilce.HashCode)
+	c.Header("Content-Type", "slice-download")
 
-	c.String(http.StatusOK, "slice-download", utils.Base64DEncode(data))
-
+	io.WriteString(c.Writer, utils.Base64DEncode(data))
 }
