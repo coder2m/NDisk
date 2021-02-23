@@ -102,7 +102,7 @@ func (s *Server) invoker() {
 	)
 	s.err = xinvoker.Init()
 	db := model.MainDB()
-	xlog.Infow("AutoMigrate", "model.File", db.AutoMigrate(&model.File{}))
+	xlog.Infow("AutoMigrate", "model.File", db.AutoMigrate(&model.File{},&model.FileSlice{}))
 }
 
 func (s *Server) initHttpServer() {
