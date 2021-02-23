@@ -32,7 +32,7 @@ func Engine() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 		router = gin.Default()
 		router.NoRoute(R.HandleNotFound)
-		router.Use(middleware.GetHeader())
+		router.Use(middleware.Auth(), middleware.GetHeader())
 		regFileHandler(router)
 	})
 	return router

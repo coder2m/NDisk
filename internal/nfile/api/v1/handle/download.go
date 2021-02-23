@@ -26,6 +26,10 @@ func Download(c *gin.Context) {
 		return
 	}
 
+	if file.Status == 0 {
+		R.Error(c, "file Upload not OK")
+	}
+
 	if header.SliceIndex == 0 {
 		R.Ok(c, file)
 		return

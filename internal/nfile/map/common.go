@@ -1,12 +1,9 @@
 package _map
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"strings"
-
-	xclient "github.com/myxy99/ndisk/internal/nfile/client"
 )
 
 const (
@@ -32,7 +29,6 @@ type (
 	}
 
 	Header struct {
-		Token      string `header:"Token"`
 		FileId     uint   `header:"File-Id"`
 		SliceIndex int    `header:"Slice-Index"`
 		Size       uint   `header:"Size"`
@@ -41,15 +37,7 @@ type (
 	}
 )
 
-func (h *Header) GetUid() uint64 {
-	uinfo, _ := xclient.GetUserInfoByToken(context.Background(), h.Token)
-	return uinfo.GetUid()
-}
-
 func (h *Header) Validate() error {
-	if len(h.Token) == 0 {
-		return errors.New("token is required")
-	}
 	if hType := h.HashType; len(hType) > 0 {
 		switch strings.ToUpper(hType) {
 		case "md5":

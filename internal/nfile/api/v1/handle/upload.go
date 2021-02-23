@@ -40,12 +40,13 @@ func Start(c *gin.Context) {
 		R.Error(c, err.Error())
 		return
 	}
+	uid := c.GetInt64("Uid")
 	file = &model.File{
 		Model:   gorm.Model{},
 		Name:    param.Name,
 		Size:    param.Size,
 		Type:    param.Type,
-		Creator: header.GetUid(),
+		Creator: uint64(uid),
 	}
 	_ = file.SetHash(hashType, hashCode)
 
