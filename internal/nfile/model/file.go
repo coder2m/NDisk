@@ -12,18 +12,17 @@ import (
 type (
 	File struct {
 		gorm.Model
-		Name         string
-		Size         uint64
-		Type         string
-		Md5          string
-		Sha1         string
-		Sha256       string
-		FileSystem   uint8
-		FileRealPath string
-		BlockSize    uint64
-		Creator      uint64
-		SliceCount   uint64
-		Status       uint8
+		Name       string
+		Size       uint64
+		Type       string
+		Md5        string
+		Sha1       string
+		Sha256     string
+		FileSystem uint8
+		BlockSize  uint64
+		Creator    uint64
+		SliceCount uint64
+		Status     uint8
 	}
 
 	FileSlice struct {

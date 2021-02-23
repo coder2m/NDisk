@@ -103,17 +103,12 @@ func CurrBlock() uint64 {
 	return MB
 }
 func CurrentFileSystem() uint8 {
-	return 0
+	return FileSystemDisk
 }
-func CurrentFileSystemBasePath() string {
-	return ""
-}
-
 func SetBlock(f *model.File) {
 	f.BlockSize = CurrBlock()
 }
 
 func SetFile(f *model.File) {
 	f.FileSystem = CurrentFileSystem()
-	f.FileRealPath = CurrentFileSystemBasePath()
 }
