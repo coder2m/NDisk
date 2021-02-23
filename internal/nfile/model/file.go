@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/myxy99/component/xcfg"
+	"github.com/myxy99/component/xlog"
 	"gorm.io/gorm"
 )
 
@@ -22,11 +23,25 @@ type (
 		BlockSize    uint64
 		Creator      uint64
 		SliceCount   uint64
+		Status       uint8
+	}
+
+	FileSlice struct {
+		gorm.Model
+		FileId   uint
+		HashType string
+		HashCode string
+		Size     uint64
+		Index    uint
 	}
 )
 
 func (f *File) TableName() string {
 	return "db_common_file"
+}
+
+func (f *FileSlice) TableName() string {
+	return "db_common_file_slice"
 }
 
 func (f *File) SetHash(ht, hc string) (err error) {
@@ -61,4 +76,38 @@ func (f *File) TmpFilePath(idx int) string {
 }
 func (f *File) TmpMergeFilePath() string {
 	return fmt.Sprintf("%s/%d/%d/final_file", xcfg.GetString("tmp_file_path"), f.FileSystem, f.ID)
+}
+func (f *File) NewSlice(idx uint, hashType, hashCode string, size uint64) *FileSlice {
+	return &FileSlice{
+		FileId:   f.ID,
+		HashType: hashType,
+		HashCode: hashCode,
+		Size:     size,
+		Index:    idx,
+	}
+}
+
+func (f *File) CheckSlice(idx uint) (count int64) {
+	fs := &FileSlice{}
+	if err := MainDB().Table(fs.TableName()).Where("file_id=? and index=?", f.ID, idx).Count(&count).Error; err != nil {
+		xlog.Errorw("checkout slice ", "error", err.Error())
+	}
+	return
+}
+
+func (f *File) GetSlice(idx uint) (slice FileSlice, err error) {
+	if err = MainDB().Table(slice.TableName()).Where("file_id=? and index=?", f.ID, idx).Take(&slice).Error; err != nil {
+		xlog.Errorw("get slice ", "error", err.Error())
+	}
+	return
+}
+
+func (f *FileSlice) Add() (err error) {
+	err = MainDB().Create(f).Error
+	return
+}
+
+func (f *File) SetStatus(status uint8) (err error) {
+	err = MainDB().Table(f.TableName()).Where("id=?", f.ID).Update("status", status).Error
+	return
 }

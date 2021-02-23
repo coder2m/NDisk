@@ -24,6 +24,7 @@ func regFileHandler(e *gin.Engine) {
 	g.POST("/start", handle.Start)
 	g.POST("/upload", handle.Upload)
 	g.POST("/end", handle.End)
+	g.GET("/download", handle.Download)
 }
 
 func Engine() *gin.Engine {

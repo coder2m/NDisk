@@ -13,6 +13,9 @@ import (
 func Base64Decode(data string) ([]byte, error) {
 	return base64.StdEncoding.DecodeString(data)
 }
+func Base64DEncode(data []byte) string {
+	return base64.StdEncoding.EncodeToString(data)
+}
 
 func Encrypt(htype string, data []byte) string {
 	var h hash.Hash

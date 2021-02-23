@@ -1,10 +1,9 @@
 package service
 
 import (
+	"bytes"
 	"errors"
-	"io/ioutil"
 
-	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/myxy99/component/xinvoker/oss/standard"
 
 	xclient "github.com/myxy99/ndisk/internal/nfile/client"
@@ -21,14 +20,23 @@ const (
 	FileSystemTfs
 )
 
+const (
+	CONV = 1024
+	B    = 1
+	KB   = CONV * B
+	MB   = CONV * KB
+	GB   = CONV * MB
+	TB   = CONV * GB
+)
+
 func WriteFileSliceData(f *model.File, data []byte, idx int) error {
-	return ioutil.WriteFile(f.TmpFilePath(idx), data, oss.FilePermMode)
+	return FileSave(f.FileSystem, f.TmpFilePath(idx), data)
 }
 
-func OnlyMergeFile(f *model.File) error {
+func MergeFile(f *model.File) error {
 	data := make([]byte, 0)
 	for i := 0; i < int(f.SliceCount); i++ {
-		tmp, err := ioutil.ReadFile(f.TmpFilePath(i))
+		tmp, err := FileGet(f.FileSystem, f.TmpFilePath(i))
 		if err != nil {
 			return err
 		}
@@ -36,7 +44,7 @@ func OnlyMergeFile(f *model.File) error {
 	}
 
 	if len(data) != int(f.Size) {
-		return errors.New("size valide error")
+		return errors.New("size validate error")
 	}
 	var (
 		hashType string
@@ -56,15 +64,15 @@ func OnlyMergeFile(f *model.File) error {
 	if utils.Encrypt(hashType, data) != hashCode {
 		return errors.New(hashType + " validate error")
 	}
-	return ioutil.WriteFile(f.TmpMergeFilePath(), data, oss.FilePermMode)
-}
-
-func MergeFile(f *model.File) error {
-	if err := OnlyMergeFile(f); err != nil {
+	if err := f.SetStatus(1); err != nil {
 		return err
 	}
+	return FileSave(f.FileSystem, f.TmpMergeFilePath(), data)
+}
+
+func FileClient(sys uint8) standard.Oss {
 	var client standard.Oss
-	switch f.FileSystem {
+	switch sys {
 	case FileSystemDisk:
 		client = xclient.Disk()
 	case FileSystemOss:
@@ -78,13 +86,21 @@ func MergeFile(f *model.File) error {
 	case FileSystemTfs:
 		client = xclient.Tfs()
 	default:
-		return errors.New("file system not find")
+		panic("file system not find")
 	}
-	return client.PutObjectFromFile(f.FileRealPath, f.TmpMergeFilePath())
+	return client
+}
+
+func FileSave(sys uint8, path string, data []byte) error {
+	return FileClient(sys).PutObject(path, bytes.NewReader(data))
+}
+
+func FileGet(sys uint8, path string) (data []byte, err error) {
+	return FileClient(sys).GetObject(path)
 }
 
 func CurrBlock() uint64 {
-	return 10
+	return MB
 }
 func CurrentFileSystem() uint8 {
 	return 0

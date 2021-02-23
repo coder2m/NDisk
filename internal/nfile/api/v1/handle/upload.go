@@ -80,6 +80,12 @@ func Upload(c *gin.Context) {
 		R.Error(c, err.Error())
 		return
 	}
+
+	if file.CheckSlice(uint(header.SliceIndex)) > 0 {
+		R.Error(c, "slice exists")
+		return
+	}
+
 	if rawData, err = c.GetRawData(); err != nil {
 		R.Error(c, err.Error())
 		return
@@ -99,6 +105,13 @@ func Upload(c *gin.Context) {
 		R.Error(c, errors.New("hash error"))
 		return
 	}
+
+	slice := file.NewSlice(uint(header.SliceIndex), header.HashType, header.HashCode, uint64(header.Size))
+	if err = slice.Add(); err != nil {
+		R.Error(c, err.Error())
+		return
+	}
+
 	if err = service.WriteFileSliceData(file, sliceData, header.SliceIndex); err != nil {
 		R.Error(c, err.Error())
 		return
@@ -121,5 +134,6 @@ func End(c *gin.Context) {
 		R.Error(c, err.Error())
 		return
 	}
+
 	R.Ok(c, nil)
 }
