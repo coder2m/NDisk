@@ -67,10 +67,6 @@ func (f *File) SliceSize() {
 	f.SliceCount = (f.Size + f.BlockSize - 1) / f.BlockSize
 }
 
-func (f *File) FullPath() string {
-	return fmt.Sprintf("%s/%d", f.FileRealPath, f.ID)
-}
-
 func (f *File) TmpFilePath(idx int) string {
 	return fmt.Sprintf("%s/%d/%d/%d", xcfg.GetString("tmp_file_path"), f.FileSystem, f.ID, idx)
 }
