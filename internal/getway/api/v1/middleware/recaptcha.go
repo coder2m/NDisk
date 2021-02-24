@@ -13,6 +13,8 @@ import (
 
 func Recaptcha() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		ctx.Next()
+		return
 		if !recaptcha.Verify(ctx.GetHeader("captcha")).Success {
 			ctx.Abort()
 			R.HandleCaptchaError(ctx)

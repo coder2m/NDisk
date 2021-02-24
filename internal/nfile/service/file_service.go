@@ -103,7 +103,7 @@ func CurrBlock() uint64 {
 	return MB
 }
 func CurrentFileSystem() uint8 {
-	return FileSystemDisk
+	return FileSystemOss
 }
 func SetBlock(f *model.File) {
 	f.BlockSize = CurrBlock()
