@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/myxy99/component/xmonitor"
+	"github.com/coder2m/component/xmonitor"
 )
 
 func extractAID(ctx *gin.Context) string {

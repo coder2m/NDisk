@@ -9,13 +9,13 @@ import (
 	"context"
 	"errors"
 
-	"github.com/myxy99/component/pkg/xcast"
-	xclient "github.com/myxy99/ndisk/internal/getway/client"
-	xerror "github.com/myxy99/ndisk/internal/getway/error"
-	_map "github.com/myxy99/ndisk/internal/getway/map"
-	AuthorityPb "github.com/myxy99/ndisk/pkg/pb/authority"
-	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
-	xrpc "github.com/myxy99/ndisk/pkg/rpc"
+	"github.com/coder2m/component/pkg/xcast"
+	xclient "github.com/coder2m/ndisk/internal/getway/client"
+	xerror "github.com/coder2m/ndisk/internal/getway/error"
+	_map "github.com/coder2m/ndisk/internal/getway/map"
+	AuthorityPb "github.com/coder2m/ndisk/pkg/pb/authority"
+	NUserPb "github.com/coder2m/ndisk/pkg/pb/nuser"
+	xrpc "github.com/coder2m/ndisk/pkg/rpc"
 )
 
 func AccountLogin(ctx context.Context, login _map.AccountLogin) (interface{}, *xerror.Err) {

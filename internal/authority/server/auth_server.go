@@ -6,14 +6,14 @@ import (
 	"strings"
 
 	"github.com/go-sql-driver/mysql"
-	xapp "github.com/myxy99/component"
-	"github.com/myxy99/component/pkg/xcast"
-	"github.com/myxy99/component/xlog"
+	xapp "github.com/coder2m/component"
+	"github.com/coder2m/component/pkg/xcast"
+	"github.com/coder2m/component/xlog"
 	"gorm.io/gorm"
 
-	xclient "github.com/myxy99/ndisk/internal/authority/client"
-	_map "github.com/myxy99/ndisk/internal/authority/map"
-	"github.com/myxy99/ndisk/internal/authority/model"
+	xclient "github.com/coder2m/ndisk/internal/authority/client"
+	_map "github.com/coder2m/ndisk/internal/authority/map"
+	"github.com/coder2m/ndisk/internal/authority/model"
 )
 
 var (

@@ -1,13 +1,13 @@
 package xclient
 
 import (
-	"github.com/myxy99/component/pkg/xconsole"
-	"github.com/myxy99/component/pkg/xdefer"
-	"github.com/myxy99/component/xcfg"
-	"github.com/myxy99/ndisk/pkg/constant"
-	AuthorityPb "github.com/myxy99/ndisk/pkg/pb/authority"
-	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
-	xrpc "github.com/myxy99/ndisk/pkg/rpc"
+	"github.com/coder2m/component/pkg/xconsole"
+	"github.com/coder2m/component/pkg/xdefer"
+	"github.com/coder2m/component/xcfg"
+	"github.com/coder2m/ndisk/pkg/constant"
+	AuthorityPb "github.com/coder2m/ndisk/pkg/pb/authority"
+	NUserPb "github.com/coder2m/ndisk/pkg/pb/nuser"
+	xrpc "github.com/coder2m/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
 )
 

@@ -6,11 +6,11 @@
 package middleware
 
 import (
-	R "github.com/myxy99/ndisk/pkg/response"
+	R "github.com/coder2m/ndisk/pkg/response"
 
 	"github.com/gin-gonic/gin"
-	xclient "github.com/myxy99/ndisk/internal/getway/client"
-	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
+	xclient "github.com/coder2m/ndisk/internal/getway/client"
+	NUserPb "github.com/coder2m/ndisk/pkg/pb/nuser"
 )
 
 func Auth() gin.HandlerFunc {

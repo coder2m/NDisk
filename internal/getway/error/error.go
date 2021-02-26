@@ -6,7 +6,7 @@
 package xerror
 
 import (
-	"github.com/myxy99/component/pkg/xcode"
+	"github.com/coder2m/component/pkg/xcode"
 )
 
 type Err struct {

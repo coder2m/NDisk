@@ -1,8 +1,8 @@
 package registry
 
 import (
-	ah "github.com/myxy99/ndisk/internal/getway/api/v1/handle/admin"
-	"github.com/myxy99/ndisk/internal/getway/api/v1/middleware"
+	ah "github.com/coder2m/ndisk/internal/getway/api/v1/handle/admin"
+	"github.com/coder2m/ndisk/internal/getway/api/v1/middleware"
 )
 
 func init() {

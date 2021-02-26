@@ -1,8 +1,8 @@
 package app
 
 import (
-	"github.com/myxy99/ndisk/cmd"
-	s "github.com/myxy99/ndisk/internal/nfile"
+	"github.com/coder2m/ndisk/cmd"
+	s "github.com/coder2m/ndisk/internal/nfile"
 	"sync"
 )
 

@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/myxy99/ndisk/internal/nuser/server/token"
+	"github.com/coder2m/ndisk/internal/nuser/server/token"
 )
 
 type key string

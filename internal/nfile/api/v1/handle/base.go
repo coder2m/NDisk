@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	_map "github.com/myxy99/ndisk/internal/nfile/map"
-	"github.com/myxy99/ndisk/internal/nfile/model"
+	_map "github.com/coder2m/ndisk/internal/nfile/map"
+	"github.com/coder2m/ndisk/internal/nfile/model"
 )
 
 func GetHeader(c *gin.Context) *_map.Header {

@@ -2,12 +2,12 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/myxy99/component/pkg/xcast"
-	"github.com/myxy99/component/pkg/xvalidator"
-	_map "github.com/myxy99/ndisk/internal/getway/map"
-	"github.com/myxy99/ndisk/internal/getway/server/admin_server"
-	"github.com/myxy99/ndisk/internal/getway/server/auth_server"
-	R "github.com/myxy99/ndisk/pkg/response"
+	"github.com/coder2m/component/pkg/xcast"
+	"github.com/coder2m/component/pkg/xvalidator"
+	_map "github.com/coder2m/ndisk/internal/getway/map"
+	"github.com/coder2m/ndisk/internal/getway/server/admin_server"
+	"github.com/coder2m/ndisk/internal/getway/server/auth_server"
+	R "github.com/coder2m/ndisk/pkg/response"
 )
 
 // 管理员创建用户

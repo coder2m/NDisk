@@ -1,13 +1,13 @@
 package registry
 
 import (
-	R "github.com/myxy99/ndisk/pkg/response"
+	R "github.com/coder2m/ndisk/pkg/response"
 	"sync"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/myxy99/ndisk/internal/nfile/api/v1/handle"
-	"github.com/myxy99/ndisk/internal/nfile/api/v1/middleware"
+	"github.com/coder2m/ndisk/internal/nfile/api/v1/handle"
+	"github.com/coder2m/ndisk/internal/nfile/api/v1/middleware"
 )
 
 var (

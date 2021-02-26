@@ -7,14 +7,14 @@ package middleware
 
 import (
 	"errors"
-	R "github.com/myxy99/ndisk/pkg/response"
+	R "github.com/coder2m/ndisk/pkg/response"
 
 	"github.com/gin-gonic/gin"
-	"github.com/myxy99/component/pkg/xcast"
-	xclient "github.com/myxy99/ndisk/internal/getway/client"
-	_map "github.com/myxy99/ndisk/internal/getway/map"
-	AuthorityPb "github.com/myxy99/ndisk/pkg/pb/authority"
-	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
+	"github.com/coder2m/component/pkg/xcast"
+	xclient "github.com/coder2m/ndisk/internal/getway/client"
+	_map "github.com/coder2m/ndisk/internal/getway/map"
+	AuthorityPb "github.com/coder2m/ndisk/pkg/pb/authority"
+	NUserPb "github.com/coder2m/ndisk/pkg/pb/nuser"
 )
 
 func Auth() gin.HandlerFunc {

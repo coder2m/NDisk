@@ -1,7 +1,7 @@
 
 # NDisk
 
-![go](https://github.com/myxy99/NDisk/workflows/go/badge.svg?branch=main)
+![go](https://github.com/coder2m/NDisk/workflows/go/badge.svg?branch=main)
 
 ### nuser 用户服务
 

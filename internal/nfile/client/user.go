@@ -3,7 +3,7 @@ package xclient
 import (
 	"context"
 
-	NUserPb "github.com/myxy99/ndisk/pkg/pb/nuser"
+	NUserPb "github.com/coder2m/ndisk/pkg/pb/nuser"
 )
 
 func GetUserInfoByToken(ctx context.Context, token string) (*NUserPb.UserInfo, error) {

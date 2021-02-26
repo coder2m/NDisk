@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"errors"
 
-	"github.com/myxy99/component/xinvoker/oss/standard"
+	"github.com/coder2m/component/xinvoker/oss/standard"
 
-	xclient "github.com/myxy99/ndisk/internal/nfile/client"
-	"github.com/myxy99/ndisk/internal/nfile/model"
-	"github.com/myxy99/ndisk/pkg/utils"
+	xclient "github.com/coder2m/ndisk/internal/nfile/client"
+	"github.com/coder2m/ndisk/internal/nfile/model"
+	"github.com/coder2m/ndisk/pkg/utils"
 )
 
 const (

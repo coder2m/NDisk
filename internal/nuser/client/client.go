@@ -1,11 +1,11 @@
 package xclient
 
 import (
-	xemail "github.com/myxy99/component/xinvoker/email"
-	xsms "github.com/myxy99/component/xinvoker/sms"
-	"github.com/myxy99/ndisk/internal/nuser/model"
-	"github.com/myxy99/ndisk/internal/nuser/server/token"
-	redisToken "github.com/myxy99/ndisk/internal/nuser/server/token/redis"
+	xemail "github.com/coder2m/component/xinvoker/email"
+	xsms "github.com/coder2m/component/xinvoker/sms"
+	"github.com/coder2m/ndisk/internal/nuser/model"
+	"github.com/coder2m/ndisk/internal/nuser/server/token"
+	redisToken "github.com/coder2m/ndisk/internal/nuser/server/token/redis"
 )
 
 var (

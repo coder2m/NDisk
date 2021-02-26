@@ -5,7 +5,7 @@
 package validator
 
 import (
-	"github.com/myxy99/component/pkg/xvalidator"
+	"github.com/coder2m/component/pkg/xvalidator"
 )
 
 var RegisterValidation = map[string]*xvalidator.Register{

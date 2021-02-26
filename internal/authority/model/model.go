@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	gormadapter "github.com/casbin/gorm-adapter/v3"
-	xgorm "github.com/myxy99/component/xinvoker/gorm"
-	"github.com/myxy99/component/xlog"
+	xgorm "github.com/coder2m/component/xinvoker/gorm"
+	"github.com/coder2m/component/xlog"
 	_ "gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

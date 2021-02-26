@@ -6,9 +6,9 @@ import (
 	"errors"
 	"time"
 
-	"github.com/myxy99/component/pkg/xjson"
-	"github.com/myxy99/component/xcfg"
-	"github.com/myxy99/ndisk/pkg/aes"
+	"github.com/coder2m/component/pkg/xjson"
+	"github.com/coder2m/component/xcfg"
+	"github.com/coder2m/ndisk/pkg/aes"
 )
 
 const (

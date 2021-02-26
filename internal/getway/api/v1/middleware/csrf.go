@@ -2,11 +2,11 @@ package middleware
 
 import (
 	"crypto/subtle"
-	R "github.com/myxy99/ndisk/pkg/response"
+	R "github.com/coder2m/ndisk/pkg/response"
 
 	"github.com/gin-gonic/gin"
-	"github.com/myxy99/ndisk/pkg/constant"
-	xrand "github.com/myxy99/ndisk/pkg/rand"
+	"github.com/coder2m/ndisk/pkg/constant"
+	xrand "github.com/coder2m/ndisk/pkg/rand"
 )
 
 func CSRF() gin.HandlerFunc {

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/myxy99/component/xcfg"
-	"github.com/myxy99/component/xlog"
+	"github.com/coder2m/component/xcfg"
+	"github.com/coder2m/component/xlog"
 	"gorm.io/gorm"
 )
 

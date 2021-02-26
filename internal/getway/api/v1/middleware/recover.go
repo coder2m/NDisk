@@ -8,7 +8,7 @@ package middleware
 import (
 	"bytes"
 	"fmt"
-	R "github.com/myxy99/ndisk/pkg/response"
+	R "github.com/coder2m/ndisk/pkg/response"
 	"io/ioutil"
 	"net"
 	"os"
@@ -17,7 +17,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/myxy99/component/xlog"
+	"github.com/coder2m/component/xlog"
 	"go.uber.org/zap"
 )
 

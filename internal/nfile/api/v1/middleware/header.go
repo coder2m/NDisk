@@ -3,9 +3,9 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 
-	_map "github.com/myxy99/ndisk/internal/nfile/map"
-	R "github.com/myxy99/ndisk/pkg/response"
-	"github.com/myxy99/ndisk/pkg/utils"
+	_map "github.com/coder2m/ndisk/internal/nfile/map"
+	R "github.com/coder2m/ndisk/pkg/response"
+	"github.com/coder2m/ndisk/pkg/utils"
 )
 
 func GetHeader() gin.HandlerFunc {

@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/myxy99/component/pkg/xcolor"
-	"github.com/myxy99/component/pkg/xflag"
-	"github.com/myxy99/component/pkg/xsignals"
+	"github.com/coder2m/component/pkg/xcolor"
+	"github.com/coder2m/component/pkg/xflag"
+	"github.com/coder2m/component/pkg/xsignals"
 
-	"github.com/myxy99/ndisk/cmd/nuser/app"
+	"github.com/coder2m/ndisk/cmd/nuser/app"
 )
 
 //run -c=etcd://ip:2379?username=&password=&key=/dev/ndisk/config/user

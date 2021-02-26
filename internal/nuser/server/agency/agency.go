@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"github.com/go-sql-driver/mysql"
-	xapp "github.com/myxy99/component"
-	"github.com/myxy99/component/pkg/xcast"
-	"github.com/myxy99/component/xlog"
-	_map "github.com/myxy99/ndisk/internal/nuser/map"
-	"github.com/myxy99/ndisk/internal/nuser/model"
+	xapp "github.com/coder2m/component"
+	"github.com/coder2m/component/pkg/xcast"
+	"github.com/coder2m/component/xlog"
+	_map "github.com/coder2m/ndisk/internal/nuser/map"
+	"github.com/coder2m/ndisk/internal/nuser/model"
 	"gorm.io/gorm"
 )
 

@@ -9,17 +9,17 @@ import (
 	"context"
 	"errors"
 
-	xapp "github.com/myxy99/component"
-	"github.com/myxy99/component/pkg/xcast"
-	"github.com/myxy99/component/pkg/xcode"
-	"github.com/myxy99/component/pkg/xvalidator"
-	"github.com/myxy99/component/xlog"
+	xapp "github.com/coder2m/component"
+	"github.com/coder2m/component/pkg/xcast"
+	"github.com/coder2m/component/pkg/xcode"
+	"github.com/coder2m/component/pkg/xvalidator"
+	"github.com/coder2m/component/xlog"
 
-	xclient "github.com/myxy99/ndisk/internal/authority/client"
-	_map "github.com/myxy99/ndisk/internal/authority/map"
-	auth_server "github.com/myxy99/ndisk/internal/authority/server"
-	"github.com/myxy99/ndisk/pkg/pb/authority"
-	xrpc "github.com/myxy99/ndisk/pkg/rpc"
+	xclient "github.com/coder2m/ndisk/internal/authority/client"
+	_map "github.com/coder2m/ndisk/internal/authority/map"
+	auth_server "github.com/coder2m/ndisk/internal/authority/server"
+	"github.com/coder2m/ndisk/pkg/pb/authority"
+	xrpc "github.com/coder2m/ndisk/pkg/rpc"
 )
 
 type Server struct{}

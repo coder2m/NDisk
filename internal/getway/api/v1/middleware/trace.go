@@ -7,7 +7,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/myxy99/component/xtrace"
+	"github.com/coder2m/component/xtrace"
 )
 
 func XTrace() gin.HandlerFunc {
