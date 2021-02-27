@@ -4,9 +4,9 @@ import (
 	"crypto/subtle"
 	R "github.com/coder2m/ndisk/pkg/response"
 
-	"github.com/gin-gonic/gin"
 	"github.com/coder2m/ndisk/pkg/constant"
 	xrand "github.com/coder2m/ndisk/pkg/rand"
+	"github.com/gin-gonic/gin"
 )
 
 func CSRF() gin.HandlerFunc {

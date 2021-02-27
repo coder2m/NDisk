@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/coder2m/component/xmonitor"
+	"github.com/gin-gonic/gin"
 )
 
 func extractAID(ctx *gin.Context) string {

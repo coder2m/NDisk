@@ -16,9 +16,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/coder2m/component/xlog"
-	"go.uber.org/zap"
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -34,10 +33,10 @@ func RecoverMiddleware(slowQueryThresholdInMilli time.Duration) gin.HandlerFunc 
 		var fields = make([]xlog.Field, 0, 8)
 		var brokenPipe bool
 		defer func() {
-			fields = append(fields, zap.Float64("cost", time.Since(beg).Seconds()))
+			fields = append(fields, xlog.String("cost", time.Since(beg).String()))
 			if slowQueryThresholdInMilli > 0 {
 				if cost := time.Since(beg); cost > slowQueryThresholdInMilli {
-					fields = append(fields, zap.Float64("slow", cost.Seconds()))
+					fields = append(fields, xlog.String("slow", cost.String()))
 				}
 			}
 			if rec := recover(); rec != nil {
@@ -49,8 +48,8 @@ func RecoverMiddleware(slowQueryThresholdInMilli time.Duration) gin.HandlerFunc 
 					}
 				}
 				var err = rec.(error)
-				fields = append(fields, zap.ByteString("stack", stack(3)))
-				fields = append(fields, zap.String("err", err.Error()))
+				fields = append(fields, xlog.ByteString("stack", stack(3)))
+				fields = append(fields, xlog.String("err", err.Error()))
 				xlog.Error("access", fields...)
 				if brokenPipe {
 					_ = c.Error(err)
@@ -62,13 +61,13 @@ func RecoverMiddleware(slowQueryThresholdInMilli time.Duration) gin.HandlerFunc 
 				return
 			}
 			fields = append(fields,
-				zap.String("method", c.Request.Method),
-				zap.Int("code", c.Writer.Status()),
-				zap.Int("size", c.Writer.Size()),
-				zap.String("host", c.Request.Host),
-				zap.String("path", c.Request.URL.Path),
-				zap.String("ip", c.ClientIP()),
-				zap.String("err", c.Errors.ByType(gin.ErrorTypePrivate).String()),
+				xlog.String("method", c.Request.Method),
+				xlog.Int("code", c.Writer.Status()),
+				xlog.Int("size", c.Writer.Size()),
+				xlog.String("host", c.Request.Host),
+				xlog.String("path", c.Request.URL.Path),
+				xlog.String("ip", c.ClientIP()),
+				xlog.String("err", c.Errors.ByType(gin.ErrorTypePrivate).String()),
 			)
 			xlog.Info("access", fields...)
 		}()
