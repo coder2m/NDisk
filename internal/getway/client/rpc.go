@@ -1,13 +1,13 @@
 package xclient
 
 import (
-	"github.com/coder2m/g-saber/xconsole"
-	"github.com/coder2m/g-saber/xdefer"
-	"github.com/coder2m/component/xcfg"
-	"github.com/coder2m/ndisk/pkg/constant"
-	AuthorityPb "github.com/coder2m/ndisk/pkg/pb/authority"
-	NUserPb "github.com/coder2m/ndisk/pkg/pb/nuser"
-	xrpc "github.com/coder2m/ndisk/pkg/rpc"
+	"github.com/coder2z/component/xcfg"
+	"github.com/coder2z/g-saber/xconsole"
+	"github.com/coder2z/g-saber/xdefer"
+	"github.com/coder2z/ndisk/pkg/constant"
+	AuthorityPb "github.com/coder2z/ndisk/pkg/pb/authority"
+	NUserPb "github.com/coder2z/ndisk/pkg/pb/nuser"
+	xrpc "github.com/coder2z/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
 )
 

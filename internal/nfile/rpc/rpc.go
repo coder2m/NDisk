@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	NFilePb "github.com/coder2m/ndisk/pkg/pb/nfile"
+	NFilePb "github.com/coder2z/ndisk/pkg/pb/nfile"
 )
 
 type Server struct{}

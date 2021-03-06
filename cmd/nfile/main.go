@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/coder2m/g-saber/xcolor"
-	"github.com/coder2m/g-saber/xflag"
-	"github.com/coder2m/g-saber/xsignals"
-	"github.com/coder2m/ndisk/cmd/nfile/app"
+	"github.com/coder2z/g-saber/xcolor"
+	"github.com/coder2z/g-saber/xflag"
+	"github.com/coder2z/g-saber/xsignals"
+	"github.com/coder2z/ndisk/cmd/nfile/app"
 	"os"
 )
 

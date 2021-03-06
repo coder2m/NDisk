@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/coder2m/g-saber/xcolor"
-	"github.com/coder2m/g-saber/xflag"
-	"github.com/coder2m/g-saber/xsignals"
+	"github.com/coder2z/g-saber/xcolor"
+	"github.com/coder2z/g-saber/xflag"
+	"github.com/coder2z/g-saber/xsignals"
 
-	"github.com/coder2m/ndisk/cmd/nuser/app"
+	"github.com/coder2z/ndisk/cmd/nuser/app"
 )
 
 //run -c=etcd://ip:2379?username=&password=&key=/dev/ndisk/config/user

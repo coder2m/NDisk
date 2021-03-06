@@ -6,11 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	_map "github.com/coder2m/ndisk/internal/nfile/map"
-	"github.com/coder2m/ndisk/internal/nfile/model"
-	"github.com/coder2m/ndisk/internal/nfile/service"
-	R "github.com/coder2m/ndisk/pkg/response"
-	"github.com/coder2m/ndisk/pkg/utils"
+	_map "github.com/coder2z/ndisk/internal/nfile/map"
+	"github.com/coder2z/ndisk/internal/nfile/model"
+	"github.com/coder2z/ndisk/internal/nfile/service"
+	R "github.com/coder2z/ndisk/pkg/response"
+	"github.com/coder2z/ndisk/pkg/utils"
 )
 
 func Start(c *gin.Context) {

@@ -6,9 +6,9 @@ import (
 	"errors"
 	"time"
 
-	"github.com/coder2m/g-saber/xjson"
-	"github.com/coder2m/component/xcfg"
-	"github.com/coder2m/ndisk/pkg/aes"
+	"github.com/coder2z/component/xcfg"
+	"github.com/coder2z/g-saber/xjson"
+	"github.com/coder2z/ndisk/pkg/aes"
 )
 
 const (

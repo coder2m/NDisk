@@ -1,11 +1,11 @@
 package xclient
 
 import (
-	xemail "github.com/coder2m/component/xinvoker/email"
-	xsms "github.com/coder2m/component/xinvoker/sms"
-	"github.com/coder2m/ndisk/internal/nuser/model"
-	"github.com/coder2m/ndisk/internal/nuser/server/token"
-	redisToken "github.com/coder2m/ndisk/internal/nuser/server/token/redis"
+	xemail "github.com/coder2z/component/xinvoker/email"
+	xsms "github.com/coder2z/component/xinvoker/sms"
+	"github.com/coder2z/ndisk/internal/nuser/model"
+	"github.com/coder2z/ndisk/internal/nuser/server/token"
+	redisToken "github.com/coder2z/ndisk/internal/nuser/server/token/redis"
 )
 
 var (

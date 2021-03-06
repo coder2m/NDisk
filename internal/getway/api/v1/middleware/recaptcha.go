@@ -6,9 +6,9 @@
 package middleware
 
 import (
+	"github.com/coder2z/ndisk/pkg/recaptcha"
+	R "github.com/coder2z/ndisk/pkg/response"
 	"github.com/gin-gonic/gin"
-	"github.com/coder2m/ndisk/pkg/recaptcha"
-	R "github.com/coder2m/ndisk/pkg/response"
 )
 
 func Recaptcha() gin.HandlerFunc {

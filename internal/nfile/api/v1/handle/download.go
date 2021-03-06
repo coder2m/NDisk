@@ -6,10 +6,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/coder2m/ndisk/internal/nfile/model"
-	"github.com/coder2m/ndisk/internal/nfile/service"
-	R "github.com/coder2m/ndisk/pkg/response"
-	"github.com/coder2m/ndisk/pkg/utils"
+	"github.com/coder2z/ndisk/internal/nfile/model"
+	"github.com/coder2z/ndisk/internal/nfile/service"
+	R "github.com/coder2z/ndisk/pkg/response"
+	"github.com/coder2z/ndisk/pkg/utils"
 )
 
 func Download(c *gin.Context) {

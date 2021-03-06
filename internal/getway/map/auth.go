@@ -5,7 +5,7 @@
  **/
 package _map
 
-import NUserPb "github.com/coder2m/ndisk/pkg/pb/nuser"
+import NUserPb "github.com/coder2z/ndisk/pkg/pb/nuser"
 
 type (
 	/*-----------------请求------------------*/

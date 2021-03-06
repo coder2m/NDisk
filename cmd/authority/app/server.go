@@ -3,8 +3,8 @@ package app
 import (
 	"sync"
 
-	"github.com/coder2m/ndisk/cmd"
-	s "github.com/coder2m/ndisk/internal/authority"
+	"github.com/coder2z/ndisk/cmd"
+	s "github.com/coder2z/ndisk/internal/authority"
 )
 
 func Run(stopCh <-chan struct{}) error {

@@ -1,7 +1,7 @@
 package xrand
 
 import (
-	"github.com/coder2m/ndisk/pkg/constant"
+	"github.com/coder2z/ndisk/pkg/constant"
 	"testing"
 )
 

@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/coder2m/component/xmonitor"
+	"github.com/coder2z/component/xmonitor"
 	"github.com/gin-gonic/gin"
 )
 

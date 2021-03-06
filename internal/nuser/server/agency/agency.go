@@ -5,12 +5,12 @@ import (
 	"errors"
 	"strings"
 
+	xapp "github.com/coder2z/component"
+	"github.com/coder2z/g-saber/xcast"
+	"github.com/coder2z/g-saber/xlog"
+	_map "github.com/coder2z/ndisk/internal/nuser/map"
+	"github.com/coder2z/ndisk/internal/nuser/model"
 	"github.com/go-sql-driver/mysql"
-	xapp "github.com/coder2m/component"
-	"github.com/coder2m/g-saber/xcast"
-	"github.com/coder2m/g-saber/xlog"
-	_map "github.com/coder2m/ndisk/internal/nuser/map"
-	"github.com/coder2m/ndisk/internal/nuser/model"
 	"gorm.io/gorm"
 )
 

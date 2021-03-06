@@ -5,15 +5,15 @@ import (
 	"errors"
 	"strings"
 
+	xapp "github.com/coder2z/component"
+	"github.com/coder2z/g-saber/xcast"
+	"github.com/coder2z/g-saber/xlog"
 	"github.com/go-sql-driver/mysql"
-	xapp "github.com/coder2m/component"
-	"github.com/coder2m/g-saber/xcast"
-	"github.com/coder2m/g-saber/xlog"
 	"gorm.io/gorm"
 
-	xclient "github.com/coder2m/ndisk/internal/authority/client"
-	_map "github.com/coder2m/ndisk/internal/authority/map"
-	"github.com/coder2m/ndisk/internal/authority/model"
+	xclient "github.com/coder2z/ndisk/internal/authority/client"
+	_map "github.com/coder2z/ndisk/internal/authority/map"
+	"github.com/coder2z/ndisk/internal/authority/model"
 )
 
 var (

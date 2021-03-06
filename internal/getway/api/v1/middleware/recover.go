@@ -8,7 +8,7 @@ package middleware
 import (
 	"bytes"
 	"fmt"
-	R "github.com/coder2m/ndisk/pkg/response"
+	R "github.com/coder2z/ndisk/pkg/response"
 	"io/ioutil"
 	"net"
 	"os"
@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/coder2m/g-saber/xlog"
+	"github.com/coder2z/g-saber/xlog"
 	"github.com/gin-gonic/gin"
 )
 

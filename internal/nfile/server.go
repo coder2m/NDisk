@@ -7,28 +7,28 @@ import (
 	"sync"
 
 	"github.com/BurntSushi/toml"
-	xapp "github.com/coder2m/component"
-	"github.com/coder2m/component/xcfg"
-	"github.com/coder2m/component/xcfg/datasource/manager"
-	"github.com/coder2m/component/xgovern"
-	"github.com/coder2m/component/xinvoker"
-	xgorm "github.com/coder2m/component/xinvoker/gorm"
-	xoss "github.com/coder2m/component/xinvoker/oss"
-	xredis "github.com/coder2m/component/xinvoker/redis"
-	"github.com/coder2m/g-saber/xlog"
-	"github.com/coder2m/component/xmonitor"
-	"github.com/coder2m/g-saber/xconsole"
-	"github.com/coder2m/g-saber/xdefer"
-	"github.com/coder2m/g-saber/xflag"
-	"github.com/coder2m/g-saber/xvalidator"
+	xapp "github.com/coder2z/component"
+	"github.com/coder2z/component/xcfg"
+	"github.com/coder2z/component/xcfg/datasource/manager"
+	"github.com/coder2z/component/xgovern"
+	"github.com/coder2z/component/xinvoker"
+	xgorm "github.com/coder2z/component/xinvoker/gorm"
+	xoss "github.com/coder2z/component/xinvoker/oss"
+	xredis "github.com/coder2z/component/xinvoker/redis"
+	"github.com/coder2z/component/xmonitor"
+	"github.com/coder2z/g-saber/xconsole"
+	"github.com/coder2z/g-saber/xdefer"
+	"github.com/coder2z/g-saber/xflag"
+	"github.com/coder2z/g-saber/xlog"
+	"github.com/coder2z/g-saber/xvalidator"
 	"google.golang.org/grpc"
 
-	"github.com/coder2m/ndisk/internal/nfile/api/v1/registry"
-	"github.com/coder2m/ndisk/internal/nfile/model"
-	rpcServer "github.com/coder2m/ndisk/internal/nfile/rpc"
-	myValidator "github.com/coder2m/ndisk/internal/nfile/validator"
-	NFilePb "github.com/coder2m/ndisk/pkg/pb/nfile"
-	"github.com/coder2m/ndisk/pkg/rpc"
+	"github.com/coder2z/ndisk/internal/nfile/api/v1/registry"
+	"github.com/coder2z/ndisk/internal/nfile/model"
+	rpcServer "github.com/coder2z/ndisk/internal/nfile/rpc"
+	myValidator "github.com/coder2z/ndisk/internal/nfile/validator"
+	NFilePb "github.com/coder2z/ndisk/pkg/pb/nfile"
+	"github.com/coder2z/ndisk/pkg/rpc"
 )
 
 type Server struct {
@@ -101,7 +101,7 @@ func (s *Server) invoker() {
 	)
 	s.err = xinvoker.Init()
 	db := model.MainDB()
-	xlog.Infow("AutoMigrate", "model.File", db.AutoMigrate(&model.File{},&model.FileSlice{}))
+	xlog.Infow("AutoMigrate", "model.File", db.AutoMigrate(&model.File{}, &model.FileSlice{}))
 }
 
 func (s *Server) initHttpServer() {

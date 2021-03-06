@@ -9,17 +9,17 @@ import (
 	"context"
 	"errors"
 
-	xapp "github.com/coder2m/component"
-	"github.com/coder2m/g-saber/xcast"
-	"github.com/coder2m/component/xcode"
-	"github.com/coder2m/g-saber/xvalidator"
-	"github.com/coder2m/g-saber/xlog"
+	xapp "github.com/coder2z/component"
+	"github.com/coder2z/g-saber/xcast"
+	"github.com/coder2z/component/xcode"
+	"github.com/coder2z/g-saber/xvalidator"
+	"github.com/coder2z/g-saber/xlog"
 
-	xclient "github.com/coder2m/ndisk/internal/authority/client"
-	_map "github.com/coder2m/ndisk/internal/authority/map"
-	auth_server "github.com/coder2m/ndisk/internal/authority/server"
-	"github.com/coder2m/ndisk/pkg/pb/authority"
-	xrpc "github.com/coder2m/ndisk/pkg/rpc"
+	xclient "github.com/coder2z/ndisk/internal/authority/client"
+	_map "github.com/coder2z/ndisk/internal/authority/map"
+	auth_server "github.com/coder2z/ndisk/internal/authority/server"
+	"github.com/coder2z/ndisk/pkg/pb/authority"
+	xrpc "github.com/coder2z/ndisk/pkg/rpc"
 )
 
 type Server struct{}

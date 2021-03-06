@@ -1,8 +1,8 @@
 package xclient
 
 import (
-	xoss "github.com/coder2m/component/xinvoker/oss"
-	"github.com/coder2m/component/xinvoker/oss/standard"
+	xoss "github.com/coder2z/component/xinvoker/oss"
+	"github.com/coder2z/component/xinvoker/oss/standard"
 )
 
 var (

@@ -1,12 +1,12 @@
 package registry
 
 import (
-	R "github.com/coder2m/ndisk/pkg/response"
+	R "github.com/coder2z/ndisk/pkg/response"
 	"time"
 
+	xapp "github.com/coder2z/component"
+	"github.com/coder2z/ndisk/internal/getway/api/v1/middleware"
 	"github.com/gin-gonic/gin"
-	xapp "github.com/coder2m/component"
-	"github.com/coder2m/ndisk/internal/getway/api/v1/middleware"
 )
 
 var (

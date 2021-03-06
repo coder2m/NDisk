@@ -5,9 +5,9 @@ import (
 
 	"github.com/casbin/casbin/v2"
 	casbinModel "github.com/casbin/casbin/v2/model"
-	"github.com/coder2m/component/xcfg"
-	"github.com/coder2m/g-saber/xlog"
-	"github.com/coder2m/ndisk/internal/authority/model"
+	"github.com/coder2z/component/xcfg"
+	"github.com/coder2z/g-saber/xlog"
+	"github.com/coder2z/ndisk/internal/authority/model"
 )
 
 var (
