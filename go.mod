@@ -1,4 +1,4 @@
-module github.com/coder2m/ndisk
+module github.com/coder2z/ndisk
 
 go 1.15
 
@@ -6,8 +6,8 @@ require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/casbin/casbin/v2 v2.12.0
 	github.com/casbin/gorm-adapter/v3 v3.0.4
-	github.com/coder2m/component v0.5.3
-	github.com/coder2m/g-saber v0.1.4
+	github.com/coder2z/component v0.5.3
+	github.com/coder2z/g-saber v0.1.4
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-redis/redis/v8 v8.4.4
