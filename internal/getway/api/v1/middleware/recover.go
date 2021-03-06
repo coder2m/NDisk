@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/coder2m/component/xlog"
+	"github.com/coder2m/g-saber/xlog"
 	"github.com/gin-gonic/gin"
 )
 

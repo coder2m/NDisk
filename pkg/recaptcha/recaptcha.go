@@ -6,9 +6,9 @@
 package recaptcha
 
 import (
+	"github.com/coder2m/g-saber/xjson"
+	"github.com/coder2m/g-saber/xlog"
 	"github.com/go-resty/resty/v2"
-	"github.com/coder2m/component/pkg/xjson"
-	"github.com/coder2m/component/xlog"
 	"io"
 	"strings"
 	"time"
@@ -166,7 +166,7 @@ func New(c *Config, options ...Option) *Client {
 		httpClient: resty.
 			New().
 			SetTimeout(c.Timeout).
-			SetLogger(xlog.GetDefaultLogger()).
+			SetLogger(xlog.DefaultLogger()).
 			SetDebug(c.Debug),
 	}
 

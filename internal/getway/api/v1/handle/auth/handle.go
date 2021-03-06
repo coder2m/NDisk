@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/coder2m/component/pkg/xvalidator"
+	"github.com/coder2m/g-saber/xvalidator"
 	_map "github.com/coder2m/ndisk/internal/getway/map"
 	"github.com/coder2m/ndisk/internal/getway/server/auth_server"
 	NUserPb "github.com/coder2m/ndisk/pkg/pb/nuser"

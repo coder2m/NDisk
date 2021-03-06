@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/coder2m/component/pkg/xcolor"
-	"github.com/coder2m/component/pkg/xflag"
-	"github.com/coder2m/component/pkg/xsignals"
+	"github.com/coder2m/g-saber/xcolor"
+	"github.com/coder2m/g-saber/xflag"
+	"github.com/coder2m/g-saber/xsignals"
 
 	"github.com/coder2m/ndisk/cmd/nuser/app"
 )

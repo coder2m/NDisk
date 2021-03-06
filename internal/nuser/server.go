@@ -6,11 +6,6 @@ import (
 
 	"github.com/BurntSushi/toml"
 	xapp "github.com/coder2m/component"
-	"github.com/coder2m/component/pkg/xcode"
-	"github.com/coder2m/component/pkg/xconsole"
-	"github.com/coder2m/component/pkg/xdefer"
-	"github.com/coder2m/component/pkg/xflag"
-	"github.com/coder2m/component/pkg/xvalidator"
 	"github.com/coder2m/component/xcfg"
 	"github.com/coder2m/component/xcfg/datasource/manager"
 	"github.com/coder2m/component/xgovern"
@@ -21,6 +16,10 @@ import (
 	xsms "github.com/coder2m/component/xinvoker/sms"
 	"github.com/coder2m/component/xmonitor"
 	"github.com/coder2m/component/xtrace"
+	"github.com/coder2m/g-saber/xconsole"
+	"github.com/coder2m/g-saber/xdefer"
+	"github.com/coder2m/g-saber/xflag"
+	"github.com/coder2m/g-saber/xvalidator"
 	"github.com/coder2m/ndisk/internal/nuser/model"
 	"github.com/coder2m/ndisk/internal/nuser/rpc"
 	myValidator "github.com/coder2m/ndisk/internal/nuser/validator"
@@ -130,7 +129,6 @@ func (s *Server) govern() {
 		return
 	}
 	xmonitor.Run()
-	xcode.GovernRun()
 	xtrace.Init("trace.jaeger")
 	go xgovern.Run()
 }

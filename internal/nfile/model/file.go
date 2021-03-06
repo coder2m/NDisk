@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/coder2m/component/xcfg"
-	"github.com/coder2m/component/xlog"
+	"github.com/coder2m/g-saber/xlog"
 	"gorm.io/gorm"
 )
 

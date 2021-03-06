@@ -10,7 +10,7 @@ import (
 	R "github.com/coder2m/ndisk/pkg/response"
 
 	"github.com/gin-gonic/gin"
-	"github.com/coder2m/component/pkg/xcast"
+	"github.com/coder2m/g-saber/xcast"
 	xclient "github.com/coder2m/ndisk/internal/getway/client"
 	_map "github.com/coder2m/ndisk/internal/getway/map"
 	AuthorityPb "github.com/coder2m/ndisk/pkg/pb/authority"

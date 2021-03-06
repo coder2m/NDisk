@@ -2,8 +2,8 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/coder2m/component/pkg/xcast"
-	"github.com/coder2m/component/pkg/xvalidator"
+	"github.com/coder2m/g-saber/xcast"
+	"github.com/coder2m/g-saber/xvalidator"
 	_map "github.com/coder2m/ndisk/internal/getway/map"
 	"github.com/coder2m/ndisk/internal/getway/server/admin_server"
 	"github.com/coder2m/ndisk/internal/getway/server/auth_server"

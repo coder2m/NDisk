@@ -10,10 +10,10 @@ import (
 	"errors"
 
 	xapp "github.com/coder2m/component"
-	"github.com/coder2m/component/pkg/xcast"
-	"github.com/coder2m/component/pkg/xcode"
-	"github.com/coder2m/component/pkg/xvalidator"
-	"github.com/coder2m/component/xlog"
+	"github.com/coder2m/g-saber/xcast"
+	"github.com/coder2m/component/xcode"
+	"github.com/coder2m/g-saber/xvalidator"
+	"github.com/coder2m/g-saber/xlog"
 
 	xclient "github.com/coder2m/ndisk/internal/authority/client"
 	_map "github.com/coder2m/ndisk/internal/authority/map"

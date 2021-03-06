@@ -6,17 +6,16 @@ import (
 
 	"github.com/BurntSushi/toml"
 	xapp "github.com/coder2m/component"
-	"github.com/coder2m/component/pkg/xcode"
-	"github.com/coder2m/component/pkg/xconsole"
-	"github.com/coder2m/component/pkg/xdefer"
-	"github.com/coder2m/component/pkg/xflag"
-	"github.com/coder2m/component/pkg/xvalidator"
 	"github.com/coder2m/component/xcfg"
 	"github.com/coder2m/component/xcfg/datasource/manager"
 	"github.com/coder2m/component/xgovern"
 	"github.com/coder2m/component/xinvoker"
 	xgorm "github.com/coder2m/component/xinvoker/gorm"
 	"github.com/coder2m/component/xmonitor"
+	"github.com/coder2m/g-saber/xconsole"
+	"github.com/coder2m/g-saber/xdefer"
+	"github.com/coder2m/g-saber/xflag"
+	"github.com/coder2m/g-saber/xvalidator"
 	"google.golang.org/grpc"
 
 	xclient "github.com/coder2m/ndisk/internal/authority/client"
@@ -122,7 +121,6 @@ func (s *Server) govern() {
 	if s.err != nil {
 		return
 	}
-	xcode.GovernRun()
 	xmonitor.Run()
 	go xgovern.Run()
 }

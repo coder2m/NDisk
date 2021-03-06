@@ -7,8 +7,8 @@ import (
 
 	"github.com/go-sql-driver/mysql"
 	xapp "github.com/coder2m/component"
-	"github.com/coder2m/component/pkg/xcast"
-	"github.com/coder2m/component/xlog"
+	"github.com/coder2m/g-saber/xcast"
+	"github.com/coder2m/g-saber/xlog"
 	_map "github.com/coder2m/ndisk/internal/nuser/map"
 	"github.com/coder2m/ndisk/internal/nuser/model"
 	"gorm.io/gorm"

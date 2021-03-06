@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/coder2m/component/pkg/xcast"
+	"github.com/coder2m/g-saber/xcast"
 	xclient "github.com/coder2m/ndisk/internal/getway/client"
 	xerror "github.com/coder2m/ndisk/internal/getway/error"
 	_map "github.com/coder2m/ndisk/internal/getway/map"

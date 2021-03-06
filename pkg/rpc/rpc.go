@@ -3,8 +3,8 @@ package xrpc
 import (
 	"fmt"
 	xapp "github.com/coder2m/component"
-	"github.com/coder2m/component/pkg/xdefer"
-	"github.com/coder2m/component/pkg/xnet"
+	"github.com/coder2m/g-saber/xdefer"
+	"github.com/coder2m/g-saber/xnet"
 	"github.com/coder2m/component/xgrpc"
 	clientinterceptors "github.com/coder2m/component/xgrpc/client"
 	serverinterceptors "github.com/coder2m/component/xgrpc/server"

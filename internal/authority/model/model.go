@@ -5,7 +5,7 @@ import (
 
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	xgorm "github.com/coder2m/component/xinvoker/gorm"
-	"github.com/coder2m/component/xlog"
+	"github.com/coder2m/g-saber/xlog"
 	_ "gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

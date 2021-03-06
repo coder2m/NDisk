@@ -6,7 +6,8 @@ require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/casbin/casbin/v2 v2.12.0
 	github.com/casbin/gorm-adapter/v3 v3.0.4
-	github.com/coder2m/component v0.5.0
+	github.com/coder2m/component v0.5.3
+	github.com/coder2m/g-saber v0.1.4
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-redis/redis/v8 v8.4.4
@@ -16,9 +17,8 @@ require (
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/pkg/errors v0.9.1
 	github.com/uber/jaeger-client-go v2.25.0+incompatible
-	go.uber.org/zap v1.16.0
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
-	google.golang.org/grpc v1.27.0
+	google.golang.org/grpc v1.36.0
 	gorm.io/driver/mysql v1.0.3
 	gorm.io/gorm v1.20.9
 )

@@ -8,11 +8,6 @@ import (
 
 	"github.com/BurntSushi/toml"
 	xapp "github.com/coder2m/component"
-	"github.com/coder2m/component/pkg/xcode"
-	"github.com/coder2m/component/pkg/xconsole"
-	"github.com/coder2m/component/pkg/xdefer"
-	"github.com/coder2m/component/pkg/xflag"
-	"github.com/coder2m/component/pkg/xvalidator"
 	"github.com/coder2m/component/xcfg"
 	"github.com/coder2m/component/xcfg/datasource/manager"
 	"github.com/coder2m/component/xgovern"
@@ -20,8 +15,12 @@ import (
 	xgorm "github.com/coder2m/component/xinvoker/gorm"
 	xoss "github.com/coder2m/component/xinvoker/oss"
 	xredis "github.com/coder2m/component/xinvoker/redis"
-	"github.com/coder2m/component/xlog"
+	"github.com/coder2m/g-saber/xlog"
 	"github.com/coder2m/component/xmonitor"
+	"github.com/coder2m/g-saber/xconsole"
+	"github.com/coder2m/g-saber/xdefer"
+	"github.com/coder2m/g-saber/xflag"
+	"github.com/coder2m/g-saber/xvalidator"
 	"google.golang.org/grpc"
 
 	"github.com/coder2m/ndisk/internal/nfile/api/v1/registry"
@@ -132,7 +131,6 @@ func (s *Server) govern() {
 		return
 	}
 	xmonitor.Run()
-	xcode.GovernRun()
 	go xgovern.Run()
 }
 

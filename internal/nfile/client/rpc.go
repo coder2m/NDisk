@@ -1,8 +1,8 @@
 package xclient
 
 import (
-	"github.com/coder2m/component/pkg/xconsole"
-	"github.com/coder2m/component/pkg/xdefer"
+	"github.com/coder2m/g-saber/xconsole"
+	"github.com/coder2m/g-saber/xdefer"
 	"github.com/coder2m/component/xcfg"
 	"google.golang.org/grpc"
 
