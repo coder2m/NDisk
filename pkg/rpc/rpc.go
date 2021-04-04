@@ -2,12 +2,12 @@ package xrpc
 
 import (
 	"fmt"
-	xapp "github.com/coder2z/component"
-	"github.com/coder2z/component/xgrpc"
-	clientinterceptors "github.com/coder2z/component/xgrpc/client"
-	serverinterceptors "github.com/coder2z/component/xgrpc/server"
-	"github.com/coder2z/component/xregistry"
-	"github.com/coder2z/component/xregistry/xetcd"
+	"github.com/coder2z/g-server/xapp"
+	"github.com/coder2z/g-server/xgrpc"
+	clientinterceptors "github.com/coder2z/g-server/xgrpc/client"
+	serverinterceptors "github.com/coder2z/g-server/xgrpc/server"
+	"github.com/coder2z/g-server/xregistry"
+	"github.com/coder2z/g-server/xregistry/xetcd"
 	"github.com/coder2z/g-saber/xdefer"
 	"github.com/coder2z/g-saber/xnet"
 	"github.com/coder2z/ndisk/pkg/constant"

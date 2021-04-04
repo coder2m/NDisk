@@ -5,21 +5,20 @@ import (
 	"sync"
 
 	"github.com/BurntSushi/toml"
-	xapp "github.com/coder2z/component"
-	"github.com/coder2z/component/xcfg"
-	"github.com/coder2z/component/xcfg/datasource/manager"
-	"github.com/coder2z/component/xgovern"
-	"github.com/coder2z/component/xinvoker"
-	xemail "github.com/coder2z/component/xinvoker/email"
-	xgorm "github.com/coder2z/component/xinvoker/gorm"
-	xredis "github.com/coder2z/component/xinvoker/redis"
-	xsms "github.com/coder2z/component/xinvoker/sms"
-	"github.com/coder2z/component/xmonitor"
-	"github.com/coder2z/component/xtrace"
+	"github.com/coder2z/g-saber/xcfg"
 	"github.com/coder2z/g-saber/xconsole"
 	"github.com/coder2z/g-saber/xdefer"
 	"github.com/coder2z/g-saber/xflag"
 	"github.com/coder2z/g-saber/xvalidator"
+	"github.com/coder2z/g-server/datasource/manager"
+	"github.com/coder2z/g-server/xapp"
+	"github.com/coder2z/g-server/xgovern"
+	"github.com/coder2z/g-server/xinvoker"
+	xemail "github.com/coder2z/g-server/xinvoker/email"
+	xgorm "github.com/coder2z/g-server/xinvoker/gorm"
+	xredis "github.com/coder2z/g-server/xinvoker/redis"
+	xsms "github.com/coder2z/g-server/xinvoker/sms"
+	"github.com/coder2z/g-server/xtrace"
 	"github.com/coder2z/ndisk/internal/nuser/model"
 	"github.com/coder2z/ndisk/internal/nuser/rpc"
 	myValidator "github.com/coder2z/ndisk/internal/nuser/validator"
@@ -128,7 +127,6 @@ func (s *Server) govern() {
 	if s.err != nil {
 		return
 	}
-	xmonitor.Run()
-	xtrace.Init("trace.jaeger")
+	xtrace.JaegerBuild("trace.jaeger")
 	go xgovern.Run()
 }

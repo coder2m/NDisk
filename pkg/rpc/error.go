@@ -6,7 +6,7 @@
 package xrpc
 
 import (
-	"github.com/coder2z/component/xcode"
+	"github.com/coder2z/g-server/xcode"
 )
 
 const (

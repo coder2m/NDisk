@@ -9,9 +9,9 @@ import (
 	"context"
 	"errors"
 
-	xapp "github.com/coder2z/component"
+	"github.com/coder2z/g-server/xapp"
 	"github.com/coder2z/g-saber/xcast"
-	"github.com/coder2z/component/xcode"
+	"github.com/coder2z/g-server/xcode"
 	"github.com/coder2z/g-saber/xvalidator"
 	"github.com/coder2z/g-saber/xlog"
 

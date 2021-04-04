@@ -4,7 +4,7 @@ import (
 	R "github.com/coder2z/ndisk/pkg/response"
 	"time"
 
-	xapp "github.com/coder2z/component"
+	"github.com/coder2z/g-server/xapp"
 	"github.com/coder2z/ndisk/internal/getway/api/v1/middleware"
 	"github.com/gin-gonic/gin"
 )

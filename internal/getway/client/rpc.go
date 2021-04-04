@@ -1,7 +1,7 @@
 package xclient
 
 import (
-	"github.com/coder2z/component/xcfg"
+	"github.com/coder2z/g-saber/xcfg"
 	"github.com/coder2z/g-saber/xconsole"
 	"github.com/coder2z/g-saber/xdefer"
 	"github.com/coder2z/ndisk/pkg/constant"

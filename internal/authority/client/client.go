@@ -5,7 +5,7 @@ import (
 
 	"github.com/casbin/casbin/v2"
 	casbinModel "github.com/casbin/casbin/v2/model"
-	"github.com/coder2z/component/xcfg"
+	"github.com/coder2z/g-saber/xcfg"
 	"github.com/coder2z/g-saber/xlog"
 	"github.com/coder2z/ndisk/internal/authority/model"
 )

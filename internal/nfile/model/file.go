@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/coder2z/component/xcfg"
+	"github.com/coder2z/g-saber/xcfg"
 	"github.com/coder2z/g-saber/xlog"
 	"gorm.io/gorm"
 )

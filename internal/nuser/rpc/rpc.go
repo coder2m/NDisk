@@ -11,9 +11,9 @@ import (
 	"fmt"
 	"strings"
 
-	xapp "github.com/coder2z/component"
-	"github.com/coder2z/component/xcode"
-	xsms "github.com/coder2z/component/xinvoker/sms"
+	"github.com/coder2z/g-server/xapp"
+	"github.com/coder2z/g-server/xcode"
+	xsms "github.com/coder2z/g-server/xinvoker/sms"
 	"github.com/coder2z/g-saber/xcast"
 	"github.com/coder2z/g-saber/xlog"
 	"github.com/coder2z/g-saber/xvalidator"

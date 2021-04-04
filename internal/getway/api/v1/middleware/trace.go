@@ -6,7 +6,7 @@
 package middleware
 
 import (
-	"github.com/coder2z/component/xtrace"
+	"github.com/coder2z/g-server/xtrace"
 	"github.com/gin-gonic/gin"
 )
 

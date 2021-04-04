@@ -11,9 +11,12 @@ import (
 
 //run -c=etcd://ip:2379?username=&password=&key=/dev/ndisk/config/nfile
 func main() {
-	xflag.NewRootCommand(&xflag.Command{
-		Use:                "NFile",
-		DisableSuggestions: false,
+	xflag.NewRootCommand(&xflag.CommandNode{
+		Name: "NFile",
+		Command: &xflag.Command{
+			Use:                "NFile",
+			DisableSuggestions: false,
+		},
 	})
 	xflag.Register(
 		xflag.CommandNode{

@@ -6,7 +6,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/coder2z/component/xcfg"
+	"github.com/coder2z/g-saber/xcfg"
 	"github.com/coder2z/g-saber/xjson"
 	"github.com/coder2z/ndisk/pkg/aes"
 )

@@ -6,17 +6,16 @@ import (
 	"sync"
 
 	"github.com/BurntSushi/toml"
-	xapp "github.com/coder2z/component"
-	"github.com/coder2z/component/xcfg"
-	"github.com/coder2z/component/xcfg/datasource/manager"
-	"github.com/coder2z/component/xgovern"
-	"github.com/coder2z/component/xmonitor"
-	"github.com/coder2z/component/xregistry/xetcd"
-	"github.com/coder2z/component/xtrace"
+	"github.com/coder2z/g-saber/xcfg"
 	"github.com/coder2z/g-saber/xconsole"
 	"github.com/coder2z/g-saber/xdefer"
 	"github.com/coder2z/g-saber/xflag"
 	"github.com/coder2z/g-saber/xvalidator"
+	"github.com/coder2z/g-server/datasource/manager"
+	"github.com/coder2z/g-server/xapp"
+	"github.com/coder2z/g-server/xgovern"
+	"github.com/coder2z/g-server/xregistry/xetcd"
+	"github.com/coder2z/g-server/xtrace"
 	"github.com/coder2z/ndisk/internal/getway/api/v1/registry"
 	"github.com/coder2z/ndisk/internal/getway/client"
 	myValidator "github.com/coder2z/ndisk/internal/getway/validator"
@@ -105,8 +104,7 @@ func (s *Server) govern() {
 	if s.err != nil {
 		return
 	}
-	xmonitor.Run()
-	xtrace.Init("trace.jaeger")
+	xtrace.JaegerBuild("trace.jaeger")
 	go xgovern.Run()
 }
 

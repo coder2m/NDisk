@@ -5,17 +5,16 @@ import (
 	"sync"
 
 	"github.com/BurntSushi/toml"
-	xapp "github.com/coder2z/component"
-	"github.com/coder2z/component/xcfg"
-	"github.com/coder2z/component/xcfg/datasource/manager"
-	"github.com/coder2z/component/xgovern"
-	"github.com/coder2z/component/xinvoker"
-	xgorm "github.com/coder2z/component/xinvoker/gorm"
-	"github.com/coder2z/component/xmonitor"
+	"github.com/coder2z/g-saber/xcfg"
 	"github.com/coder2z/g-saber/xconsole"
 	"github.com/coder2z/g-saber/xdefer"
 	"github.com/coder2z/g-saber/xflag"
 	"github.com/coder2z/g-saber/xvalidator"
+	"github.com/coder2z/g-server/datasource/manager"
+	"github.com/coder2z/g-server/xapp"
+	"github.com/coder2z/g-server/xgovern"
+	"github.com/coder2z/g-server/xinvoker"
+	xgorm "github.com/coder2z/g-server/xinvoker/gorm"
 	"google.golang.org/grpc"
 
 	xclient "github.com/coder2z/ndisk/internal/authority/client"
@@ -121,7 +120,7 @@ func (s *Server) govern() {
 	if s.err != nil {
 		return
 	}
-	xmonitor.Run()
+
 	go xgovern.Run()
 }
 

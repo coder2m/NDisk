@@ -7,20 +7,19 @@ import (
 	"sync"
 
 	"github.com/BurntSushi/toml"
-	xapp "github.com/coder2z/component"
-	"github.com/coder2z/component/xcfg"
-	"github.com/coder2z/component/xcfg/datasource/manager"
-	"github.com/coder2z/component/xgovern"
-	"github.com/coder2z/component/xinvoker"
-	xgorm "github.com/coder2z/component/xinvoker/gorm"
-	xoss "github.com/coder2z/component/xinvoker/oss"
-	xredis "github.com/coder2z/component/xinvoker/redis"
-	"github.com/coder2z/component/xmonitor"
+	"github.com/coder2z/g-saber/xcfg"
 	"github.com/coder2z/g-saber/xconsole"
 	"github.com/coder2z/g-saber/xdefer"
 	"github.com/coder2z/g-saber/xflag"
 	"github.com/coder2z/g-saber/xlog"
 	"github.com/coder2z/g-saber/xvalidator"
+	"github.com/coder2z/g-server/datasource/manager"
+	"github.com/coder2z/g-server/xapp"
+	"github.com/coder2z/g-server/xgovern"
+	"github.com/coder2z/g-server/xinvoker"
+	xgorm "github.com/coder2z/g-server/xinvoker/gorm"
+	xoss "github.com/coder2z/g-server/xinvoker/oss"
+	xredis "github.com/coder2z/g-server/xinvoker/redis"
 	"google.golang.org/grpc"
 
 	"github.com/coder2z/ndisk/internal/nfile/api/v1/registry"
@@ -130,7 +129,7 @@ func (s *Server) govern() {
 	if s.err != nil {
 		return
 	}
-	xmonitor.Run()
+
 	go xgovern.Run()
 }
 

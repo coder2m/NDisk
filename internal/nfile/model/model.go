@@ -1,8 +1,8 @@
 package model
 
 import (
-	xgorm "github.com/coder2z/component/xinvoker/gorm"
-	xredis "github.com/coder2z/component/xinvoker/redis"
+	xgorm "github.com/coder2z/g-server/xinvoker/gorm"
+	xredis "github.com/coder2z/g-server/xinvoker/redis"
 	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
 )

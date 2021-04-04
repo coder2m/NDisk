@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strings"
 
-	xapp "github.com/coder2z/component"
+	"github.com/coder2z/g-server/xapp"
 	"github.com/coder2z/g-saber/xcast"
 	"github.com/coder2z/g-saber/xlog"
 	"github.com/go-sql-driver/mysql"

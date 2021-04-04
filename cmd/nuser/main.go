@@ -13,9 +13,12 @@ import (
 
 //run -c=etcd://ip:2379?username=&password=&key=/dev/ndisk/config/user
 func main() {
-	xflag.NewRootCommand(&xflag.Command{
-		Use:                "NUser",
-		DisableSuggestions: false,
+	xflag.NewRootCommand(&xflag.CommandNode{
+		Name: "NUser",
+		Command: &xflag.Command{
+			Use:                "NUser",
+			DisableSuggestions: false,
+		},
 	})
 	xflag.Register(
 		xflag.CommandNode{

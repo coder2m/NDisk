@@ -1,8 +1,8 @@
 package xclient
 
 import (
-	xemail "github.com/coder2z/component/xinvoker/email"
-	xsms "github.com/coder2z/component/xinvoker/sms"
+	xemail "github.com/coder2z/g-server/xinvoker/email"
+	xsms "github.com/coder2z/g-server/xinvoker/sms"
 	"github.com/coder2z/ndisk/internal/nuser/model"
 	"github.com/coder2z/ndisk/internal/nuser/server/token"
 	redisToken "github.com/coder2z/ndisk/internal/nuser/server/token/redis"

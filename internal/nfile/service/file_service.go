@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"errors"
 
-	"github.com/coder2z/component/xinvoker/oss/standard"
+	"github.com/coder2z/g-server/xinvoker/oss/standard"
 
 	xclient "github.com/coder2z/ndisk/internal/nfile/client"
 	"github.com/coder2z/ndisk/internal/nfile/model"

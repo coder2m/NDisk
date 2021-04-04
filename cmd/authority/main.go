@@ -12,9 +12,13 @@ import (
 )
 
 func main() {
-	xflag.NewRootCommand(&xflag.Command{
-		Use:                "NAuth",
-		DisableSuggestions: false,
+
+	xflag.NewRootCommand(&xflag.CommandNode{
+		Name: "NAuth",
+		Command: &xflag.Command{
+			Use:                "NAuth",
+			DisableSuggestions: false,
+		},
 	})
 	xflag.Register(
 		xflag.CommandNode{
