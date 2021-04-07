@@ -19,7 +19,7 @@ var (
 
 func InitClient() {
 	NUserServer = NUserPb.NewNUserServiceClient(connection("ndisk_nuser"))
-	AuthorityServer = AuthorityPb.NewAuthorityServiceClient(connection("ndisk_authority"))
+	AuthorityServer = AuthorityPb.NewAuthorityServiceClient(connection("ndisk_auth"))
 }
 
 func GetGRPCCfg() *xrpc.GRPCConfig {

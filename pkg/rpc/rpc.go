@@ -2,16 +2,19 @@ package xrpc
 
 import (
 	"fmt"
+	"github.com/coder2z/g-saber/xdefer"
+	"github.com/coder2z/g-saber/xnet"
 	"github.com/coder2z/g-server/xapp"
 	"github.com/coder2z/g-server/xgrpc"
+	xbalancer "github.com/coder2z/g-server/xgrpc/balancer"
+	"github.com/coder2z/g-server/xgrpc/balancer/p2c"
 	clientinterceptors "github.com/coder2z/g-server/xgrpc/client"
 	serverinterceptors "github.com/coder2z/g-server/xgrpc/server"
 	"github.com/coder2z/g-server/xregistry"
 	"github.com/coder2z/g-server/xregistry/xetcd"
-	"github.com/coder2z/g-saber/xdefer"
-	"github.com/coder2z/g-saber/xnet"
 	"github.com/coder2z/ndisk/pkg/constant"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 	"time"
 )
 
@@ -21,6 +24,7 @@ type GRPCConfig struct {
 	ServerName    string        `mapStructure:"serverName"`
 	ServerTimeout time.Duration `mapStructure:"serverTimeout"`
 	SlowThreshold time.Duration `mapStructure:"serverSlowThreshold"`
+	Weight        string        `json:"weight"`
 
 	EtcdAddr         string        `mapStructure:"register_etcd_addr"`
 	RegisterTTL      time.Duration `mapStructure:"register_ttl"`
@@ -41,6 +45,7 @@ func DefaultGRPCConfig() *GRPCConfig {
 		EtcdAddr:         "127.0.0.1:2379",
 		RegisterTTL:      30 * time.Second,
 		RegisterInterval: 15 * time.Second,
+		Weight:           "1",
 	}
 }
 
@@ -75,6 +80,7 @@ func DefaultClientOption(c *GRPCConfig) []grpc.DialOption {
 		xgrpc.WithStreamClientInterceptors(
 			clientinterceptors.PrometheusStreamClientInterceptor(c.ServerName),
 		),
+		grpc.WithDefaultServiceConfig(fmt.Sprintf(`{"LoadBalancingPolicy": "%s"}`, p2c.P2C)),
 	}
 }
 
@@ -94,6 +100,7 @@ func DefaultRegistryEtcd(c *GRPCConfig) (err error) {
 		xregistry.Address(c.Addr()),
 		xregistry.RegisterTTL(c.RegisterTTL),
 		xregistry.RegisterInterval(c.RegisterInterval),
+		xregistry.Metadata(metadata.Pairs(xbalancer.WeightKey, c.Weight)),
 	)
 
 	xdefer.Register(func() error {

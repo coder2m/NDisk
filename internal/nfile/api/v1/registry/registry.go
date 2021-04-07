@@ -1,6 +1,7 @@
 package registry
 
 import (
+	"github.com/coder2z/g-server/xapp"
 	R "github.com/coder2z/ndisk/pkg/response"
 	"sync"
 
@@ -29,7 +30,12 @@ func regFileHandler(e *gin.Engine) {
 
 func Engine() *gin.Engine {
 	once.Do(func() {
-		gin.SetMode(gin.ReleaseMode)
+		if xapp.Debug() {
+			gin.DisableConsoleColor()
+			gin.SetMode(gin.DebugMode)
+		} else {
+			gin.SetMode(gin.ReleaseMode)
+		}
 		router = gin.Default()
 		router.NoRoute(R.HandleNotFound)
 		router.Use(middleware.Auth(), middleware.GetHeader())
