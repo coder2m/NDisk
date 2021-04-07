@@ -51,9 +51,9 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 	}()
 	var (
 		lis     net.Listener
-		grpcCfg *xrpc.GRPCConfig
+		grpcCfg *xrpc.GRPCServerConfig
 	)
-	grpcCfg = xcfg.UnmarshalWithExpect("rpc", xrpc.DefaultGRPCConfig()).(*xrpc.GRPCConfig)
+	grpcCfg=xrpc.GRPCServerCfgBuild("rpc")
 	s.err = xrpc.DefaultRegistryEtcd(grpcCfg)
 	if s.err != nil {
 		return

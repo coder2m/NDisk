@@ -2,6 +2,7 @@ package getway
 
 import (
 	"context"
+	xrpc "github.com/coder2z/ndisk/pkg/rpc"
 	"net/http"
 	"sync"
 
@@ -14,7 +15,6 @@ import (
 	"github.com/coder2z/g-server/datasource/manager"
 	"github.com/coder2z/g-server/xapp"
 	"github.com/coder2z/g-server/xgovern"
-	"github.com/coder2z/g-server/xregistry/xetcd"
 	"github.com/coder2z/g-server/xtrace"
 	"github.com/coder2z/ndisk/internal/getway/api/v1/registry"
 	"github.com/coder2z/ndisk/internal/getway/client"
@@ -112,12 +112,8 @@ func (s *Server) rpc() {
 	if s.err != nil {
 		return
 	}
-	grpcCfg := xclient.GetGRPCCfg()
-	conf := xetcd.EtcdV3Cfg{
-		Endpoints:        []string{grpcCfg.EtcdAddr},
-		AutoSyncInterval: grpcCfg.RegisterInterval,
-	}
-	s.err = xetcd.RegisterBuilder(conf)
+	grpcCfg := xrpc.GRPCServerCfgBuild("rpc")
+	s.err = xrpc.RegistryBuilder(grpcCfg.ETCD)
 	xclient.InitClient()
 }
 

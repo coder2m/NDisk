@@ -2,6 +2,7 @@ package nfile
 
 import (
 	"context"
+	xclient "github.com/coder2z/ndisk/internal/nfile/client"
 	"net"
 	"net/http"
 	"sync"
@@ -139,9 +140,9 @@ func (s *Server) rpc() {
 	}
 	var (
 		lis     net.Listener
-		grpcCfg *xrpc.GRPCConfig
+		grpcCfg *xrpc.GRPCServerConfig
 	)
-	grpcCfg = xcfg.UnmarshalWithExpect("rpc", xrpc.DefaultGRPCConfig()).(*xrpc.GRPCConfig)
+	grpcCfg = xrpc.GRPCServerCfgBuild("rpc")
 	s.err = xrpc.DefaultRegistryEtcd(grpcCfg)
 	if s.err != nil {
 		return
@@ -166,5 +167,6 @@ func (s *Server) rpc() {
 		xconsole.Red("grpc server shutdown success ")
 		return nil
 	})
+	xclient.GetUserRpc()
 	xconsole.Greenf("grpc server start up success:", grpcCfg.Addr())
 }
