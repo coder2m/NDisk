@@ -7,8 +7,11 @@ build-nfile-server:
 
 .PHONY: run-nfile
 run-nfile:
+	export SERVER_APP_MODE=dev
+	export SERVER_APP_ID=idj$s*@na21
+	export SERVER_APP_DEBUG=true
 	go run cmd/nfile/main.go run -c=config/confin-nfile.toml
 
 .PHONY: build-nfile
 build-nfile:
-	go build -o  cmd/nfile/nfile cmd/nfile/main.go
+	go build -o  cmd/nfile/nfile -ldflags "-X github.com/coder2z/g-server/xapp.appName=ndisk_nfile -X github.com/coder2z/g-server/xapp.buildAppVersion=v1.0 -X github.com/coder2z/g-server/xapp.buildHost=`hostname`" cmd/nfile/main.go

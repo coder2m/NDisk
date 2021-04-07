@@ -7,8 +7,11 @@ build-getway-server:
 
 .PHONY: run-getway
 run-getway:
+	export SERVER_APP_MODE=dev
+	export SERVER_APP_ID=idj$sa2@na21
+	export SERVER_APP_DEBUG=true
 	go run cmd/getway/main.go run -c=config/confin-getway.toml
 
 .PHONY: build-getway
 build-getway:
-	go build -o  cmd/getway/getway cmd/getway/main.go
+	go build -o  cmd/getway/getway -ldflags "-X github.com/coder2z/g-server/xapp.appName=ndisk_getway -X github.com/coder2z/g-server/xapp.buildAppVersion=v1.0 -X github.com/coder2z/g-server/xapp.buildHost=`hostname`" cmd/getway/main.go
