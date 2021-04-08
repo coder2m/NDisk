@@ -46,3 +46,58 @@ func List(ctx context.Context, uid uint64, req _map.Id, page _map.PageList) (_ma
 		Data:  res,
 	}, err
 }
+
+func Add(ctx context.Context, post _map.DirectoryPost) (_map.DirectoryInfo, error) {
+	dir := &model.Directory{
+		Uid:      post.Uid,
+		FileId:   post.FileId,
+		IsDir:    post.IsDir,
+		Name:     post.Name,
+		ParentID: post.ParentID,
+	}
+	err := dir.Add(ctx)
+	if err != nil {
+		return _map.DirectoryInfo{}, err
+	}
+	return _map.DirectoryInfo{
+		Id:        dir.ID,
+		Uid:       dir.Uid,
+		FileId:    dir.FileId,
+		IsDir:     dir.IsDir,
+		Name:      dir.Name,
+		ParentID:  dir.ParentID,
+		CreatedAt: dir.CreatedAt.Unix(),
+		UpdatedAt: dir.UpdatedAt.Unix(),
+		DeletedAt: dir.DeletedAt.Time.Unix(),
+	}, err
+}
+
+func Del(ctx context.Context, uid, id uint) error {
+	var (
+		where map[string][]interface{}
+	)
+	where = map[string][]interface{}{
+		"id=? and uid =?": {
+			id, uid,
+		},
+	}
+	_, err := new(model.Directory).Del(ctx, where)
+	return err
+}
+
+func Update(ctx context.Context, req _map.DirectoryUpdate) error {
+	var (
+		where map[string][]interface{}
+	)
+	where = map[string][]interface{}{
+		"id=? and uid =?": {
+			req.Id, req.Uid,
+		},
+	}
+	dir := &model.Directory{
+		Name:     req.Name,
+		ParentID: req.ParentID,
+	}
+	err := dir.UpdatesWhere(ctx, where)
+	return err
+}

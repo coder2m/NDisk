@@ -56,8 +56,6 @@ func (m *Directory) Get(ctx context.Context, start int, size int, data *[]Direct
 	}
 	if isDelete {
 		db = db.Unscoped().Where("deleted_at is not null")
-	} else {
-		db = db.Where(map[string]interface{}{"deleted_at": nil})
 	}
 	tx := db.Limit(size).Offset(start).Find(data)
 	err = tx.Error

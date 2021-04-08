@@ -17,4 +17,19 @@ type (
 		UpdatedAt int64  `json:"updated_at,omitempty"`
 		DeletedAt int64  `json:"deleted_at,omitempty"`
 	}
+
+	DirectoryPost struct {
+		FileId   uint   `json:"file_id"`
+		IsDir    bool   `validate:"required" json:"is_dir"`
+		Name     string `validate:"required" json:"name"`
+		ParentID uint   `validate:"required,number" json:"parent_id"`
+		Uid      uint
+	}
+
+	DirectoryUpdate struct {
+		Id       uint
+		Name     string `validate:"required" json:"name"`
+		ParentID uint   `validate:"required,number" json:"parent_id"`
+		Uid      uint
+	}
 )
