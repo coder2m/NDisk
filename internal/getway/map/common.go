@@ -16,3 +16,7 @@ type PageList struct {
 	Keyword  string `json:"keyword" form:"keyword"`
 	IsDelete bool   `json:"is_delete" form:"is_delete"`
 }
+
+type Id struct {
+	Id uint `uri:"id"`
+}

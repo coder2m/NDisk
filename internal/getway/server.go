@@ -2,6 +2,11 @@ package getway
 
 import (
 	"context"
+	"github.com/coder2z/g-saber/xlog"
+	"github.com/coder2z/g-server/xinvoker"
+	xgorm "github.com/coder2z/g-server/xinvoker/gorm"
+	xredis "github.com/coder2z/g-server/xinvoker/redis"
+	"github.com/coder2z/ndisk/internal/getway/model"
 	xrpc "github.com/coder2z/ndisk/pkg/rpc"
 	"net/http"
 	"sync"
@@ -31,6 +36,7 @@ type Server struct {
 func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 	s.initCfg()
 	s.debug()
+	s.invoker()
 	s.initHttpServer()
 	s.initRouter()
 	s.initValidator()
@@ -120,4 +126,22 @@ func (s *Server) rpc() {
 func (s *Server) recaptcha() {
 	recaptchaCfg := xcfg.UnmarshalWithExpect("google.recaptcha", recaptcha.DefaultConfig()).(*recaptcha.Config)
 	recaptcha.NewDefault(recaptchaCfg)
+}
+
+func (s *Server) invoker() {
+	if s.err != nil {
+		return
+	}
+	xdefer.Register(func() error {
+		return xinvoker.Close()
+	})
+	xinvoker.Register(
+		xgorm.Register("mysql"),
+		xredis.Register("redis"),
+	)
+	s.err = xinvoker.Init()
+	db := model.MainDB()
+	rdb := model.MainRedis()
+	xlog.Infow("DB AutoMigrate", xlog.FieldErr(db.AutoMigrate(new(model.Directory))))
+	xlog.Info("Redis ping", xlog.FieldErr(rdb.Ping(context.Background()).Err()))
 }

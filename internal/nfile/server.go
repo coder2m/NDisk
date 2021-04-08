@@ -152,12 +152,6 @@ func (s *Server) rpc() {
 		return
 	}
 	serve := grpc.NewServer(xrpc.DefaultServerOption(grpcCfg)...)
-
-	xdefer.Register(func() error {
-		serve.Stop()
-		xconsole.Red("grpc server shutdown success ")
-		return nil
-	})
 	NFilePb.RegisterNFileServiceServer(serve, new(rpcServer.Server))
 	go func() {
 		s.err = serve.Serve(lis)
