@@ -54,6 +54,7 @@ func Add(ctx context.Context, post _map.DirectoryPost) (_map.DirectoryInfo, erro
 		IsDir:    post.IsDir,
 		Name:     post.Name,
 		ParentID: post.ParentID,
+		Type:     post.Type,
 	}
 	err := dir.Add(ctx)
 	if err != nil {
@@ -66,6 +67,7 @@ func Add(ctx context.Context, post _map.DirectoryPost) (_map.DirectoryInfo, erro
 		IsDir:     dir.IsDir,
 		Name:      dir.Name,
 		ParentID:  dir.ParentID,
+		Type:      dir.Type,
 		CreatedAt: dir.CreatedAt.Unix(),
 		UpdatedAt: dir.UpdatedAt.Unix(),
 		DeletedAt: dir.DeletedAt.Time.Unix(),

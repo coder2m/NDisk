@@ -91,8 +91,8 @@ github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd/go.mod h1:sE
 github.com/coder2z/g-saber v1.0.1/go.mod h1:bdjvBpmiDkifYK8Cl56ZSZtkw0LJD2NSp17rgEDkShA=
 github.com/coder2z/g-saber v1.0.5 h1:IoeEK4BwdjafClcIIdQWtn8W8qPVKvyF9q9Ih581f+w=
 github.com/coder2z/g-saber v1.0.5/go.mod h1:bdjvBpmiDkifYK8Cl56ZSZtkw0LJD2NSp17rgEDkShA=
-github.com/coder2z/g-server v1.0.8 h1:PoXIzvtHsD0WGav9GivzfBqZ4nZEiwhTD8shcpKd59U=
-github.com/coder2z/g-server v1.0.8/go.mod h1:W7rz3BEe+ykdg+5mywJ+XOPmV62fMyscifWEQtjI2m8=
+github.com/coder2z/g-server v1.0.9 h1:QMwzIKcawlCvsp3jIclZMkcVDAsvkeB3no8WFFhza10=
+github.com/coder2z/g-server v1.0.9/go.mod h1:W7rz3BEe+ykdg+5mywJ+XOPmV62fMyscifWEQtjI2m8=
 github.com/coreos/bbolt v1.3.2/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
 github.com/coreos/etcd v3.3.13+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=
 github.com/coreos/go-semver v0.2.0/go.mod h1:nnelYz7RCh+5ahJtPPxZlU+153eP4D4r3EedlOD2RNk=

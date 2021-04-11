@@ -13,6 +13,7 @@ type (
 		IsDir     bool   `json:"is_dir"`
 		Name      string `json:"name,omitempty"`
 		ParentID  uint   `json:"parent_id"`
+		Type      uint   `json:"type"`
 		CreatedAt int64  `json:"created_at,omitempty"`
 		UpdatedAt int64  `json:"updated_at,omitempty"`
 		DeletedAt int64  `json:"deleted_at,omitempty"`
@@ -24,6 +25,7 @@ type (
 		Name     string `validate:"required" json:"name"`
 		ParentID uint   `validate:"required,number" json:"parent_id"`
 		Uid      uint
+		Type     uint `validate:"required,number" json:"type"`
 	}
 
 	DirectoryUpdate struct {

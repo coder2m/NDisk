@@ -8,11 +8,12 @@ import (
 type (
 	Directory struct {
 		gorm.Model
-		Uid      uint `gorm:"not null"`
-		FileId   uint `gorm:"null"`
-		IsDir    bool //0 为文件 1 为文件夹
+		Uid      uint   `gorm:"not null"`
+		FileId   uint   `gorm:"null"`
+		IsDir    bool   //0 为文件 1 为文件夹
 		Name     string `gorm:"null"`
 		ParentID uint   `gorm:"DEFAULT:0;not null"`
+		Type     uint   `gorm:"DEFAULT:1;not null"` //1为个人文件夹 2为机构文件
 	}
 )
 

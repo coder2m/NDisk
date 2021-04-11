@@ -32,8 +32,8 @@ type Server struct {
 
 func (s *Server) PrepareRun(stopCh <-chan struct{}) (err error) {
 	s.initCfg()
-	s.invoker()
 	s.debug()
+	s.invoker()
 	s.initValidator()
 	s.govern()
 	s.casbin()
