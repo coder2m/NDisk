@@ -6,8 +6,8 @@ require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/casbin/casbin/v2 v2.12.0
 	github.com/casbin/gorm-adapter/v3 v3.0.4
-	github.com/coder2z/g-saber v1.0.7
-	github.com/coder2z/g-server v1.1.1
+	github.com/coder2z/g-saber v1.0.8
+	github.com/coder2z/g-server v1.1.2
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-redis/redis/v8 v8.7.1
