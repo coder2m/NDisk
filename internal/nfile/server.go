@@ -59,10 +59,19 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 	xdefer.Register(func() error {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
-		xconsole.Red("http server shutdown")
+		xlog.Info("Application Stopping",
+			xlog.FieldComponentName("HTTP"),
+			xlog.FieldMethod("NFile.Run"),
+			xlog.FieldDescription("HTTP server shutdown success"),
+		)
 		return s.Server.Shutdown(ctx)
 	})
-	xconsole.Greenf("Start listening on:", s.Server.Addr)
+	xlog.Info("Application Starting",
+		xlog.FieldComponentName("HTTP"),
+		xlog.FieldMethod("NFile.Run"),
+		xlog.FieldDescription("HTTP server start up success"),
+		xlog.FieldAddr(s.Server.Addr),
+	)
 	if err = s.Server.ListenAndServe(); err != http.ErrServerClosed {
 		return err
 	}
@@ -158,9 +167,18 @@ func (s *Server) rpc() {
 	}()
 	xdefer.Register(func() error {
 		serve.Stop()
-		xconsole.Red("grpc server shutdown success ")
+		xlog.Info("Application Stopping",
+			xlog.FieldComponentName("GRPC"),
+			xlog.FieldMethod("NFile.Rpc"),
+			xlog.FieldDescription("GRPC server shutdown success"),
+		)
 		return nil
 	})
 	xclient.GetUserRpc()
-	xconsole.Greenf("grpc server start up success:", grpcCfg.Addr())
+	xlog.Info("Application Starting",
+		xlog.FieldComponentName("GRPC"),
+		xlog.FieldMethod("NFile.Rpc"),
+		xlog.FieldDescription("GRPC server start up success"),
+		xlog.FieldAddr(grpcCfg.Addr()),
+	)
 }

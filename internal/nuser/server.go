@@ -1,6 +1,7 @@
 package nuser
 
 import (
+	"github.com/coder2z/g-saber/xlog"
 	"net"
 	"sync"
 
@@ -53,7 +54,7 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 		lis     net.Listener
 		grpcCfg *xrpc.GRPCServerConfig
 	)
-	grpcCfg=xrpc.GRPCServerCfgBuild("rpc")
+	grpcCfg = xrpc.GRPCServerCfgBuild("rpc")
 	s.err = xrpc.DefaultRegistryEtcd(grpcCfg)
 	if s.err != nil {
 		return
@@ -65,15 +66,27 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 	serve := grpc.NewServer(xrpc.DefaultServerOption(grpcCfg)...)
 	xdefer.Register(func() error {
 		serve.Stop()
-		xconsole.Red("grpc server shutdown success ")
+		xlog.Info("Application Stopping",
+			xlog.FieldComponentName("GRPC"),
+			xlog.FieldMethod("NUser.Run"),
+			xlog.FieldDescription("GRPC server shutdown success"),
+		)
 		return nil
 	})
 	NUserPb.RegisterNUserServiceServer(serve, new(rpc.Server))
-	xconsole.Greenf("grpc server start up success:", grpcCfg.Addr())
 	if xapp.Debug() {
 		reflection.Register(serve)
 	}
 	s.err = serve.Serve(lis)
+	xlog.Info("Application Starting",
+		xlog.FieldComponentName("GRPC"),
+		xlog.FieldMethod("NUser.Run"),
+		xlog.FieldDescription("GRPC server start up success"),
+		xlog.FieldAddr(grpcCfg.Addr()),
+	)
+	if s.err != nil {
+		return
+	}
 	s.Wait()
 	return s.err
 }

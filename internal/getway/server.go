@@ -56,10 +56,19 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 	xdefer.Register(func() error {
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
-		xconsole.Red("http server Shutdown")
+		xlog.Info("Application Stopping",
+			xlog.FieldComponentName("HTTP"),
+			xlog.FieldMethod("GetWay.Run"),
+			xlog.FieldDescription("HTTP server shutdown success"),
+		)
 		return s.Server.Shutdown(ctx)
 	})
-	xconsole.Greenf("Start listening on:", s.Server.Addr)
+	xlog.Info("Application Starting",
+		xlog.FieldComponentName("HTTP"),
+		xlog.FieldMethod("GetWay.Run"),
+		xlog.FieldDescription("HTTP server start up success"),
+		xlog.FieldAddr(s.Server.Addr),
+	)
 	if err = s.Server.ListenAndServe(); err != http.ErrServerClosed {
 		return err
 	}

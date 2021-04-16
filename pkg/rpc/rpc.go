@@ -3,8 +3,8 @@ package xrpc
 import (
 	"fmt"
 	"github.com/coder2z/g-saber/xcfg"
-	"github.com/coder2z/g-saber/xconsole"
 	"github.com/coder2z/g-saber/xdefer"
+	"github.com/coder2z/g-saber/xlog"
 	"github.com/coder2z/g-saber/xnet"
 	"github.com/coder2z/g-server/xapp"
 	"github.com/coder2z/g-server/xgrpc"
@@ -155,7 +155,12 @@ func Connection(servername string, op ...grpc.DialOption) *grpc.ClientConn {
 		panic(err.Error())
 	}
 	xdefer.Register(func() error {
-		xconsole.Redf("grpc conn close => server name:", servername)
+		xlog.Info("Application Stopping",
+			xlog.FieldComponentName("GRPC"),
+			xlog.FieldMethod("RPC.Connection"),
+			xlog.FieldDescription("GRPC connection close"),
+			xlog.String("server name", servername),
+		)
 		return conn.Close()
 	})
 	return conn
