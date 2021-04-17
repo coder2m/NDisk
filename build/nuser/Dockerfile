@@ -7,7 +7,9 @@ COPY go.mod .
 COPY go.sum .
 RUN go mod download
 COPY . /app
-RUN CGO_ENABLED=0 go build -o  dist/nuser -a -ldflags "-w -s" ./cmd/nuser
+RUN CGO_ENABLED=0 go build -o  dist/nuser -a -ldflags "-w -s -X github.com/coder2z/g-server/xapp.appName=ndisk_nuser\
+                                                       -X github.com/coder2z/g-server/xapp.buildAppVersion=v1.0 \
+                                                       -X github.com/coder2z/g-server/xapp.buildHost=`hostname -f`" ./cmd/nuser
 
 FROM alpine:3.10
 

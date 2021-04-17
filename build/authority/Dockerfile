@@ -7,7 +7,9 @@ COPY go.mod .
 COPY go.sum .
 RUN go mod download
 COPY . /app
-RUN CGO_ENABLED=0 go build -o  dist/authority -a -ldflags "-w -s" ./cmd/authority
+RUN CGO_ENABLED=0 go build -o  dist/authority -a -ldflags "-w -s -X github.com/coder2z/g-server/xapp.appName=ndisk_auth\
+                                                           -X github.com/coder2z/g-server/xapp.buildAppVersion=v1.0 \
+                                                           -X github.com/coder2z/g-server/xapp.buildHost=`hostname -f`" ./cmd/authority
 
 FROM alpine:3.10
 
