@@ -11,7 +11,7 @@ import (
 	"github.com/coder2z/ndisk/cmd/nuser/app"
 )
 
-//run -c=etcd://ip:2379?username=&password=&key=/dev/ndisk/config/user
+//run -c=etcd://ip:2379?username=&password=&key=ndisk/dev/nuser
 func main() {
 	xflag.NewRootCommand(&xflag.CommandNode{
 		Name: "NUser",
