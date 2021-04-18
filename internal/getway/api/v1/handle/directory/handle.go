@@ -28,7 +28,7 @@ func List(ctx *gin.Context) {
 	}
 	if i, ok := ctx.Get("user"); ok {
 		info := i.(_map.UserInfo)
-		if data, err := directory_server.List(ctx, info.Uid, req, pageReq); err != nil {
+		if data, err := directory_server.List(ctx.Request.Context(), info.Uid, req, pageReq); err != nil {
 			R.Error(ctx, err)
 		} else {
 			R.Page(ctx, xcast.ToInt64(data.Count), pageReq.Page, pageReq.PageSize, data.Data)
@@ -56,7 +56,7 @@ func Add(ctx *gin.Context) {
 	if i, ok := ctx.Get("user"); ok {
 		info := i.(_map.UserInfo)
 		req.Uid = xcast.ToUint(info.Uid)
-		if data, err := directory_server.Add(ctx, req); err != nil {
+		if data, err := directory_server.Add(ctx.Request.Context(), req); err != nil {
 			R.Error(ctx, err)
 		} else {
 			R.Ok(ctx, data)
@@ -82,7 +82,7 @@ func Del(ctx *gin.Context) {
 
 	if i, ok := ctx.Get("user"); ok {
 		info := i.(_map.UserInfo)
-		if err := directory_server.Del(ctx, xcast.ToUint(info.Uid), req.Id); err != nil {
+		if err := directory_server.Del(ctx.Request.Context(), xcast.ToUint(info.Uid), req.Id); err != nil {
 			R.Error(ctx, err)
 		} else {
 			R.Ok(ctx, nil)
@@ -124,7 +124,7 @@ func Update(ctx *gin.Context) {
 	if i, ok := ctx.Get("user"); ok {
 		info := i.(_map.UserInfo)
 		reqDir.Uid = xcast.ToUint(info.Uid)
-		if err := directory_server.Update(ctx, reqDir); err != nil {
+		if err := directory_server.Update(ctx.Request.Context(), reqDir); err != nil {
 			R.Error(ctx, err)
 		} else {
 			R.Ok(ctx, nil)

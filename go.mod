@@ -15,6 +15,7 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.4.3
 	github.com/pkg/errors v0.9.1
+	github.com/uber/jaeger-client-go v2.25.0+incompatible
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	google.golang.org/grpc v1.36.0
 	gorm.io/driver/mysql v1.0.4

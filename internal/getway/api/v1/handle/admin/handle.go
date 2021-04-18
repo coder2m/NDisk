@@ -21,7 +21,7 @@ func CreateUser(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := admin_server.CreateUser(ctx, req); err != nil {
+	if data, err := admin_server.CreateUser(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -41,7 +41,7 @@ func UpdateUser(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := admin_server.UpdateUser(ctx, req); err != nil {
+	if err := admin_server.UpdateUser(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -60,7 +60,7 @@ func DeleteUser(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := admin_server.DeleteUser(ctx, req); err != nil {
+	if data, err := admin_server.DeleteUser(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -75,7 +75,7 @@ func UserList(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, nil)
 		return
 	}
-	if data, err := admin_server.UserList(ctx, req); err != nil {
+	if data, err := admin_server.UserList(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Page(ctx, xcast.ToInt64(data.Count), req.Page, req.PageSize, data.Data)
@@ -94,7 +94,7 @@ func UpdateStatusUser(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := admin_server.UpdateStatusUser(ctx, req); err != nil {
+	if err := admin_server.UpdateStatusUser(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -113,7 +113,7 @@ func RestoreDeleteUser(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := admin_server.RestoreDeleteUser(ctx, req); err != nil {
+	if data, err := admin_server.RestoreDeleteUser(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -132,7 +132,7 @@ func UserById(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := admin_server.UserById(ctx, req); err != nil {
+	if data, err := admin_server.UserById(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -147,7 +147,7 @@ func RoleList(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, nil)
 		return
 	}
-	if data, err := admin_server.GetAllRoles(ctx, req); err != nil {
+	if data, err := admin_server.GetAllRoles(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Page(ctx, xcast.ToInt64(data.Count), req.Page, req.PageSize, data.Data)
@@ -165,7 +165,7 @@ func UserByRole(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := admin_server.UserByRole(ctx, req.Content); err != nil {
+	if data, err := admin_server.UserByRole(ctx.Request.Context(), req.Content); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -185,7 +185,7 @@ func UserAddRoles(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := admin_server.UserAddRoles(ctx, req); err != nil {
+	if err := admin_server.UserAddRoles(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -205,7 +205,7 @@ func DeleteUserRole(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := admin_server.UserDelRoles(ctx, req); err != nil {
+	if err := admin_server.UserDelRoles(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -221,7 +221,7 @@ func MenuList(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, nil)
 		return
 	}
-	if data, err := admin_server.MenuList(ctx, req); err != nil {
+	if data, err := admin_server.MenuList(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Page(ctx, xcast.ToInt64(data.Count), req.Page, req.PageSize, data.Data)
@@ -239,7 +239,7 @@ func DelMenu(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := admin_server.DelMenu(ctx, req); err != nil {
+	if data, err := admin_server.DelMenu(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -263,7 +263,7 @@ func UpdateMenu(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, "id is not cant 0")
 		return
 	}
-	if err := admin_server.UpdateMenu(ctx, id, req); err != nil {
+	if err := admin_server.UpdateMenu(ctx.Request.Context(), id, req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -282,7 +282,7 @@ func AddMenu(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := admin_server.AddMenu(ctx, req); err != nil {
+	if err := admin_server.AddMenu(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -297,7 +297,7 @@ func ResourcesList(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, nil)
 		return
 	}
-	if data, err := admin_server.ResourcesList(ctx, req); err != nil {
+	if data, err := admin_server.ResourcesList(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Page(ctx, xcast.ToInt64(data.Count), req.Page, req.PageSize, data.Data)
@@ -314,7 +314,7 @@ func DelResources(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := admin_server.DelResources(ctx, req); err != nil {
+	if data, err := admin_server.DelResources(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -337,7 +337,7 @@ func UpdateResources(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, "id is not cant 0")
 		return
 	}
-	if err := admin_server.UpdateResources(ctx, id, req); err != nil {
+	if err := admin_server.UpdateResources(ctx.Request.Context(), id, req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -355,7 +355,7 @@ func AddResources(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := admin_server.AddResources(ctx, req); err != nil {
+	if err := admin_server.AddResources(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -370,7 +370,7 @@ func GetPermissionAndMenuByRoles(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, nil)
 		return
 	}
-	if data, err := auth_server.GetPermissionAndMenuByRoles(ctx, []string{id}); err != nil {
+	if data, err := auth_server.GetPermissionAndMenuByRoles(ctx.Request.Context(), []string{id}); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -407,7 +407,7 @@ func AddRoles(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := admin_server.AddRoles(ctx, req); err != nil {
+	if err := admin_server.AddRoles(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -426,7 +426,7 @@ func DelRoles(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := admin_server.DelRoles(ctx, req); err != nil {
+	if data, err := admin_server.DelRoles(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -450,7 +450,7 @@ func UpdateRoles(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, "id is not cant 0")
 		return
 	}
-	if err := admin_server.UpdateRoles(ctx, id, req); err != nil {
+	if err := admin_server.UpdateRoles(ctx.Request.Context(), id, req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -471,7 +471,7 @@ func AgencyList(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, "pid is greater than 0")
 		return
 	}
-	if data, err := admin_server.AgencyList(ctx, parentId, req); err != nil {
+	if data, err := admin_server.AgencyList(ctx.Request.Context(), parentId, req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Page(ctx, xcast.ToInt64(data.Count), req.Page, req.PageSize, data.Data)
@@ -489,7 +489,7 @@ func DelAgency(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := admin_server.DelAgency(ctx, req); err != nil {
+	if data, err := admin_server.DelAgency(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -513,7 +513,7 @@ func UpdateAgency(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, "id is not cant 0")
 		return
 	}
-	if err := admin_server.UpdateAgency(ctx, id, req); err != nil {
+	if err := admin_server.UpdateAgency(ctx.Request.Context(), id, req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -534,7 +534,7 @@ func AddAgency(ctx *gin.Context) {
 	}
 	if get, ok := ctx.Get("Uid"); ok {
 		uid := xcast.ToUint32(get)
-		if err := admin_server.AddAgency(ctx, uid, req); err != nil {
+		if err := admin_server.AddAgency(ctx.Request.Context(), uid, req); err != nil {
 			R.Error(ctx, err)
 		} else {
 			R.Ok(ctx, nil)
@@ -556,7 +556,7 @@ func RecoverDelAgency(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := admin_server.RecoverDelAgency(ctx, req); err != nil {
+	if data, err := admin_server.RecoverDelAgency(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -579,7 +579,7 @@ func UpdateAgencyStatus(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, "id >= 0 or status error")
 		return
 	}
-	if err := admin_server.UpdateAgencyStatus(ctx, xcast.ToUint32(req.Uid), req.Status); err != nil {
+	if err := admin_server.UpdateAgencyStatus(ctx.Request.Context(), xcast.ToUint32(req.Uid), req.Status); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -598,7 +598,7 @@ func RemoveAgency(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := admin_server.RemoveAgency(ctx, req); err != nil {
+	if data, err := admin_server.RemoveAgency(ctx.Request.Context(), req); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -621,7 +621,7 @@ func ListUserByJoinAgency(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, "id >= 0 or status error")
 		return
 	}
-	if data, err := admin_server.ListUserByJoinAgency(ctx, xcast.ToUint32(req.Uid), req.Status); err != nil {
+	if data, err := admin_server.ListUserByJoinAgency(ctx.Request.Context(), xcast.ToUint32(req.Uid), req.Status); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)

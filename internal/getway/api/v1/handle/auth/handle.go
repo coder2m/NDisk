@@ -27,7 +27,7 @@ func AccountLogin(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := auth_server.AccountLogin(ctx, login); err != nil {
+	if data, err := auth_server.AccountLogin(ctx.Request.Context(), login); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -47,7 +47,7 @@ func LoginSMSSend(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := auth_server.SMSSend(ctx, send); err != nil {
+	if err := auth_server.SMSSend(ctx.Request.Context(), send); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -66,7 +66,7 @@ func SMSLogin(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := auth_server.SMSLogin(ctx, login); err != nil {
+	if data, err := auth_server.SMSLogin(ctx.Request.Context(), login); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -85,7 +85,7 @@ func Register(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := auth_server.Register(ctx, register); err != nil {
+	if err := auth_server.Register(ctx.Request.Context(), register); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -105,7 +105,7 @@ func RegisterSendSMS(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := auth_server.SMSSend(ctx, send); err != nil {
+	if err := auth_server.SMSSend(ctx.Request.Context(), send); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -125,7 +125,7 @@ func RetrieveSendSms(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := auth_server.SMSSend(ctx, send); err != nil {
+	if err := auth_server.SMSSend(ctx.Request.Context(), send); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -144,7 +144,7 @@ func Retrieve(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := auth_server.Retrieve(ctx, retrieve); err != nil {
+	if err := auth_server.Retrieve(ctx.Request.Context(), retrieve); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -165,7 +165,7 @@ func RefreshToken(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := auth_server.RefreshToken(ctx, token); err != nil {
+	if data, err := auth_server.RefreshToken(ctx.Request.Context(), token); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -192,7 +192,7 @@ func Info(ctx *gin.Context) {
 func BindEmailSend(ctx *gin.Context) {
 	if i, ok := ctx.Get("user"); ok {
 		info := i.(_map.UserInfo)
-		if err := auth_server.SendEmail(ctx, _map.EmailSend{
+		if err := auth_server.SendEmail(ctx.Request.Context(), _map.EmailSend{
 			Email: info.Email,
 			Type:  NUserPb.ActionType_EmailAttest_Type,
 		}); err != nil {
@@ -223,7 +223,7 @@ func BindEmail(ctx *gin.Context) {
 			return
 		}
 
-		if err := auth_server.BindEmail(ctx, _map.BindEmail{
+		if err := auth_server.BindEmail(ctx.Request.Context(), _map.BindEmail{
 			Uid:   bind.Uid,
 			Email: bind.Email,
 			Code:  bind.Code,

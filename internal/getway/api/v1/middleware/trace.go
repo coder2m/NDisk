@@ -14,7 +14,7 @@ func XTrace() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		span, ctx := xtrace.StartSpanFromContext(
 			c.Request.Context(),
-			c.Request.Method+" "+c.Request.URL.Path,
+			c.Request.Method+"."+c.FullPath(),
 			xtrace.TagComponent("http"),
 			xtrace.TagSpanKind("server"),
 			xtrace.HeaderExtractor(c.Request.Header),
