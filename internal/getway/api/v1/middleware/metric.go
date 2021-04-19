@@ -6,6 +6,7 @@
 package middleware
 
 import (
+	"github.com/coder2z/g-server/xapp"
 	"net/http"
 	"time"
 
@@ -24,13 +25,15 @@ func XMonitor() gin.HandlerFunc {
 
 		xmonitor.ServerHandleHistogram.WithLabelValues(
 			xmonitor.TypeHTTP,
-			c.Request.Method+"."+c.Request.URL.Path,
+			xapp.Name(),
+			c.Request.Method+" "+c.Request.URL.Path,
 			extractAID(c),
 		).Observe(time.Since(beg).Seconds())
 
 		xmonitor.ServerHandleCounter.WithLabelValues(
 			xmonitor.TypeHTTP,
-			c.Request.Method+"."+c.Request.URL.Path,
+			xapp.Name(),
+			c.Request.Method+" "+c.Request.URL.Path,
 			extractAID(c),
 			http.StatusText(c.Writer.Status()),
 		).Inc()

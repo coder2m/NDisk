@@ -7,7 +7,7 @@ require (
 	github.com/casbin/casbin/v2 v2.12.0
 	github.com/casbin/gorm-adapter/v3 v3.0.4
 	github.com/coder2z/g-saber v1.0.8
-	github.com/coder2z/g-server v1.1.2
+	github.com/coder2z/g-server v1.1.4
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-redis/redis/v8 v8.7.1
@@ -15,7 +15,6 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.4.3
 	github.com/pkg/errors v0.9.1
-	github.com/uber/jaeger-client-go v2.25.0+incompatible
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	google.golang.org/grpc v1.36.0
 	gorm.io/driver/mysql v1.0.4
