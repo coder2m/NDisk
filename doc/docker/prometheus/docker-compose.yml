@@ -9,7 +9,7 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
-      - code-prom-network
+      - monitor-network
   ndiskgrafana:
     container_name: ndisk-grafana
     image: grafana/grafana
@@ -17,7 +17,7 @@ services:
     ports:
       - 3000:3000
     networks:
-      - code-prom-network
+      - monitor-network
 networks:
-  code-prom-network:
+  monitor-network:
     driver: bridge

@@ -25,6 +25,8 @@ services:
       -initial-cluster-state new
     volumes:
       - ./etcd-data:/etcd-data
+    networks:
+      - etcd-network
   etcd-manage:
     image: "shiguanghuxian/etcd-manage"
     container_name: etcd-manage
@@ -34,3 +36,8 @@ services:
       - ./bin/logs:/app/logs
     ports:
       - "10280:10280"
+    networks:
+      - etcd-network
+networks:
+  etcd-network:
+    driver: bridge
