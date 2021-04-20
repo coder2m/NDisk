@@ -4,6 +4,8 @@ services:
     container_name: ndisk-authority
     image: yangzzzzzz/ndisk-authority:0.1
     restart: always
+    volumes:
+      - /www/wwwlogs/wpan:/logs
     environment:
       - SERVER_APP_MODE=dev
       - SERVER_APP_ID=f5b20808893848a9a99a3584104f97c4
@@ -18,6 +20,8 @@ services:
     container_name: ndisk-file
     image: yangzzzzzz/ndisk-nfile:0.1
     restart: always
+    volumes:
+      - /www/wwwlogs/wpan:/logs
     environment:
       - SERVER_APP_MODE=dev
       - SERVER_APP_ID=3ea7f44cdb7f4e1aa3680ab2bc766de3
@@ -33,6 +37,8 @@ services:
     container_name: ndisk-user
     image: yangzzzzzz/ndisk-nuser:0.1
     restart: always
+    volumes:
+      - /www/wwwlogs/wpan:/logs
     environment:
       - SERVER_APP_MODE=dev
       - SERVER_APP_ID=58b0fbecef074d4b92c801cc8e454315
@@ -47,6 +53,8 @@ services:
     container_name: ndisk-getway
     image: yangzzzzzz/ndisk-getway:0.1
     restart: always
+    volumes:
+      - /www/wwwlogs/wpan:/logs
     environment:
       - SERVER_APP_MODE=dev
       - SERVER_APP_ID=728331236e244c3bb12d448d547b4ea5
