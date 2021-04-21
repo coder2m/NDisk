@@ -78,9 +78,6 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 	})
 	AuthorityPb.RegisterAuthorityServiceServer(serve, new(rpc.Server))
 	s.err = serve.Serve(lis)
-	if s.err != nil {
-		return
-	}
 	xlog.Info("Application Starting",
 		xlog.FieldComponentName("GRPC"),
 		xlog.FieldMethod("Auth.Run"),

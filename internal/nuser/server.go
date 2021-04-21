@@ -26,7 +26,6 @@ import (
 	NUserPb "github.com/coder2z/ndisk/pkg/pb/nuser"
 	"github.com/coder2z/ndisk/pkg/rpc"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
 type Server struct {
@@ -74,9 +73,6 @@ func (s *Server) Run(stopCh <-chan struct{}) (err error) {
 		return nil
 	})
 	NUserPb.RegisterNUserServiceServer(serve, new(rpc.Server))
-	if xapp.Debug() {
-		reflection.Register(serve)
-	}
 	s.err = serve.Serve(lis)
 	xlog.Info("Application Starting",
 		xlog.FieldComponentName("GRPC"),

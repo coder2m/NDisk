@@ -58,6 +58,7 @@ func Auth() gin.HandlerFunc {
 			UpdatedAt:   userInfo.UpdatedAt,
 		}
 		ctx.Set("user", info)
+		ctx.Request = ctx.Request.WithContext(context)
 		ctx.Next()
 		return
 	}
