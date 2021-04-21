@@ -2,6 +2,7 @@ package model
 
 import (
 	"context"
+	"github.com/coder2z/g-server/xtrace"
 	"gorm.io/gorm"
 )
 
@@ -22,18 +23,24 @@ func (m *Directory) TableName() string {
 }
 
 func (m *Directory) Add(ctx context.Context) error {
-	return MainDB().Table(m.TableName()).WithContext(ctx).Create(m).Error
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Model Add")
+	defer span.Finish()
+	return MainDB().Table(m.TableName()).WithContext(ctx2).Create(m).Error
 }
 
 func (m *Directory) Adds(ctx context.Context, data []Directory) (count int64, err error) {
-	tx := MainDB().Table(m.TableName()).WithContext(ctx).CreateInBatches(data, 200)
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Model Adds")
+	defer span.Finish()
+	tx := MainDB().Table(m.TableName()).WithContext(ctx2).CreateInBatches(data, 200)
 	err = tx.Error
 	count = tx.RowsAffected
 	return
 }
 
 func (m *Directory) Del(ctx context.Context, wheres map[string][]interface{}) (count int64, err error) {
-	db := MainDB().Table(m.TableName()).WithContext(ctx)
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Model Del")
+	defer span.Finish()
+	db := MainDB().Table(m.TableName()).WithContext(ctx2)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -43,7 +50,9 @@ func (m *Directory) Del(ctx context.Context, wheres map[string][]interface{}) (c
 	return
 }
 func (m *Directory) GetAll(ctx context.Context, data *[]Directory, wheres map[string][]interface{}) (err error) {
-	db := MainDB().Table(m.TableName()).WithContext(ctx)
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Model GetAll")
+	defer span.Finish()
+	db := MainDB().Table(m.TableName()).WithContext(ctx2)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -51,7 +60,9 @@ func (m *Directory) GetAll(ctx context.Context, data *[]Directory, wheres map[st
 	return
 }
 func (m *Directory) Get(ctx context.Context, start int, size int, data *[]Directory, wheres map[string][]interface{}, isDelete bool) (total int64, err error) {
-	db := MainDB().Table(m.TableName()).WithContext(ctx)
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Model Get")
+	defer span.Finish()
+	db := MainDB().Table(m.TableName()).WithContext(ctx2)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -65,7 +76,9 @@ func (m *Directory) Get(ctx context.Context, start int, size int, data *[]Direct
 }
 
 func (m *Directory) GetById(ctx context.Context, IgnoreDel bool) error {
-	db := MainDB().Table(m.TableName()).WithContext(ctx)
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Model GetById")
+	defer span.Finish()
+	db := MainDB().Table(m.TableName()).WithContext(ctx2)
 	if !IgnoreDel {
 		db = db.Unscoped()
 	}
@@ -73,7 +86,9 @@ func (m *Directory) GetById(ctx context.Context, IgnoreDel bool) error {
 }
 
 func (m *Directory) GetByWhere(ctx context.Context, wheres map[string][]interface{}) error {
-	db := MainDB().Table(m.TableName()).WithContext(ctx)
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Model GetByWhere")
+	defer span.Finish()
+	db := MainDB().Table(m.TableName()).WithContext(ctx2)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -81,7 +96,9 @@ func (m *Directory) GetByWhere(ctx context.Context, wheres map[string][]interfac
 }
 
 func (m *Directory) ExistWhere(ctx context.Context, wheres map[string][]interface{}) bool {
-	db := MainDB().Table(m.TableName()).WithContext(ctx)
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Model ExistWhere")
+	defer span.Finish()
+	db := MainDB().Table(m.TableName()).WithContext(ctx2)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -90,7 +107,9 @@ func (m *Directory) ExistWhere(ctx context.Context, wheres map[string][]interfac
 }
 
 func (m *Directory) UpdatesWhere(ctx context.Context, wheres map[string][]interface{}) error {
-	db := MainDB().Table(m.TableName()).WithContext(ctx)
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Model UpdatesWhere")
+	defer span.Finish()
+	db := MainDB().Table(m.TableName()).WithContext(ctx2)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -98,7 +117,9 @@ func (m *Directory) UpdatesWhere(ctx context.Context, wheres map[string][]interf
 }
 
 func (m *Directory) UpdateWhere(ctx context.Context, wheres map[string][]interface{}, column string, value interface{}) error {
-	db := MainDB().Table(m.TableName()).WithContext(ctx)
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Model UpdateWhere")
+	defer span.Finish()
+	db := MainDB().Table(m.TableName()).WithContext(ctx2)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -106,11 +127,15 @@ func (m *Directory) UpdateWhere(ctx context.Context, wheres map[string][]interfa
 }
 
 func (m *Directory) UpdateStatus(ctx context.Context, status uint32) error {
-	return MainDB().Table(m.TableName()).WithContext(ctx).Where("id=?", m.ID).Update("status", status).Error
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Model UpdateStatus")
+	defer span.Finish()
+	return MainDB().Table(m.TableName()).WithContext(ctx2).Where("id=?", m.ID).Update("status", status).Error
 }
 
 func (m *Directory) DelRes(ctx context.Context, wheres map[string][]interface{}) (count int64, err error) {
-	db := MainDB().Table(m.TableName()).WithContext(ctx)
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Model DelRes")
+	defer span.Finish()
+	db := MainDB().Table(m.TableName()).WithContext(ctx2)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}
@@ -121,7 +146,9 @@ func (m *Directory) DelRes(ctx context.Context, wheres map[string][]interface{})
 }
 
 func (m *Directory) Count(ctx context.Context, wheres map[string][]interface{}, isDelete bool) (count int64, err error) {
-	db := MainDB().Table(m.TableName()).WithContext(ctx)
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Model Count")
+	defer span.Finish()
+	db := MainDB().Table(m.TableName()).WithContext(ctx2)
 	for s, i := range wheres {
 		db = db.Where(s, i...)
 	}

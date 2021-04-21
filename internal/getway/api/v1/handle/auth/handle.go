@@ -19,8 +19,8 @@ import (
 
 //  账号登录
 func AccountLogin(ctx *gin.Context) {
-	context, ctx2 := xtrace.StartSpanFromContext(ctx.Request.Context(), "AccountLogin handle")
-	defer context.Finish()
+	span, context := xtrace.StartSpanFromContext(ctx.Request.Context(), "AccountLogin handle")
+	defer span.Finish()
 	var login _map.AccountLogin
 	if err := ctx.ShouldBind(&login); err != nil {
 		R.HandleBadRequest(ctx, nil)
@@ -30,7 +30,7 @@ func AccountLogin(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := auth_server.AccountLogin(ctx2, login); err != nil {
+	if data, err := auth_server.AccountLogin(context, login); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -40,6 +40,8 @@ func AccountLogin(ctx *gin.Context) {
 
 //  短信验证码发送验证码
 func LoginSMSSend(ctx *gin.Context) {
+	span, context := xtrace.StartSpanFromContext(ctx.Request.Context(), "LoginSMSSend handle")
+	defer span.Finish()
 	var send _map.SMSSend
 	if err := ctx.ShouldBind(&send); err != nil {
 		R.HandleBadRequest(ctx, nil)
@@ -50,7 +52,7 @@ func LoginSMSSend(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := auth_server.SMSSend(ctx.Request.Context(), send); err != nil {
+	if err := auth_server.SMSSend(context, send); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -60,6 +62,8 @@ func LoginSMSSend(ctx *gin.Context) {
 
 //  账号登录-验证码
 func SMSLogin(ctx *gin.Context) {
+	span, context := xtrace.StartSpanFromContext(ctx.Request.Context(), "SMSLogin handle")
+	defer span.Finish()
 	var login _map.SMSLogin
 	if err := ctx.ShouldBind(&login); err != nil {
 		R.HandleBadRequest(ctx, nil)
@@ -69,7 +73,7 @@ func SMSLogin(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := auth_server.SMSLogin(ctx.Request.Context(), login); err != nil {
+	if data, err := auth_server.SMSLogin(context, login); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -79,6 +83,8 @@ func SMSLogin(ctx *gin.Context) {
 
 //  注册
 func Register(ctx *gin.Context) {
+	span, context := xtrace.StartSpanFromContext(ctx.Request.Context(), "Register handle")
+	defer span.Finish()
 	var register _map.UserRegister
 	if err := ctx.ShouldBind(&register); err != nil {
 		R.HandleBadRequest(ctx, nil)
@@ -88,7 +94,7 @@ func Register(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := auth_server.Register(ctx.Request.Context(), register); err != nil {
+	if err := auth_server.Register(context, register); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -98,6 +104,8 @@ func Register(ctx *gin.Context) {
 
 // 注册发送验证码
 func RegisterSendSMS(ctx *gin.Context) {
+	span, context := xtrace.StartSpanFromContext(ctx.Request.Context(), "RegisterSendSMS handle")
+	defer span.Finish()
 	var send _map.SMSSend
 	if err := ctx.ShouldBind(&send); err != nil {
 		R.HandleBadRequest(ctx, nil)
@@ -108,7 +116,7 @@ func RegisterSendSMS(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := auth_server.SMSSend(ctx.Request.Context(), send); err != nil {
+	if err := auth_server.SMSSend(context, send); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -118,6 +126,8 @@ func RegisterSendSMS(ctx *gin.Context) {
 
 //  找回密码发送sms
 func RetrieveSendSms(ctx *gin.Context) {
+	span, context := xtrace.StartSpanFromContext(ctx.Request.Context(), "RetrieveSendSms handle")
+	defer span.Finish()
 	var send _map.SMSSend
 	if err := ctx.ShouldBind(&send); err != nil {
 		R.HandleBadRequest(ctx, nil)
@@ -128,7 +138,7 @@ func RetrieveSendSms(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := auth_server.SMSSend(ctx.Request.Context(), send); err != nil {
+	if err := auth_server.SMSSend(context, send); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -138,6 +148,8 @@ func RetrieveSendSms(ctx *gin.Context) {
 
 //  找回密码 邮件或者电话 都可
 func Retrieve(ctx *gin.Context) {
+	span, context := xtrace.StartSpanFromContext(ctx.Request.Context(), "Retrieve handle")
+	defer span.Finish()
 	var retrieve _map.RetrievePassword
 	if err := ctx.ShouldBind(&retrieve); err != nil {
 		R.HandleBadRequest(ctx, nil)
@@ -147,7 +159,7 @@ func Retrieve(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if err := auth_server.Retrieve(ctx.Request.Context(), retrieve); err != nil {
+	if err := auth_server.Retrieve(context, retrieve); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, nil)
@@ -157,6 +169,8 @@ func Retrieve(ctx *gin.Context) {
 
 //  刷新token
 func RefreshToken(ctx *gin.Context) {
+	span, context := xtrace.StartSpanFromContext(ctx.Request.Context(), "RefreshToken handle")
+	defer span.Finish()
 	var token _map.UserToken
 	if t, ok := ctx.Get("token"); ok {
 		token.Token = t.(string)
@@ -168,7 +182,7 @@ func RefreshToken(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := auth_server.RefreshToken(ctx.Request.Context(), token); err != nil {
+	if data, err := auth_server.RefreshToken(context, token); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
@@ -178,9 +192,11 @@ func RefreshToken(ctx *gin.Context) {
 
 // 获取用户信息
 func Info(ctx *gin.Context) {
+	span, context := xtrace.StartSpanFromContext(ctx.Request.Context(), "Info handle")
+	defer span.Finish()
 	if i, ok := ctx.Get("user"); ok {
 		info := i.(_map.UserInfo)
-		menu, _ := auth_server.GetPermissionAndMenuByRoles(ctx, strings.Split(info.Authority, ","))
+		menu, _ := auth_server.GetPermissionAndMenuByRoles(context, strings.Split(info.Authority, ","))
 		R.Ok(ctx, gin.H{
 			"info": info,
 			"menu": menu,
@@ -193,9 +209,11 @@ func Info(ctx *gin.Context) {
 
 // 绑定邮件 发送邮件验证码
 func BindEmailSend(ctx *gin.Context) {
+	span, context := xtrace.StartSpanFromContext(ctx.Request.Context(), "BindEmailSend handle")
+	defer span.Finish()
 	if i, ok := ctx.Get("user"); ok {
 		info := i.(_map.UserInfo)
-		if err := auth_server.SendEmail(ctx.Request.Context(), _map.EmailSend{
+		if err := auth_server.SendEmail(context, _map.EmailSend{
 			Email: info.Email,
 			Type:  NUserPb.ActionType_EmailAttest_Type,
 		}); err != nil {
@@ -211,6 +229,8 @@ func BindEmailSend(ctx *gin.Context) {
 
 //绑定邮箱
 func BindEmail(ctx *gin.Context) {
+	span, context := xtrace.StartSpanFromContext(ctx.Request.Context(), "BindEmail handle")
+	defer span.Finish()
 	if i, ok := ctx.Get("user"); ok {
 		info := i.(_map.UserInfo)
 
@@ -226,7 +246,7 @@ func BindEmail(ctx *gin.Context) {
 			return
 		}
 
-		if err := auth_server.BindEmail(ctx.Request.Context(), _map.BindEmail{
+		if err := auth_server.BindEmail(context, _map.BindEmail{
 			Uid:   bind.Uid,
 			Email: bind.Email,
 			Code:  bind.Code,

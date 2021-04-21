@@ -3,11 +3,14 @@ package directory_server
 import (
 	"context"
 	"github.com/coder2z/g-saber/xcast"
+	"github.com/coder2z/g-server/xtrace"
 	_map "github.com/coder2z/ndisk/internal/getway/map"
 	"github.com/coder2z/ndisk/internal/getway/model"
 )
 
 func List(ctx context.Context, uid uint64, req _map.Id, page _map.PageList) (_map.DirList, error) {
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory List Service")
+	defer span.Finish()
 	var (
 		data  []model.Directory
 		where = make(map[string][]interface{})
@@ -23,7 +26,7 @@ func List(ctx context.Context, uid uint64, req _map.Id, page _map.PageList) (_ma
 			"%" + page.Keyword + "%",
 		}
 	}
-	count, err := new(model.Directory).Get(ctx, page.PageSize*(page.Page-1), page.PageSize, &data, where, page.IsDelete)
+	count, err := new(model.Directory).Get(ctx2, page.PageSize*(page.Page-1), page.PageSize, &data, where, page.IsDelete)
 	if err != nil {
 		return _map.DirList{}, err
 	}
@@ -48,6 +51,8 @@ func List(ctx context.Context, uid uint64, req _map.Id, page _map.PageList) (_ma
 }
 
 func Add(ctx context.Context, post _map.DirectoryPost) (_map.DirectoryInfo, error) {
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Add Service")
+	defer span.Finish()
 	dir := &model.Directory{
 		Uid:      post.Uid,
 		FileId:   post.FileId,
@@ -56,7 +61,7 @@ func Add(ctx context.Context, post _map.DirectoryPost) (_map.DirectoryInfo, erro
 		ParentID: post.ParentID,
 		Type:     post.Type,
 	}
-	err := dir.Add(ctx)
+	err := dir.Add(ctx2)
 	if err != nil {
 		return _map.DirectoryInfo{}, err
 	}
@@ -75,6 +80,8 @@ func Add(ctx context.Context, post _map.DirectoryPost) (_map.DirectoryInfo, erro
 }
 
 func Del(ctx context.Context, uid, id uint) error {
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Del Service")
+	defer span.Finish()
 	var (
 		where map[string][]interface{}
 	)
@@ -83,11 +90,13 @@ func Del(ctx context.Context, uid, id uint) error {
 			id, uid,
 		},
 	}
-	_, err := new(model.Directory).Del(ctx, where)
+	_, err := new(model.Directory).Del(ctx2, where)
 	return err
 }
 
 func Update(ctx context.Context, req _map.DirectoryUpdate) error {
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "Directory Update Service")
+	defer span.Finish()
 	var (
 		where map[string][]interface{}
 	)
@@ -100,6 +109,6 @@ func Update(ctx context.Context, req _map.DirectoryUpdate) error {
 		Name:     req.Name,
 		ParentID: req.ParentID,
 	}
-	err := dir.UpdatesWhere(ctx, where)
+	err := dir.UpdatesWhere(ctx2, where)
 	return err
 }

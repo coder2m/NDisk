@@ -7,6 +7,7 @@ package middleware
 
 import (
 	"errors"
+	"github.com/coder2z/g-server/xtrace"
 	R "github.com/coder2z/ndisk/pkg/response"
 
 	"github.com/coder2z/g-saber/xcast"
@@ -19,6 +20,8 @@ import (
 
 func Auth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		span, context := xtrace.StartSpanFromContext(ctx.Request.Context(), "Auth Middleware")
+		defer span.Finish()
 		token := ctx.GetHeader("Authorization")
 		if token == "" {
 			R.HandleForbidden(ctx)
@@ -26,7 +29,7 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 		ctx.Set("token", token)
-		userInfo, err := xclient.NUserServer.VerifyUsers(ctx.Request.Context(), &NUserPb.Token{
+		userInfo, err := xclient.NUserServer.VerifyUsers(context, &NUserPb.Token{
 			AccountToken: token,
 		})
 		if err != nil {
@@ -34,7 +37,7 @@ func Auth() gin.HandlerFunc {
 			ctx.Abort()
 			return
 		}
-		rolesData, err := xclient.AuthorityServer.GetUsersRoles(ctx.Request.Context(), &AuthorityPb.Ids{
+		rolesData, err := xclient.AuthorityServer.GetUsersRoles(context, &AuthorityPb.Ids{
 			To: []uint32{xcast.ToUint32(userInfo.Uid)},
 		})
 		if !errors.Is(err, nil) {
@@ -62,10 +65,12 @@ func Auth() gin.HandlerFunc {
 
 func Authority() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		span, context := xtrace.StartSpanFromContext(ctx.Request.Context(), "Authority Middleware")
+		defer span.Finish()
 		if i, ok := ctx.Get("user"); ok {
 			info := i.(_map.UserInfo)
 			ctx.Set("Uid", info.Uid)
-			rep, _ := xclient.AuthorityServer.Enforce(ctx.Request.Context(), &AuthorityPb.Resources{
+			rep, _ := xclient.AuthorityServer.Enforce(context, &AuthorityPb.Resources{
 				Role:   xcast.ToString(info.Uid),
 				Obj:    ctx.FullPath(),
 				Action: ctx.Request.Method,

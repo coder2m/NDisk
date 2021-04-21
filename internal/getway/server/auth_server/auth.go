@@ -8,6 +8,7 @@ package auth_server
 import (
 	"context"
 	"errors"
+	"github.com/coder2z/g-server/xtrace"
 
 	"github.com/coder2z/g-saber/xcast"
 	xclient "github.com/coder2z/ndisk/internal/getway/client"
@@ -19,7 +20,9 @@ import (
 )
 
 func AccountLogin(ctx context.Context, login _map.AccountLogin) (interface{}, *xerror.Err) {
-	rep, err := xclient.NUserServer.AccountLogin(ctx, &NUserPb.UserLoginRequest{
+	span, ctx2 := xtrace.StartSpanFromContext(ctx, "AccountLogin Server")
+	defer span.Finish()
+	rep, err := xclient.NUserServer.AccountLogin(ctx2, &NUserPb.UserLoginRequest{
 		Account:  login.Account,
 		Password: login.Password,
 	})
