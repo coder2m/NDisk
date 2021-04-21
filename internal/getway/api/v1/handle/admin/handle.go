@@ -3,7 +3,6 @@ package admin
 import (
 	"github.com/coder2z/g-saber/xcast"
 	"github.com/coder2z/g-saber/xvalidator"
-	"github.com/coder2z/g-server/xtrace"
 	_map "github.com/coder2z/ndisk/internal/getway/map"
 	"github.com/coder2z/ndisk/internal/getway/server/admin_server"
 	"github.com/coder2z/ndisk/internal/getway/server/auth_server"
@@ -590,7 +589,6 @@ func UpdateAgencyStatus(ctx *gin.Context) {
 
 //退出 RemoveAgency
 func RemoveAgency(ctx *gin.Context) {
-	xtrace.SpanFromContext(ctx.Request.Context())
 	var req _map.UidList
 	if err := ctx.ShouldBind(&req); err != nil {
 		R.HandleBadRequest(ctx, nil)

@@ -6,6 +6,7 @@
 package auth
 
 import (
+	"github.com/coder2z/g-server/xtrace"
 	"strings"
 
 	"github.com/coder2z/g-saber/xvalidator"
@@ -18,6 +19,8 @@ import (
 
 //  账号登录
 func AccountLogin(ctx *gin.Context) {
+	context, ctx2 := xtrace.StartSpanFromContext(ctx.Request.Context(), "AccountLogin handle")
+	defer context.Finish()
 	var login _map.AccountLogin
 	if err := ctx.ShouldBind(&login); err != nil {
 		R.HandleBadRequest(ctx, nil)
@@ -27,7 +30,7 @@ func AccountLogin(ctx *gin.Context) {
 		R.HandleBadRequest(ctx, xvalidator.GetMsg(err).Error())
 		return
 	}
-	if data, err := auth_server.AccountLogin(ctx.Request.Context(), login); err != nil {
+	if data, err := auth_server.AccountLogin(ctx2, login); err != nil {
 		R.Error(ctx, err)
 	} else {
 		R.Ok(ctx, data)
