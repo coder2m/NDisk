@@ -23,7 +23,7 @@ type (
 		FileId   uint   `json:"file_id"`
 		IsDir    bool   `validate:"required" json:"is_dir"`
 		Name     string `validate:"required" json:"name"`
-		ParentID uint   `validate:"required,number" json:"parent_id"`
+		ParentID uint   `json:"parent_id"`
 		Uid      uint
 		Type     uint `validate:"required,number" json:"type"`
 	}
