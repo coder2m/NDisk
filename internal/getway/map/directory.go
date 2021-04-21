@@ -31,7 +31,7 @@ type (
 	DirectoryUpdate struct {
 		Id       uint
 		Name     string `validate:"required" json:"name"`
-		ParentID uint   `validate:"required,number" json:"parent_id"`
+		ParentID uint   `json:"parent_id"`
 		Uid      uint
 	}
 )
