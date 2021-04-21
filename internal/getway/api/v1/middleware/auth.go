@@ -26,7 +26,7 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 		ctx.Set("token", token)
-		userInfo, err := xclient.NUserServer.VerifyUsers(ctx, &NUserPb.Token{
+		userInfo, err := xclient.NUserServer.VerifyUsers(ctx.Request.Context(), &NUserPb.Token{
 			AccountToken: token,
 		})
 		if err != nil {
@@ -34,7 +34,7 @@ func Auth() gin.HandlerFunc {
 			ctx.Abort()
 			return
 		}
-		rolesData, err := xclient.AuthorityServer.GetUsersRoles(ctx, &AuthorityPb.Ids{
+		rolesData, err := xclient.AuthorityServer.GetUsersRoles(ctx.Request.Context(), &AuthorityPb.Ids{
 			To: []uint32{xcast.ToUint32(userInfo.Uid)},
 		})
 		if !errors.Is(err, nil) {
@@ -65,7 +65,7 @@ func Authority() gin.HandlerFunc {
 		if i, ok := ctx.Get("user"); ok {
 			info := i.(_map.UserInfo)
 			ctx.Set("Uid", info.Uid)
-			rep, _ := xclient.AuthorityServer.Enforce(ctx, &AuthorityPb.Resources{
+			rep, _ := xclient.AuthorityServer.Enforce(ctx.Request.Context(), &AuthorityPb.Resources{
 				Role:   xcast.ToString(info.Uid),
 				Obj:    ctx.FullPath(),
 				Action: ctx.Request.Method,
