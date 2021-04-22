@@ -2,6 +2,7 @@ package nfile
 
 import (
 	"context"
+	"github.com/coder2z/g-server/xtrace"
 	xclient "github.com/coder2z/ndisk/internal/nfile/client"
 	"net"
 	"net/http"
@@ -139,7 +140,7 @@ func (s *Server) govern() {
 	if s.err != nil {
 		return
 	}
-
+	xtrace.JaegerBuild("trace.jaeger")
 	go xgovern.Run()
 }
 

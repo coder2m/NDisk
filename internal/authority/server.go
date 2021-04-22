@@ -2,6 +2,7 @@ package authority
 
 import (
 	"github.com/coder2z/g-saber/xlog"
+	"github.com/coder2z/g-server/xtrace"
 	"net"
 	"sync"
 
@@ -130,7 +131,7 @@ func (s *Server) govern() {
 	if s.err != nil {
 		return
 	}
-
+	xtrace.JaegerBuild("trace.jaeger")
 	go xgovern.Run()
 }
 
